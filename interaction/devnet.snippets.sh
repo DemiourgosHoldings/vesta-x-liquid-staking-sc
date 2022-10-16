@@ -4,9 +4,13 @@ WALLET="./wallets/shard1-wallet.pem"
 ADDRESS=$(erdpy data load --key=address-devnet)
 ######################################################################
 
+DELEGATE_ADDRESS="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzhllllsp9wvyl"
+DELEGATE_ADDRESS_HEX="0x$(erdpy wallet bech32 --decode ${DELEGATE_ADDRESS})"
 
 ###
-ISSUE_COST=50000000000000000
+ISSUE_COST=50000000000000000 # 0.05 EGLD
+
+STAKE_AMOUNT=1000000000000000000
 
 deploy() {
     erdpy --verbose contract deploy  --project=${PROJECT} --recall-nonce --pem=${WALLET} --send --proxy=${PROXY} --chain=${CHAIN_ID} \
@@ -35,9 +39,35 @@ issueValarAndSetAllRoles() {
     --value ${ISSUE_COST}
 }
 
+setDelegateAddress() {
+    erdpy --verbose contract call ${ADDRESS} --send --proxy=${PROXY} --chain=${CHAIN_ID} --recall-nonce --pem=${WALLET} \
+    --gas-limit=6000000 \
+    --function="setDelegateAddress" \
+    --arguments ${DELEGATE_ADDRESS_HEX}
+}
+
+stake() {
+    erdpy --verbose contract call ${ADDRESS} --send --proxy=${PROXY} --chain=${CHAIN_ID} --recall-nonce --pem=${WALLET} \
+    --gas-limit=30000000 \
+    --function="stake" \
+    --value ${STAKE_AMOUNT}
+}
+
 
 ###
 
 getValarIdentifier() {
     erdpy --verbose contract query ${ADDRESS} --proxy=${PROXY} --function="getValarIdentifier"
+}
+
+getDelegateAddress() {
+    erdpy --verbose contract query ${ADDRESS} --proxy=${PROXY} --function="getDelegateAddress"
+}
+
+getValarSupply() {
+    erdpy --verbose contract query ${ADDRESS} --proxy=${PROXY} --function="getValarSupply"
+}
+
+getStakedEgldAmount() {
+    erdpy --verbose contract query ${ADDRESS} --proxy=${PROXY} --function="getStakedEgldAmount"
 }

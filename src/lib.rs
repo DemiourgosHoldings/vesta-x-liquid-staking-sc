@@ -8,6 +8,8 @@ pub mod stake;
 pub mod event;
 pub mod valar;
 pub mod config;
+pub mod delegate;
+pub mod pool;
 
 #[elrond_wasm::contract]
 pub trait ValarLiquidStaking:
@@ -15,8 +17,18 @@ pub trait ValarLiquidStaking:
     + event::EventModule
     + stake::StakeModule
     + valar::ValarModule
+    + pool::PoolModule
 {
     #[init]
     fn init(&self) {
+    }
+
+    #[only_owner]
+    #[endpoint(setDelegateAddress)]
+    fn set_delegate_address(
+        &self,
+        delegate_address: ManagedAddress,
+    ) {
+        self.delegate_address().set(&delegate_address);
     }
 }

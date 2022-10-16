@@ -4,3 +4,6 @@ pub const TOKEN_ISSUE_COST: u64 = 50_000_000_000_000_000; // 0.05 EGLD
 pub const VALAR_DISPLAY_NAME: &[u8] = b"Valar";
 pub const VALAR_TICKER: &[u8] = b"VALAR";
 pub const VALAR_DECIMALS: usize = 18;
+
+// Delegate
+pub const DELEGATE_MIN_AMOUNT: u64 = 1_000_000_000_000_000_000;
