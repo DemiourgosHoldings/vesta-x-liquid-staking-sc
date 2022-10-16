@@ -44,4 +44,11 @@ pub trait EventModule
     fn undelegate_fail_event(
         &self,
     );
+
+    #[event("Claim")]
+    fn claim_event(
+        &self,
+        #[indexed] to: &ManagedAddress,
+        #[indexed] egld_amount: &BigUint,
+    );
 }

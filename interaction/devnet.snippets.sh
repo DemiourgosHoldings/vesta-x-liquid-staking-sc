@@ -66,6 +66,12 @@ unstakeOneValar() {
     --data=${DATA_UNSTAKE_ONE_VALAR}
 }
 
+claim() {
+    erdpy --verbose contract call ${ADDRESS} --send --proxy=${PROXY} --chain=${CHAIN_ID} --recall-nonce --pem=${WALLET} \
+    --gas-limit=6000000 \
+    --function="claim"
+}
+
 ###
 
 getValarIdentifier() {

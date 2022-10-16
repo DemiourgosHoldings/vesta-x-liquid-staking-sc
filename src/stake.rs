@@ -109,6 +109,30 @@ pub trait StakeModule:
     }
 
     //
+    #[endpoint]
+    fn claim(&self) {
+       let caller = self.blockchain().get_caller();
+
+       let mut unbonded_egld_amount_per_user = self.unbonded_egld_amount_per_user();
+       let egld_amount = unbonded_egld_amount_per_user.get(&caller).unwrap_or_default();
+
+       require!(
+            egld_amount != BigUint::zero(),
+            "No claimable EGLD."
+       );
+       require!(
+            self.blockchain().get_balance(&self.blockchain().get_sc_address()) >= egld_amount,
+            "No enough EGLD balance in Smart Contract."
+        );
+
+       unbonded_egld_amount_per_user.remove(&caller);
+
+       self.send().direct_egld(&caller, &egld_amount);
+
+       self.claim_event(&caller, &egld_amount);
+    }
+
+    //
     #[inline]
     fn mint_and_send_valar(&self, to: &ManagedAddress, egld_amount: &BigUint) -> BigUint {
         let valar_supply = self.valar_supply().get();

@@ -8,6 +8,7 @@ elrond_wasm_node::wasm_endpoints! {
     valar_liquid_staking
     (
         callBack
+        claim
         getDelegateAddress
         getStakedEgldAmount
         getUnbondedEgldAmount
