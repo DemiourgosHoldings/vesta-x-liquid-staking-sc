@@ -7,7 +7,8 @@
 elrond_wasm_node::wasm_endpoints! {
     valar_liquid_staking
     (
+        callBack
+        getValarIdentifier
+        issueValarAndSetAllRoles
     )
 }
-
-elrond_wasm_node::wasm_empty_callback! {}
