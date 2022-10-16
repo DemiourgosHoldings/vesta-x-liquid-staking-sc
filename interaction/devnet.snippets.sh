@@ -13,8 +13,11 @@ ISSUE_COST=50000000000000000 # 0.05 EGLD
 STAKE_AMOUNT=1000000000000000000
 UNSTAKE_AMOUNT=1000000000000000000
 
-VALAR_IDENTIFIER_ONLY_HEX="56414c41522d383839656661"
+VALAR_IDENTIFIER_ONLY_HEX="56414c41522d366239363238"
 DATA_UNSTAKE_ONE_VALAR="ESDTTransfer@${VALAR_IDENTIFIER_ONLY_HEX}@0de0b6b3a7640000@756e7374616b65"
+
+CALLER_ADDRESS="erd1ygdttzrulwfspme2s4qrx5y2qyfqalju0k2vcyy8z3979whlj9qssl5uay"
+CALLER_ADDRESS_HEX="0x$(erdpy wallet bech32 --decode ${CALLER_ADDRESS})"
 
 deploy() {
     erdpy --verbose contract deploy  --project=${PROJECT} --recall-nonce --pem=${WALLET} --send --proxy=${PROXY} --chain=${CHAIN_ID} \
@@ -79,4 +82,20 @@ getValarSupply() {
 
 getStakedEgldAmount() {
     erdpy --verbose contract query ${ADDRESS} --proxy=${PROXY} --function="getStakedEgldAmount"
+}
+
+getUnbondingEgldAmount() {
+    erdpy --verbose contract query ${ADDRESS} --proxy=${PROXY} --function="getUnbondingEgldAmount"
+}
+
+getUnbondingUsers() {
+    erdpy --verbose contract query ${ADDRESS} --proxy=${PROXY} --function="getUnbondingUsers"
+}
+
+getUnbondingEgldAmountPerUser() {
+    erdpy --verbose contract query ${ADDRESS} --proxy=${PROXY} --function="getUnbondingEgldAmountPerUser" --arguments ${CALLER_ADDRESS_HEX}
+}
+
+getUnbondedEgldAmountPerUser() {
+    erdpy --verbose contract query ${ADDRESS} --proxy=${PROXY} --function="getUnbondedEgldAmountPerUser"
 }

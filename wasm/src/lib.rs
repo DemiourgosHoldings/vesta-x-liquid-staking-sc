@@ -10,6 +10,11 @@ elrond_wasm_node::wasm_endpoints! {
         callBack
         getDelegateAddress
         getStakedEgldAmount
+        getUnbondedEgldAmount
+        getUnbondedEgldAmountPerUser
+        getUnbondingEgldAmount
+        getUnbondingEgldAmountPerUser
+        getUnbondingUsers
         getValarIdentifier
         getValarSupply
         issueValarAndSetAllRoles

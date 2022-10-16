@@ -98,12 +98,54 @@ pub trait StakeModule:
         match result {
             ManagedAsyncCallResult::Ok(()) => {
                 // VALAR supply should be decreased only after successful Undelegation
-                self.burn_valar(unstaking_valar_amount, unstaking_egld_amount);
+                self.burn_valar(caller, unstaking_valar_amount, unstaking_egld_amount);
 
                 self.undelegate_success_event(caller, delegate_address, unstaking_valar_amount, unstaking_egld_amount);
             },
             ManagedAsyncCallResult::Err(_) => {
                 self.undelegate_fail_event();
             },
-    } }
+        } 
+    }
+
+    //
+    #[inline]
+    fn mint_and_send_valar(&self, to: &ManagedAddress, egld_amount: &BigUint) -> BigUint {
+        let valar_supply = self.valar_supply().get();
+        let staked_egld_amount = self.staked_egld_amount().get();
+
+        let valar_mint_amount = if valar_supply == BigUint::zero() { // First Mint
+            egld_amount.clone()
+        } else {
+            require!(
+                staked_egld_amount != BigUint::zero(),
+                "staked_egld_amount is zero while valar_supply is not zero."
+            );
+
+            self.quote_valar(egld_amount)
+        };
+
+        //
+        self.valar_identifier().mint_and_send(to, valar_mint_amount.clone());
+
+        //
+        self.valar_supply().set(valar_supply + &valar_mint_amount);
+        self.staked_egld_amount().set(staked_egld_amount + egld_amount);
+
+        valar_mint_amount
+    }
+
+    #[inline]
+    fn burn_valar(&self, to: &ManagedAddress, valar_amount: &BigUint, egld_amount: &BigUint) {
+        self.send().esdt_local_burn(&self.valar_identifier().get_token_id(), 0, valar_amount);
+        self.valar_supply().update(|v| *v -= valar_amount);
+        self.staked_egld_amount().update(|v| *v -= egld_amount);
+
+        self.unbonding_egld_amount().update(|v| *v += egld_amount);
+
+        self.unbonding_users().insert(to.clone());
+        let current_timestamp = self.blockchain().get_block_timestamp();
+        let mut unbonding_egld_amount_per_user = self.unbonding_egld_amount_per_user(to);
+        unbonding_egld_amount_per_user.insert(current_timestamp, unbonding_egld_amount_per_user.get(&current_timestamp).unwrap_or_default() + egld_amount);
+    }
 }
