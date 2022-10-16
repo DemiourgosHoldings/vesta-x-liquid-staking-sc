@@ -51,4 +51,40 @@ pub trait EventModule
         #[indexed] to: &ManagedAddress,
         #[indexed] egld_amount: &BigUint,
     );
+
+    // Admin
+    #[event("RedelegateRewardsSuccess")]
+    fn redelegate_rewards_success_event(
+        &self,
+        #[indexed] from: &ManagedAddress,
+    );
+    
+    #[event("RedelegateRewardsFail")]
+    fn redelegate_rewards_fail_event(
+        &self,
+    );
+
+    #[event("WithdrawSuccess")]
+    fn withdraw_success_event(
+        &self,
+        #[indexed] from: &ManagedAddress,
+        #[indexed] egld_amount: &BigUint,
+    );
+    
+    #[event("WithdrawFail")]
+    fn withdraw_fail_event(
+        &self,
+    );
+
+    #[event("ClaimRewardsSuccess")]
+    fn claim_rewards_success_event(
+        &self,
+        #[indexed] from: &ManagedAddress,
+        #[indexed] egld_amount: &BigUint,
+    );
+    
+    #[event("ClaimRewardsFail")]
+    fn claim_rewards_fail_event(
+        &self,
+    );
 }

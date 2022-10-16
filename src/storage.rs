@@ -44,4 +44,9 @@ pub trait StorageModule
     #[view(getDelegateAddress)]
     #[storage_mapper("delegate_address")]
     fn delegate_address(&self) -> SingleValueMapper<ManagedAddress>;
+
+    // Admin
+    #[view(getTreasuryWallet)]
+    #[storage_mapper("treasury_wallet")]
+    fn treasury_wallet(&self) -> SingleValueMapper<ManagedAddress>;
 }

@@ -10,6 +10,7 @@ pub mod valar;
 pub mod config;
 pub mod delegate;
 pub mod pool;
+pub mod admin;
 
 #[elrond_wasm::contract]
 pub trait ValarLiquidStaking:
@@ -18,6 +19,7 @@ pub trait ValarLiquidStaking:
     + stake::StakeModule
     + valar::ValarModule
     + pool::PoolModule
+    + admin::AdminModule
 {
     #[init]
     fn init(&self) {
@@ -30,5 +32,14 @@ pub trait ValarLiquidStaking:
         delegate_address: ManagedAddress,
     ) {
         self.delegate_address().set(&delegate_address);
+    }
+
+    #[only_owner]
+    #[endpoint(setTreasuryWallet)]
+    fn set_treasury_wallet(
+        &self,
+        treasury_wallet: ManagedAddress,
+    ) {
+        self.treasury_wallet().set(&treasury_wallet);
     }
 }

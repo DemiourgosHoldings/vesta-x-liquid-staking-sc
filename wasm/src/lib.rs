@@ -8,9 +8,13 @@ elrond_wasm_node::wasm_endpoints! {
     valar_liquid_staking
     (
         callBack
+        adminClaimRewards
+        adminRedelegateRewards
+        adminWithdraw
         claim
         getDelegateAddress
         getStakedEgldAmount
+        getTreasuryWallet
         getUnbondedEgldAmount
         getUnbondedEgldAmountPerUser
         getUnbondingEgldAmount
@@ -22,6 +26,7 @@ elrond_wasm_node::wasm_endpoints! {
         quoteEgld
         quoteValar
         setDelegateAddress
+        setTreasuryWallet
         stake
         unstake
     )

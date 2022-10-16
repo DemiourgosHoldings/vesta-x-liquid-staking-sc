@@ -72,6 +72,24 @@ claim() {
     --function="claim"
 }
 
+adminRedelegateRewards() {
+    erdpy --verbose contract call ${ADDRESS} --send --proxy=${PROXY} --chain=${CHAIN_ID} --recall-nonce --pem=${WALLET} \
+    --gas-limit=30000000 \
+    --function="adminRedelegateRewards"
+}
+
+adminWithdraw() {
+    erdpy --verbose contract call ${ADDRESS} --send --proxy=${PROXY} --chain=${CHAIN_ID} --recall-nonce --pem=${WALLET} \
+    --gas-limit=30000000 \
+    --function="adminWithdraw"
+}
+
+adminClaimRewards() {
+    erdpy --verbose contract call ${ADDRESS} --send --proxy=${PROXY} --chain=${CHAIN_ID} --recall-nonce --pem=${WALLET} \
+    --gas-limit=30000000 \
+    --function="adminClaimRewards"
+}
+
 ###
 
 getValarIdentifier() {
