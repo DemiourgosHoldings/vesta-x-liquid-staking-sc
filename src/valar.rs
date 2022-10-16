@@ -1,7 +1,12 @@
 elrond_wasm::imports!();
 elrond_wasm::derive_imports!();
 
-use crate::config::{ TOKEN_ISSUE_COST };
+use crate::config::{
+    TOKEN_ISSUE_COST,
+    VALAR_DISPLAY_NAME,
+    VALAR_TICKER,
+    VALAR_DECIMALS,
+};
 
 #[elrond_wasm::module]
 pub trait ValarModule:
@@ -13,9 +18,6 @@ pub trait ValarModule:
     #[endpoint(issueValarAndSetAllRoles)]
     fn issue_valar_and_set_all_roles(
         &self,
-        valar_display_name: ManagedBuffer,
-        valar_ticker: ManagedBuffer,
-        num_decimals: usize,
     ) {
         require!(
             self.valar_identifier().is_empty(),
@@ -30,9 +32,9 @@ pub trait ValarModule:
 
         self.valar_identifier().issue_and_set_all_roles(
             payment_amount,
-            valar_display_name,
-            valar_ticker,
-            num_decimals,
+            ManagedBuffer::new_from_bytes(VALAR_DISPLAY_NAME),
+            ManagedBuffer::new_from_bytes(VALAR_TICKER),
+            VALAR_DECIMALS,
             Some(self.callbacks().issue_callback()),
         );
     }
