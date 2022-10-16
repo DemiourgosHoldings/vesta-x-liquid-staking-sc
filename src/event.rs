@@ -17,16 +17,31 @@ pub trait EventModule
     );
 
     // Stake
-    #[event("StakeSuccess")]
-    fn stake_success_event(
+    #[event("DelegateSuccess")]
+    fn delegate_success_event(
         &self,
         #[indexed] from: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,
-        #[indexed] amount: &BigUint,
+        #[indexed] valar_amount: &BigUint,
+        #[indexed] egld_amount: &BigUint,
     );
 
-    #[event("StakeFail")]
-    fn stake_fail_event(
+    #[event("DelegateFail")]
+    fn delegate_fail_event(
+        &self,
+    );
+
+    #[event("UndelegateSuccess")]
+    fn undelegate_success_event(
+        &self,
+        #[indexed] from: &ManagedAddress,
+        #[indexed] delegate_address: &ManagedAddress,
+        #[indexed] valar_amount: &BigUint,
+        #[indexed] egld_amount: &BigUint,
+    );
+
+    #[event("UndelegateFail")]
+    fn undelegate_fail_event(
         &self,
     );
 }

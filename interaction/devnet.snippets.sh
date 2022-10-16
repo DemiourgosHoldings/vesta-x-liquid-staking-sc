@@ -11,6 +11,10 @@ DELEGATE_ADDRESS_HEX="0x$(erdpy wallet bech32 --decode ${DELEGATE_ADDRESS})"
 ISSUE_COST=50000000000000000 # 0.05 EGLD
 
 STAKE_AMOUNT=1000000000000000000
+UNSTAKE_AMOUNT=1000000000000000000
+
+VALAR_IDENTIFIER_ONLY_HEX="56414c41522d383839656661"
+DATA_UNSTAKE_ONE_VALAR="ESDTTransfer@${VALAR_IDENTIFIER_ONLY_HEX}@0de0b6b3a7640000@756e7374616b65"
 
 deploy() {
     erdpy --verbose contract deploy  --project=${PROJECT} --recall-nonce --pem=${WALLET} --send --proxy=${PROXY} --chain=${CHAIN_ID} \
@@ -53,6 +57,11 @@ stake() {
     --value ${STAKE_AMOUNT}
 }
 
+unstakeOneValar() {
+    erdpy --verbose tx new --receiver ${ADDRESS} --recall-nonce --pem=${WALLET} --send --proxy=${PROXY} --chain=${CHAIN_ID} \
+    --gas-limit=30000000 \
+    --data=${DATA_UNSTAKE_ONE_VALAR}
+}
 
 ###
 
