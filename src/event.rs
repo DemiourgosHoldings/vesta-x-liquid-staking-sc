@@ -65,6 +65,24 @@ pub trait EventModule
     );
 
     // Admin
+    #[event("AdminDelegateSuccess")]
+    fn admin_delegate_success_event(
+        &self,
+        #[indexed] from: &ManagedAddress,
+        #[indexed] delegate_address: &ManagedAddress,
+        #[indexed] valar_amount: &BigUint,
+        #[indexed] egld_amount: &BigUint,
+    );
+
+    #[event("AdminDelegateFail")]
+    fn admin_delegate_fail_event(
+        &self,
+        #[indexed] from: &ManagedAddress,
+        #[indexed] delegate_address: &ManagedAddress,
+        #[indexed] egld_amount: &BigUint,
+        err_msg: &ManagedBuffer,
+    );
+
     #[event("RedelegateRewardsSuccess")]
     fn redelegate_rewards_success_event(
         &self,

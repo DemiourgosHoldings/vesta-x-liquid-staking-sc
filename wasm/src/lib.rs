@@ -9,6 +9,7 @@ elrond_wasm_node::wasm_endpoints! {
     (
         callBack
         adminClaimRewards
+        adminDelegateFixedAmount
         adminRedelegateRewards
         adminWithdraw
         getAutoDelegateEnabled
