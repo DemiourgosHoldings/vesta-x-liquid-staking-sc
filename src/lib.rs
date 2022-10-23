@@ -3,23 +3,32 @@
 elrond_wasm::imports!();
 elrond_wasm::derive_imports!();
 
-pub mod common_storage;
-pub mod stake;
+mod storages;
+use storages::common_storage;
+use storages::pool_storage;
+mod liquid_staking;
+use liquid_staking::rewards;
+use liquid_staking::stake;
+use liquid_staking::unstake;
+
 pub mod event;
 pub mod valar;
 pub mod config;
 pub mod delegate_proxy;
 pub mod pool;
-pub mod admin;
+pub mod context;
 
 #[elrond_wasm::contract]
 pub trait ValarLiquidStaking:
-    common_storage::StorageModule
-    + event::EventModule
+    common_storage::CommonStorageModule
+    + pool_storage::PoolStorageModule
+    + rewards::RewardsModule
     + stake::StakeModule
+    + unstake::UnstakeModule
+
+    + event::EventModule
     + valar::ValarModule
     + pool::PoolModule
-    + admin::AdminModule
 {
     #[init]
     fn init(&self) {

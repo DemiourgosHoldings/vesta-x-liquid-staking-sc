@@ -6,8 +6,8 @@ use crate::config::{ DELEGATE_MIN_AMOUNT };
 
 #[elrond_wasm::module]
 pub trait StakeModule:
-    crate::storage::common_storage::StorageModule
-    + crate::storage::pool_storage::PoolModule
+    crate::storages::common_storage::CommonStorageModule
+    + crate::storages::pool_storage::PoolStorageModule
     + crate::event::EventModule
     + crate::pool::PoolModule
 {
@@ -34,7 +34,7 @@ pub trait StakeModule:
 
         //
         self.prestaked_egld_amount().update(|v| *v += &staking_egld_amount);
-        self.prestaked_egld_amount_map().insert(&caller, self.prestaked_egld_amount_map().get(&caller).unwrap_or_default() + &staking_egld_amount);
+        self.prestaked_egld_amount_map().insert(caller.clone(), self.prestaked_egld_amount_map().get(&caller).unwrap_or_default() + &staking_egld_amount);
 
         //
         self.delegate_contract(delegate_address.clone())
@@ -60,14 +60,14 @@ pub trait StakeModule:
                 let staked_egld_amount = self.staked_egld_amount().get();
 
                 let valar_mint_amount = if staked_valar_amount == BigUint::zero() { // First Mint
-                    egld_amount.clone()
+                    payment_amount.clone()
                 } else {
                     require!(
                         staked_egld_amount != BigUint::zero(),
                         "staked_egld_amount is zero while staked_valar_amount is not zero."
                     );
 
-                    self.quote_valar(egld_amount)
+                    self.quote_valar(payment_amount)
                 };
 
                 //
@@ -75,7 +75,7 @@ pub trait StakeModule:
 
                 //
                 self.staked_valar_amount().set(staked_valar_amount + &valar_mint_amount);
-                self.staked_egld_amount().set(staked_egld_amount + egld_amount);
+                self.staked_egld_amount().set(staked_egld_amount + payment_amount);
 
                 self.delegate_success_event(caller, delegate_address, &valar_mint_amount, payment_amount);
             },

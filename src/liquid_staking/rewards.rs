@@ -6,8 +6,8 @@ use crate::config::{ DELEGATE_MIN_AMOUNT };
 
 #[elrond_wasm::module]
 pub trait RewardsModule:
-crate::storage::common_storage::StorageModule
-+ crate::storage::pool_storage::PoolModule
+crate::storages::common_storage::CommonStorageModule
++ crate::storages::pool_storage::PoolStorageModule
 + crate::event::EventModule
 + crate::pool::PoolModule
 {
