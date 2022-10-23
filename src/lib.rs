@@ -3,18 +3,18 @@
 elrond_wasm::imports!();
 elrond_wasm::derive_imports!();
 
-pub mod storage;
+pub mod common_storage;
 pub mod stake;
 pub mod event;
 pub mod valar;
 pub mod config;
-pub mod delegate;
+pub mod delegate_proxy;
 pub mod pool;
 pub mod admin;
 
 #[elrond_wasm::contract]
 pub trait ValarLiquidStaking:
-    storage::StorageModule
+    common_storage::StorageModule
     + event::EventModule
     + stake::StakeModule
     + valar::ValarModule

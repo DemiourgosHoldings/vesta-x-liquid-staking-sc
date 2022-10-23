@@ -10,7 +10,7 @@ use crate::config::{
 
 #[elrond_wasm::module]
 pub trait ValarModule:
-    crate::storage::StorageModule
+    crate::common_storage::StorageModule
     + crate::event::EventModule
 {
     #[only_owner]

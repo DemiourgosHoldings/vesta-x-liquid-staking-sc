@@ -3,7 +3,7 @@ elrond_wasm::derive_imports!();
 
 #[elrond_wasm::module]
 pub trait PoolModule:
-    crate::storage::StorageModule
+    crate::common_storage::StorageModule
     + crate::event::EventModule
 {
     #[view(quoteValar)]

@@ -1,17 +1,19 @@
 elrond_wasm::imports!();
 elrond_wasm::derive_imports!();
 
-use crate::delegate;
+use crate::delegate_proxy;
+use crate::config::{ DELEGATE_MIN_AMOUNT };
 
 #[elrond_wasm::module]
-pub trait AdminModule:
-    crate::storage::StorageModule
-    + crate::event::EventModule
-    + crate::pool::PoolModule
+pub trait RewardsModule:
+crate::storage::common_storage::StorageModule
++ crate::storage::pool_storage::PoolModule
++ crate::event::EventModule
++ crate::pool::PoolModule
 {
     #[proxy]
-    fn delegate_contract(&self, sc_address: ManagedAddress) -> delegate::Proxy<Self::Api>;
-
+    fn delegate_contract(&self, sc_address: ManagedAddress) -> delegate_proxy::Proxy<Self::Api>;
+    
     #[only_owner]
     #[endpoint(adminRedelegateRewards)]
     fn admin_redelegate_rewards(&self) {
@@ -118,4 +120,5 @@ pub trait AdminModule:
             },
         }
     }
+    
 }
