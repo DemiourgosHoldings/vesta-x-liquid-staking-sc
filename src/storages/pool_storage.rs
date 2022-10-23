@@ -6,16 +6,16 @@ use crate::context::{ UserActionItem };
 #[elrond_wasm::module]
 pub trait PoolStorageModule
 {
-    /* Main Pool */
+    /* LP Share Pool - Main Pool */
     // VALAR token total supply
-    #[view(getStakedValarAmount)]
-    #[storage_mapper("staked_valar_amount")]
-    fn staked_valar_amount(&self) -> SingleValueMapper<BigUint>;
+    #[view(getPoolValarAmount)]
+    #[storage_mapper("pool_valar_amount")]
+    fn pool_valar_amount(&self) -> SingleValueMapper<BigUint>;
 
     // total delegated EGLD amount in Delegate SCs (excluding undelegating or undelegated EGLD)
-    #[view(getStakedEgldAmount)]
-    #[storage_mapper("staked_egld_amount")]
-    fn staked_egld_amount(&self) -> SingleValueMapper<BigUint>;
+    #[view(getPoolEgldAmount)]
+    #[storage_mapper("pool_egld_amount")]
+    fn pool_egld_amount(&self) -> SingleValueMapper<BigUint>;
 
     /* PreStake Pool */
     // total prestaked amount

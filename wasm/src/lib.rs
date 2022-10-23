@@ -11,13 +11,14 @@ elrond_wasm_node::wasm_endpoints! {
         adminClaimRewards
         adminRedelegateRewards
         adminWithdraw
+        getAutoDelegateEnabled
         getDelegateAddress
+        getPoolEgldAmount
+        getPoolValarAmount
         getPrestakedEgldAmount
         getPrestakedEgldAmountMap
         getPreunstakedValarAmount
         getPreunstakedValarAmountQueue
-        getStakedEgldAmount
-        getStakedValarAmount
         getTreasuryWallet
         getUnbondedEgldAmount
         getUnbondedEgldAmountMap
@@ -27,6 +28,7 @@ elrond_wasm_node::wasm_endpoints! {
         issueValarAndSetAllRoles
         quoteEgld
         quoteValar
+        setAutoDelegateEnabled
         setDelegateAddress
         setTreasuryWallet
         stake

@@ -15,8 +15,13 @@ pub trait CommonStorageModule
     #[storage_mapper("delegate_address")]
     fn delegate_address(&self) -> SingleValueMapper<ManagedAddress>;
 
-    // Admin
+    //
     #[view(getTreasuryWallet)]
     #[storage_mapper("treasury_wallet")]
     fn treasury_wallet(&self) -> SingleValueMapper<ManagedAddress>;
+
+    //
+    #[view(getAutoDelegateEnabled)]
+    #[storage_mapper("auto_delegate_enabled")]
+    fn auto_delegate_enabled(&self) -> SingleValueMapper<bool>;
 }

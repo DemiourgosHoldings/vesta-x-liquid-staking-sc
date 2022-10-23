@@ -16,7 +16,15 @@ pub trait EventModule
         &self,
     );
 
-    // Stake
+    // User Activities
+    #[event("Prestake")]
+    fn prestake_event(
+        &self,
+        #[indexed] from: &ManagedAddress,
+        #[indexed] egld_amount: &BigUint,
+        #[indexed] auto_delegate_enabled: bool,
+    );
+
     #[event("DelegateSuccess")]
     fn delegate_success_event(
         &self,
@@ -29,6 +37,10 @@ pub trait EventModule
     #[event("DelegateFail")]
     fn delegate_fail_event(
         &self,
+        #[indexed] from: &ManagedAddress,
+        #[indexed] delegate_address: &ManagedAddress,
+        #[indexed] egld_amount: &BigUint,
+        err_msg: &ManagedBuffer,
     );
 
     #[event("UndelegateSuccess")]
@@ -86,5 +98,24 @@ pub trait EventModule
     #[event("ClaimRewardsFail")]
     fn claim_rewards_fail_event(
         &self,
+    );
+
+    // Admin Settings
+    #[event("ChangeDelegateAddress")]
+    fn change_delegate_address(
+        &self,
+        #[indexed] to: &ManagedAddress,
+    );
+
+    #[event("ChangeTreasuryWallet")]
+    fn change_treasury_wallet(
+        &self,
+        #[indexed] to: &ManagedAddress,
+    );
+
+    #[event("ChangeAutoDelegateEnabled")]
+    fn change_auto_delegate_enabled(
+        &self,
+        #[indexed] value: bool,
     );
 }

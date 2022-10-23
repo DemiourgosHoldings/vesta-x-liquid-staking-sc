@@ -22,6 +22,7 @@ pub mod context;
 pub trait ValarLiquidStaking:
     common_storage::CommonStorageModule
     + pool_storage::PoolStorageModule
+
     + rewards::RewardsModule
     + stake::StakeModule
     + unstake::UnstakeModule
@@ -41,6 +42,7 @@ pub trait ValarLiquidStaking:
         delegate_address: ManagedAddress,
     ) {
         self.delegate_address().set(&delegate_address);
+        self.change_delegate_address(&delegate_address);
     }
 
     #[only_owner]
@@ -50,5 +52,16 @@ pub trait ValarLiquidStaking:
         treasury_wallet: ManagedAddress,
     ) {
         self.treasury_wallet().set(&treasury_wallet);
+        self.change_treasury_wallet(&treasury_wallet);
+    }
+
+    #[only_owner]
+    #[endpoint(setAutoDelegateEnabled)]
+    fn set_auto_delegate_enabled(
+        &self,
+        auto_delegate_enabled: bool,
+    ) {
+        self.auto_delegate_enabled().set(auto_delegate_enabled);
+        self.change_auto_delegate_enabled(auto_delegate_enabled);
     }
 }

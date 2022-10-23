@@ -2,7 +2,6 @@ elrond_wasm::imports!();
 elrond_wasm::derive_imports!();
 
 use crate::delegate_proxy;
-use crate::config::{ DELEGATE_MIN_AMOUNT };
 
 #[elrond_wasm::module]
 pub trait UnstakeModule:
