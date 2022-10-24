@@ -50,10 +50,10 @@ pub trait EventModule
         #[indexed] egld_amount: &BigUint,
     );
 
-    #[event("Claim")]
-    fn claim_event(
+    #[event("UserWithdraw")]
+    fn user_withdraw_event(
         &self,
-        #[indexed] to: &ManagedAddress,
+        #[indexed] user: &ManagedAddress,
         #[indexed] egld_amount: &BigUint,
     );
 
@@ -95,6 +95,15 @@ pub trait EventModule
         err_msg: &ManagedBuffer,
     );
 
+    #[event("AdminUnbondEvent")]
+    fn admin_unbond_event(
+        &self,
+        #[indexed] caller: &ManagedAddress,
+        #[indexed] target_unbond_egld_amount: &BigUint,
+        #[indexed] real_unbond_egld_amount: &BigUint,
+    );
+
+    // Rewards
     #[event("RedelegateRewardsSuccess")]
     fn redelegate_rewards_success_event(
         &self,

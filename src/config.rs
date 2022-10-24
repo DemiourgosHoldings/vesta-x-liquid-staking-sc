@@ -7,3 +7,6 @@ pub const VALAR_DECIMALS: usize = 18;
 
 // Delegate
 pub const DELEGATE_MIN_AMOUNT: u64 = 1_000_000_000_000_000_000;
+
+// Undelegate
+pub const UNBONDING_PERIOD: u64 = 3600 * 24 * 11; // 11 days

@@ -86,6 +86,7 @@ pub trait UnstakeModule:
             // target_burn_valar_amount is reached and the last item should be splited
             if final_amount < preunstaked_item.amount {
                 last_item_amount = final_amount;
+                undelegating_item_count -= 1;
                 break;
             }
         }
@@ -132,12 +133,13 @@ pub trait UnstakeModule:
 
                 // update User Account
                 let mut preunstaked_valar_amount_queue = self.preunstaked_valar_amount_queue();
-                for _ in 0..(undelegating_item_count - 1) {
-                    preunstaked_valar_amount_queue.pop_front();
+                let mut unbonding_egld_amount_queue = self.unbonding_egld_amount_queue();
+                for _ in 0..undelegating_item_count {
+                    if let Some(node) = preunstaked_valar_amount_queue.pop_front() {
+                        unbonding_egld_amount_queue.push_back(node.into_value());
+                    }
                 }
-                if *last_item_amount == BigUint::zero() { 
-                    preunstaked_valar_amount_queue.pop_front();
-                } else { // if the last time is splitted
+                if *last_item_amount != BigUint::zero() { // if the last time is splitted
                     match preunstaked_valar_amount_queue.front() {
                         Some(item) => {
                             let item_ref = item.get_value_as_ref();
@@ -146,6 +148,13 @@ pub trait UnstakeModule:
                                 amount: item_ref.amount.clone() - last_item_amount,
                                 timestamp: item_ref.timestamp,
                             };
+                            unbonding_egld_amount_queue.push_back(
+                                UserActionItem {
+                                    address: item_ref.address.clone(),
+                                    amount: last_item_amount.clone(),
+                                    timestamp: item_ref.timestamp,
+                                }
+                            );
                             preunstaked_valar_amount_queue.set_node_value(item, new_item); // Note: must check changed amount is saved in LinkedListMapper
                         },
                         None => sc_panic!("undelegating_item_count and the length of preunstaked_valar_amount_queue not match.")
@@ -154,6 +163,7 @@ pub trait UnstakeModule:
 
                 //
                 self.preunstaked_valar_amount().update(|v| *v -= real_burn_valar_amount);
+                self.unbonding_egld_amount().update(|v| *v += real_burn_valar_amount);
 
                 self.admin_undelegate_success_event(caller, delegate_address, real_burn_valar_amount, real_undelegating_egld_amount);
             },
@@ -163,27 +173,90 @@ pub trait UnstakeModule:
         } 
     }
 
-    // //
-    // #[endpoint]
-    // fn claim(&self) {
-    //     let caller = self.blockchain().get_caller();
+    #[only_owner]
+    #[endpoint(adminUnbondFixedAmount)]
+    fn admin_unbond_fixed_amount(
+        &self,
+        target_unbond_egld_amount: BigUint,  // EGLD
+    ) {
+        let mut real_unbond_egld_amount = BigUint::zero();
+        let mut unbonding_egld_amount_queue = self.unbonding_egld_amount_queue();
+        let mut unbond_items_count = 0;
+        let mut last_item_amount = BigUint::zero();
+        for item in unbonding_egld_amount_queue.iter() {
+            let unbonding_item = item.into_value();
+            let final_amount = if real_unbond_egld_amount.clone() + &unbonding_item.amount > target_unbond_egld_amount {
+                if real_unbond_egld_amount == target_unbond_egld_amount {
+                    BigUint::zero()
+                } else {
+                    target_unbond_egld_amount.clone() - &real_unbond_egld_amount
+                }
+            } else {
+                unbonding_item.amount.clone()
+            };
+            // if target_unbond_egld_amount is reached, break the loop
+            if final_amount == BigUint::zero() && unbonding_item.amount != BigUint::zero() {
+                break;
+            }
+
+            real_unbond_egld_amount += &final_amount;
+            unbond_items_count += 1;
+
+            // target_burn_valar_amount is reached and the last item should be splited
+            if final_amount < unbonding_item.amount {
+                last_item_amount = final_amount;
+                unbond_items_count -= 1;
+                break;
+            }
+        }
+
+        //
+        self.unbonded_egld_amount().update(|v| *v += &real_unbond_egld_amount);
+
+        let mut unbonded_egld_amount_map = self.unbonded_egld_amount_map();
+        for _ in 0..unbond_items_count {
+            if let Some(node) = unbonding_egld_amount_queue.pop_front() {
+                let unbond_item = node.into_value();
+                unbonded_egld_amount_map.insert(unbond_item.address.clone(), unbonded_egld_amount_map.get(&unbond_item.address).unwrap_or_default() + &unbond_item.amount);
+            }
+        }
+        if last_item_amount != BigUint::zero() {
+            if let Some(node) = unbonding_egld_amount_queue.front() {
+                let item_ref = node.get_value_as_ref();
+                let new_item = UserActionItem {
+                    address: item_ref.address.clone(),
+                    amount: item_ref.amount.clone() - &last_item_amount,
+                    timestamp: item_ref.timestamp,
+                };
+                unbonded_egld_amount_map.insert(item_ref.address.clone(), unbonded_egld_amount_map.get(&item_ref.address).unwrap_or_default() + &last_item_amount);
+                unbonding_egld_amount_queue.set_node_value(node, new_item);
+            }
+        }
+
+        self.admin_unbond_event(&self.blockchain().get_caller(), &target_unbond_egld_amount, &real_unbond_egld_amount);
+    }
+
+    //
+    #[endpoint]
+    fn withdraw(&self) {
+        let caller = self.blockchain().get_caller();
+        let mut unbonded_egld_amount_map = self.unbonded_egld_amount_map();
+        let user_unbonded_egld_amount = unbonded_egld_amount_map.get(&caller).unwrap_or_default();
         
-    //     let mut unbonded_egld_amount_per_user = self.unbonded_egld_amount_per_user();
-    //     let egld_amount = unbonded_egld_amount_per_user.get(&caller).unwrap_or_default();
+        require!(
+            user_unbonded_egld_amount != BigUint::zero(),
+            "No EGLD for withdraw."
+        );
+        require!(
+            self.blockchain().get_balance(&self.blockchain().get_sc_address()) >= user_unbonded_egld_amount,
+            "No enough EGLD balance in Smart Contract."
+        );
         
-    //     require!(
-    //         egld_amount != BigUint::zero(),
-    //         "No claimable EGLD."
-    //     );
-    //     require!(
-    //         self.blockchain().get_balance(&self.blockchain().get_sc_address()) >= egld_amount,
-    //         "No enough EGLD balance in Smart Contract."
-    //     );
+        unbonded_egld_amount_map.remove(&caller);
+        self.unbonded_egld_amount().update(|v| *v -= &user_unbonded_egld_amount);
         
-    //     unbonded_egld_amount_per_user.remove(&caller);
+        self.send().direct_egld(&caller, &user_unbonded_egld_amount);
         
-    //     self.send().direct_egld(&caller, &egld_amount);
-        
-    //     self.claim_event(&caller, &egld_amount);
-    // }
+        self.user_withdraw_event(&caller, &user_unbonded_egld_amount);
+    }
 }

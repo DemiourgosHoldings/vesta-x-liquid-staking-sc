@@ -23,7 +23,7 @@ deploy() {
     erdpy --verbose contract deploy  --project=${PROJECT} --recall-nonce --pem=${WALLET} --send --proxy=${PROXY} --chain=${CHAIN_ID} \
     --outfile="deploy-devnet.interaction.json" \
     --metadata-payable \
-    --gas-limit=60000000
+    --gas-limit=100000000
     
     ADDRESS=$(erdpy data parse --file="deploy-devnet.interaction.json" --expression="data['contractAddress']")
 
@@ -36,7 +36,7 @@ deploy() {
 upgrade() {
     erdpy --verbose contract upgrade ${ADDRESS} --project=${PROJECT} --recall-nonce --pem=${WALLET} --send --outfile="upgrade.json" --proxy=${PROXY} --chain=${CHAIN_ID} \
     --metadata-payable \
-    --gas-limit=60000000
+    --gas-limit=100000000
 }
 
 issueValarAndSetAllRoles() {
