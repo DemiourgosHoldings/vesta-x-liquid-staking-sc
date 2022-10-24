@@ -132,6 +132,15 @@ pub trait EventModule
         #[indexed] delegate_address: &ManagedAddress,
     );
 
+    // Pool
+    #[event("UpdateMainPool")]
+    fn update_main_pool_event(
+        &self,
+        #[indexed] caller: &ManagedAddress,
+        #[indexed] pool_valar_amount: &BigUint,
+        #[indexed] pool_egld_amount: &BigUint,
+    );
+
     // Admin Settings
     #[event("ChangeDelegateAddress")]
     fn change_delegate_address(

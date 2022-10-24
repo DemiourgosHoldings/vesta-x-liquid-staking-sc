@@ -10,7 +10,7 @@ pub trait UnstakeModule:
     crate::storages::common_storage::CommonStorageModule
     + crate::storages::pool_storage::PoolStorageModule
     + crate::event::EventModule
-    + crate::pool::PoolModule
+    + crate::amm::AmmModule
 {
     #[proxy]
     fn delegate_contract(&self, sc_address: ManagedAddress) -> delegate_proxy::Proxy<Self::Api>;

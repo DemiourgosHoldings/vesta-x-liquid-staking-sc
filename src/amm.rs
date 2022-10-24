@@ -2,7 +2,7 @@ elrond_wasm::imports!();
 elrond_wasm::derive_imports!();
 
 #[elrond_wasm::module]
-pub trait PoolModule:
+pub trait AmmModule:
     crate::pool_storage::PoolStorageModule
     + crate::event::EventModule
 {

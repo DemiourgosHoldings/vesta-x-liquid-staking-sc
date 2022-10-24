@@ -10,12 +10,13 @@ mod liquid_staking;
 use liquid_staking::rewards;
 use liquid_staking::stake;
 use liquid_staking::unstake;
+use liquid_staking::pool;
 
 pub mod event;
 pub mod valar;
 pub mod config;
 pub mod delegate_proxy;
-pub mod pool;
+pub mod amm;
 pub mod state;
 
 #[elrond_wasm::contract]
@@ -26,10 +27,11 @@ pub trait ValarLiquidStaking:
     + rewards::RewardsModule
     + stake::StakeModule
     + unstake::UnstakeModule
+    + pool::PoolModule
 
     + event::EventModule
     + valar::ValarModule
-    + pool::PoolModule
+    + amm::AmmModule
 {
     #[init]
     fn init(&self) {
