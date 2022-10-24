@@ -11,6 +11,7 @@ elrond_wasm_node::wasm_endpoints! {
         adminClaimRewards
         adminDelegateFixedAmount
         adminRedelegateRewards
+        adminUndelegateFixedAmount
         adminWithdraw
         getAutoDelegateEnabled
         getDelegateAddress
@@ -33,5 +34,6 @@ elrond_wasm_node::wasm_endpoints! {
         setDelegateAddress
         setTreasuryWallet
         stake
+        unstake
     )
 }

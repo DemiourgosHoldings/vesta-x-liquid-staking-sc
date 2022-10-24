@@ -45,7 +45,7 @@ pub trait StakeModule:
         }
         
         //
-        self.prestake_event(&caller, &staking_egld_amount, self.auto_delegate_enabled().get());
+        self.user_prestake_event(&caller, &staking_egld_amount, self.auto_delegate_enabled().get());
     }
 
     #[callback]
@@ -87,10 +87,10 @@ pub trait StakeModule:
                 self.pool_valar_amount().set(pool_valar_amount + &valar_mint_amount);
                 self.pool_egld_amount().set(pool_egld_amount + delegated_egld_amount);
 
-                self.delegate_success_event(caller, delegate_address, &valar_mint_amount, delegated_egld_amount);
+                self.user_delegate_success_event(caller, delegate_address, &valar_mint_amount, delegated_egld_amount);
             },
             ManagedAsyncCallResult::Err(err) => {
-                self.delegate_fail_event(caller, delegate_address, delegated_egld_amount, &err.err_msg);
+                self.user_delegate_fail_event(caller, delegate_address, delegated_egld_amount, &err.err_msg);
             },
         }
     }
@@ -131,11 +131,16 @@ pub trait StakeModule:
 
             real_delegating_amount += &final_amount;
             delegating_users.push(address);
-            delegating_amounts.push(final_amount);
+            delegating_amounts.push(final_amount.clone());
+
+            // target_delegate_amount is reached and the last item should be splited
+            if final_amount < amount {
+                break;
+            }
         }
 
         require!(
-            target_delegate_amount >= BigUint::from(DELEGATE_MIN_AMOUNT),
+            real_delegating_amount >= BigUint::from(DELEGATE_MIN_AMOUNT),
             "real_delegating_amount cannot be less than 1 EGLD."
         );
 
@@ -183,7 +188,14 @@ pub trait StakeModule:
                     let delegated_egld_amount: BigUint = delegated_egld_amounts.get(i).to_bytes_be_buffer().into();
 
                     //
-                    self.prestaked_egld_amount_map().insert(delegated_user.clone(), self.prestaked_egld_amount_map().get(&delegated_user).unwrap_or_default() - &delegated_egld_amount);
+                    let mut prestaked_egld_amount_map = self.prestaked_egld_amount_map();
+                    let new_prestaked_egld_amount = self.prestaked_egld_amount_map().get(&delegated_user).unwrap_or_default() - &delegated_egld_amount;
+                    if new_prestaked_egld_amount == BigUint::zero() {
+                        prestaked_egld_amount_map.remove(&delegated_user);
+                    } else {
+                        prestaked_egld_amount_map.insert(delegated_user.clone(), new_prestaked_egld_amount);
+                    }
+
                     //
                     self.valar_identifier().mint_and_send(&delegated_user, delegated_egld_amount);
                 }

@@ -1,7 +1,7 @@
 elrond_wasm::imports!();
 elrond_wasm::derive_imports!();
 
-use crate::context::{ UserActionItem };
+use crate::state::{ UserActionItem };
 
 #[elrond_wasm::module]
 pub trait PoolStorageModule
@@ -17,6 +17,7 @@ pub trait PoolStorageModule
     #[storage_mapper("pool_egld_amount")]
     fn pool_egld_amount(&self) -> SingleValueMapper<BigUint>;
 
+
     /* PreStake Pool */
     // total prestaked amount
     #[view(getPrestakedEgldAmount)]
@@ -27,6 +28,7 @@ pub trait PoolStorageModule
     #[view(getPrestakedEgldAmountMap)]
     #[storage_mapper("prestaked_egld_amount_map")]
     fn prestaked_egld_amount_map(&self) -> MapMapper<ManagedAddress, BigUint>;
+
 
     /* PreUnstake Pool */
     // total preunstaked VALAR amount
@@ -39,6 +41,7 @@ pub trait PoolStorageModule
     #[storage_mapper("preunstaked_valar_amount_queue")]
     fn preunstaked_valar_amount_queue(&self) -> LinkedListMapper<UserActionItem<Self::Api>>;
 
+
     /* Unbonding Pool */
     // total unbonding EGLD amount
     #[view(getUnbondingEgldAmount)]
@@ -49,6 +52,7 @@ pub trait PoolStorageModule
     #[view(getUnbondingEgldAmountQueue)]
     #[storage_mapper("unbonding_egld_amount_queue")]
     fn unbonding_egld_amount_queue(&self) -> LinkedListMapper<UserActionItem<Self::Api>>;
+
 
     /* Unbonded Pool */
     // total unbonded EGLD amount

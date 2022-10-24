@@ -16,7 +16,7 @@ pub mod valar;
 pub mod config;
 pub mod delegate_proxy;
 pub mod pool;
-pub mod context;
+pub mod state;
 
 #[elrond_wasm::contract]
 pub trait ValarLiquidStaking:

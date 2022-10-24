@@ -17,44 +17,37 @@ pub trait EventModule
     );
 
     // User Activities
-    #[event("Prestake")]
-    fn prestake_event(
+    #[event("UserPrestake")]
+    fn user_prestake_event(
         &self,
-        #[indexed] from: &ManagedAddress,
+        #[indexed] user: &ManagedAddress,
         #[indexed] egld_amount: &BigUint,
         #[indexed] auto_delegate_enabled: bool,
     );
 
-    #[event("DelegateSuccess")]
-    fn delegate_success_event(
+    #[event("UserDelegateSuccess")]
+    fn user_delegate_success_event(
         &self,
-        #[indexed] from: &ManagedAddress,
+        #[indexed] user: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,
         #[indexed] valar_amount: &BigUint,
         #[indexed] egld_amount: &BigUint,
     );
 
-    #[event("DelegateFail")]
-    fn delegate_fail_event(
+    #[event("UserDelegateFail")]
+    fn user_delegate_fail_event(
         &self,
-        #[indexed] from: &ManagedAddress,
+        #[indexed] user: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,
         #[indexed] egld_amount: &BigUint,
         err_msg: &ManagedBuffer,
     );
 
-    #[event("UndelegateSuccess")]
-    fn undelegate_success_event(
+    #[event("UserPreunstake")]
+    fn user_preunstake_event(
         &self,
-        #[indexed] from: &ManagedAddress,
-        #[indexed] delegate_address: &ManagedAddress,
-        #[indexed] valar_amount: &BigUint,
+        #[indexed] user: &ManagedAddress,
         #[indexed] egld_amount: &BigUint,
-    );
-
-    #[event("UndelegateFail")]
-    fn undelegate_fail_event(
-        &self,
     );
 
     #[event("Claim")]
@@ -68,7 +61,7 @@ pub trait EventModule
     #[event("AdminDelegateSuccess")]
     fn admin_delegate_success_event(
         &self,
-        #[indexed] from: &ManagedAddress,
+        #[indexed] caller: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,
         #[indexed] valar_amount: &BigUint,
         #[indexed] egld_amount: &BigUint,
@@ -77,8 +70,27 @@ pub trait EventModule
     #[event("AdminDelegateFail")]
     fn admin_delegate_fail_event(
         &self,
-        #[indexed] from: &ManagedAddress,
+        #[indexed] caller: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,
+        #[indexed] egld_amount: &BigUint,
+        err_msg: &ManagedBuffer,
+    );
+
+    #[event("AdminUndelegateSuccess")]
+    fn admin_undelegate_success_event(
+        &self,
+        #[indexed] caller: &ManagedAddress,
+        #[indexed] delegate_address: &ManagedAddress,
+        #[indexed] valar_amount: &BigUint,
+        #[indexed] egld_amount: &BigUint,
+    );
+
+    #[event("AdminUndelegateFail")]
+    fn admin_undelegate_fail_event(
+        &self,
+        #[indexed] caller: &ManagedAddress,
+        #[indexed] delegate_address: &ManagedAddress,
+        #[indexed] valar_amount: &BigUint,
         #[indexed] egld_amount: &BigUint,
         err_msg: &ManagedBuffer,
     );
