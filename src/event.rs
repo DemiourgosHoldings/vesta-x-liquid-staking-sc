@@ -104,39 +104,32 @@ pub trait EventModule
     );
 
     // Rewards
-    #[event("RedelegateRewardsSuccess")]
-    fn redelegate_rewards_success_event(
+    #[event("AdminRedelegateRewardsSuccess")]
+    fn admin_redelegate_rewards_success_event(
         &self,
-        #[indexed] from: &ManagedAddress,
-    );
-    
-    #[event("RedelegateRewardsFail")]
-    fn redelegate_rewards_fail_event(
-        &self,
+        #[indexed] caller: &ManagedAddress,
+        #[indexed] delegate_address: &ManagedAddress,
     );
 
-    #[event("WithdrawSuccess")]
-    fn withdraw_success_event(
+    #[event("AdminRedelegateRewardsFail")]
+    fn admin_redelegate_rewards_fail_event(
         &self,
-        #[indexed] from: &ManagedAddress,
-        #[indexed] egld_amount: &BigUint,
-    );
-    
-    #[event("WithdrawFail")]
-    fn withdraw_fail_event(
-        &self,
+        #[indexed] caller: &ManagedAddress,
+        #[indexed] delegate_address: &ManagedAddress,
     );
 
-    #[event("ClaimRewardsSuccess")]
-    fn claim_rewards_success_event(
+    #[event("AdminClaimRewardsSuccess")]
+    fn admin_claim_rewards_success_event(
         &self,
-        #[indexed] from: &ManagedAddress,
-        #[indexed] egld_amount: &BigUint,
+        #[indexed] caller: &ManagedAddress,
+        #[indexed] delegate_address: &ManagedAddress,
     );
-    
-    #[event("ClaimRewardsFail")]
-    fn claim_rewards_fail_event(
+
+    #[event("AdminClaimRewardsFail")]
+    fn admin_claim_rewards_fail_event(
         &self,
+        #[indexed] caller: &ManagedAddress,
+        #[indexed] delegate_address: &ManagedAddress,
     );
 
     // Admin Settings

@@ -13,7 +13,6 @@ elrond_wasm_node::wasm_endpoints! {
         adminRedelegateRewards
         adminUnbondFixedAmount
         adminUndelegateFixedAmount
-        adminWithdraw
         getAutoDelegateEnabled
         getDelegateAddress
         getPoolEgldAmount
