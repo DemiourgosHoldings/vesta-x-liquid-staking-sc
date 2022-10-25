@@ -15,6 +15,7 @@ elrond_wasm_node::wasm_endpoints! {
         adminUndelegateFixedAmount
         getAutoDelegateEnabled
         getDelegateAddress
+        getEgldPrice
         getPoolEgldAmount
         getPoolValarAmount
         getPrestakedEgldAmount
@@ -27,6 +28,7 @@ elrond_wasm_node::wasm_endpoints! {
         getUnbondingEgldAmount
         getUnbondingEgldAmountQueue
         getValarIdentifier
+        getValarPrice
         issueValarAndSetAllRoles
         quoteEgld
         quoteValar
@@ -36,6 +38,10 @@ elrond_wasm_node::wasm_endpoints! {
         stake
         unstake
         updateMainPool
+        viewPrestakedAmount
+        viewPreunstakedPacks
+        viewUnbondedAmount
+        viewUnbondingPacks
         withdraw
     )
 }

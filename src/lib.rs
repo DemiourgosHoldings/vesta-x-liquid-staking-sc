@@ -11,6 +11,9 @@ use liquid_staking::rewards;
 use liquid_staking::stake;
 use liquid_staking::unstake;
 use liquid_staking::pool;
+mod views;
+use views::views_pool;
+use views::views_user;
 
 pub mod event;
 pub mod valar;
@@ -32,6 +35,9 @@ pub trait ValarLiquidStaking:
     + event::EventModule
     + valar::ValarModule
     + amm::AmmModule
+
+    + views_pool::ViewPoolModule
+    + views_user::ViewUserModule
 {
     #[init]
     fn init(&self) {

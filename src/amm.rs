@@ -4,7 +4,6 @@ elrond_wasm::derive_imports!();
 #[elrond_wasm::module]
 pub trait AmmModule:
     crate::pool_storage::PoolStorageModule
-    + crate::event::EventModule
 {
     #[view(quoteValar)]
     fn quote_valar(&self, egld_amount: &BigUint) -> BigUint {
