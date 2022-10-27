@@ -82,19 +82,19 @@ crate::storages::common_storage::CommonStorageModule
         };
 
         require!(
-            undelegateing_amount >= BigUint::from(DELEGATE_MIN_AMOUNT),
-            "undelegateing_amount cannot be less than 1 EGLD."
+            undelegating_amount >= BigUint::from(DELEGATE_MIN_AMOUNT),
+            "undelegating_amount cannot be less than 1 EGLD."
         );
 
         let caller = self.blockchain().get_caller();
 
         self.delegate_contract(delegate_address.clone())
-            .unDelegate(undelegateing_amount.clone())
+            .unDelegate(undelegating_amount.clone())
             .async_call()
             .with_callback(self.callbacks().admin_undelegate_callback(
                 &caller,
                 &delegate_address,
-                &undelegateing_amount,
+                &undelegating_amount,
             ))
             .call_and_exit();
     }
@@ -209,5 +209,4 @@ crate::storages::common_storage::CommonStorageModule
             },
         }
     }
-    
 }

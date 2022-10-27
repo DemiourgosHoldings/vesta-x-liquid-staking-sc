@@ -9,39 +9,30 @@ elrond_wasm_node::wasm_endpoints! {
     (
         callBack
         adminClaimRewards
-        adminDelegateFixedAmount
+        adminDelegate
         adminRedelegateRewards
-        adminUnbondFixedAmount
-        adminUndelegateFixedAmount
-        getAutoDelegateEnabled
-        getDelegateAddress
+        adminUndelegate
+        adminWithdraw
         getEgldPrice
         getPoolEgldAmount
         getPoolValarAmount
         getPrestakedEgldAmount
-        getPrestakedEgldAmountMap
-        getPreunstakedValarAmount
-        getPreunstakedValarAmountQueue
+        getPreunstakedEgldAmount
         getTreasuryWallet
         getUnbondedEgldAmount
-        getUnbondedEgldAmountMap
-        getUnbondingEgldAmount
-        getUnbondingEgldAmountQueue
+        getUnbondingPeriod
+        getUnstakingEgldAmount
+        getUnstakingPacks
+        getUnstakingUsers
         getValarIdentifier
         getValarPrice
         issueValarAndSetAllRoles
         quoteEgld
         quoteValar
-        setAutoDelegateEnabled
-        setDelegateAddress
         setTreasuryWallet
         stake
         unstake
         updateMainPool
-        viewPrestakedAmount
-        viewPreunstakedPacks
-        viewUnbondedAmount
-        viewUnbondingPacks
         withdraw
     )
 }

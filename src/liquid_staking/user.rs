@@ -1,8 +1,6 @@
 elrond_wasm::imports!();
 elrond_wasm::derive_imports!();
 
-use crate::delegate_proxy;
-use crate::config::{ DELEGATE_MIN_AMOUNT };
 use crate::state::{ UnstakingPack };
 
 #[elrond_wasm::module]
@@ -12,9 +10,6 @@ pub trait UserModule:
     + crate::event::EventModule
     + crate::amm::AmmModule
 {
-    #[proxy]
-    fn delegate_contract(&self, sc_address: ManagedAddress) -> delegate_proxy::Proxy<Self::Api>;
-
     #[payable("EGLD")]
     #[endpoint]
     fn stake(&self) {
@@ -36,7 +31,7 @@ pub trait UserModule:
             );
 
             // VALAR : EGLD = pool_valar_amount : pool_egld_amount
-            self.quote_valar(staking_egld_amount)
+            self.quote_valar(&staking_egld_amount)
         };
 
         // update Prestake Pool
@@ -74,7 +69,7 @@ pub trait UserModule:
         self.preunstaked_egld_amount().update(|v| *v += &unstaking_egld_amount);
 
         self.unstaking_egld_amount().update(|v| *v += &unstaking_egld_amount);
-        self.unstaking_users().insert(&caller);
+        self.unstaking_users().insert(caller.clone());
         self.unstaking_packs(&caller).push_back(UnstakingPack {
             amount: unstaking_egld_amount.clone(),
             timestamp: self.blockchain().get_block_timestamp(),

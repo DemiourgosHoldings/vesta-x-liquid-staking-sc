@@ -26,8 +26,8 @@ pub trait ValarLiquidStaking:
     common_storage::CommonStorageModule
     + pool_storage::PoolStorageModule
 
-    + admin::RewardsModule
-    + user::StakeModule
+    + admin::AdminModule
+    + user::UserModule
     + pool::PoolModule
 
     + event::EventModule
