@@ -16,5 +16,5 @@ crate::storages::common_storage::CommonStorageModule
         self.pool_egld_amount().set(&pool_egld_amount);
 
         self.update_main_pool_event(&self.blockchain().get_caller(), &pool_valar_amount, &pool_egld_amount);
-    }   
+    }
 }
