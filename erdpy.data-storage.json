@@ -1,5 +1,6 @@
 {
     "*": {
-        "address-devnet": "erd1qqqqqqqqqqqqqpgqd7f0a0g2a8k79vyh22rw470jn4xckrd9j9qsdjv3jp"
+        "address-devnet": "erd1qqqqqqqqqqqqqpgqxt63zxervjmdl49yxj3n6eze3r6ct4d6j9qsf75vzf",
+        "address-testnet": "erd1qqqqqqqqqqqqqpgq9a8n5nwwe50f5hqk8rjyvph7ydfwvw3dj9qsrktp9z"
     }
 }

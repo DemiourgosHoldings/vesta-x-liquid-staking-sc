@@ -1,10 +1,10 @@
-PROXY=https://devnet-gateway.elrond.com
-CHAIN_ID="D"
+PROXY=https://testnet-gateway.elrond.com
+CHAIN_ID="T"
 WALLET="./wallets/shard1-wallet.pem"
-ADDRESS=$(erdpy data load --key=address-devnet)
+ADDRESS=$(erdpy data load --key=address-testnet)
 ######################################################################
 
-DELEGATE_ADDRESS="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzhllllsp9wvyl"
+DELEGATE_ADDRESS="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp0llllswfeycs"
 DELEGATE_ADDRESS_HEX="0x$(erdpy wallet bech32 --decode ${DELEGATE_ADDRESS})"
 
 ###
@@ -13,7 +13,7 @@ ISSUE_COST=50000000000000000 # 0.05 EGLD
 STAKE_AMOUNT=1000000000000000000
 UNSTAKE_AMOUNT=1000000000000000000
 
-VALAR_IDENTIFIER_ONLY_HEX="56414c41522d366239363238"
+VALAR_IDENTIFIER_ONLY_HEX="4d45582d663934656137" # MEX-f94ea7
 DATA_UNSTAKE_ONE_VALAR="ESDTTransfer@${VALAR_IDENTIFIER_ONLY_HEX}@0de0b6b3a7640000@756e7374616b65"
 
 CALLER_ADDRESS="erd1ygdttzrulwfspme2s4qrx5y2qyfqalju0k2vcyy8z3979whlj9qssl5uay"
@@ -21,13 +21,13 @@ CALLER_ADDRESS_HEX="0x$(erdpy wallet bech32 --decode ${CALLER_ADDRESS})"
 
 deploy() {
     erdpy --verbose contract deploy  --project=${PROJECT} --recall-nonce --pem=${WALLET} --send --proxy=${PROXY} --chain=${CHAIN_ID} \
-    --outfile="deploy-devnet.interaction.json" \
+    --outfile="deploy-testnet.interaction.json" \
     --metadata-payable \
     --gas-limit=100000000
     
-    ADDRESS=$(erdpy data parse --file="deploy-devnet.interaction.json" --expression="data['contractAddress']")
+    ADDRESS=$(erdpy data parse --file="deploy-testnet.interaction.json" --expression="data['contractAddress']")
 
-    erdpy data store --key=address-devnet --value=${ADDRESS}
+    erdpy data store --key=address-testnet --value=${ADDRESS}
 
     echo ""
     echo "Smart contract address: ${ADDRESS}"
@@ -41,7 +41,7 @@ upgrade() {
 
 issueValarAndSetAllRoles() {
     erdpy --verbose contract call ${ADDRESS} --send --proxy=${PROXY} --chain=${CHAIN_ID} --recall-nonce --pem=${WALLET} \
-    --gas-limit=60000000 \
+    --gas-limit=80000000 \
     --function="issueValarAndSetAllRoles" \
     --value ${ISSUE_COST}
 }
@@ -51,6 +51,13 @@ setDelegateAddress() {
     --gas-limit=6000000 \
     --function="setDelegateAddress" \
     --arguments ${DELEGATE_ADDRESS_HEX}
+}
+
+setAutoDelegateEnabled() {
+    erdpy --verbose contract call ${ADDRESS} --send --proxy=${PROXY} --chain=${CHAIN_ID} --recall-nonce --pem=${WALLET} \
+    --gas-limit=6000000 \
+    --function="setAutoDelegateEnabled" \
+    --arguments 1
 }
 
 stake() {
