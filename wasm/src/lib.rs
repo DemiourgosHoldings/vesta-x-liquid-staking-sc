@@ -32,6 +32,7 @@ elrond_wasm_node::wasm_endpoints! {
         getUserActionAllowed
         getValarIdentifier
         getValarPrice
+        isOwnerOrAdmin
         issueValarAndSetAllRoles
         quoteEgld
         quoteValar

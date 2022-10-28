@@ -10,9 +10,6 @@ mod liquid_staking;
 use liquid_staking::admin;
 use liquid_staking::user;
 use liquid_staking::pool;
-mod views;
-use views::views_pool;
-use views::views_user;
 
 pub mod event;
 pub mod valar;
@@ -21,6 +18,7 @@ pub mod delegate_proxy;
 pub mod amm;
 pub mod state;
 pub mod validation;
+pub mod view;
 
 #[elrond_wasm::contract]
 pub trait ValarLiquidStaking:
@@ -36,8 +34,7 @@ pub trait ValarLiquidStaking:
     + amm::AmmModule
     + validation::ValidationModule
 
-    + views_pool::ViewPoolModule
-    + views_user::ViewUserModule
+    + view::ViewModule
 {
     #[init]
     fn init(&self) {
