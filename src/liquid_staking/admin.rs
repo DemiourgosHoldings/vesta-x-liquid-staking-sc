@@ -1,7 +1,7 @@
 elrond_wasm::imports!();
 elrond_wasm::derive_imports!();
 
-use core::cmp::max;
+use core::cmp::min;
 
 use crate::delegate_proxy;
 use crate::config::{ DELEGATE_MIN_AMOUNT };
@@ -25,7 +25,7 @@ crate::storages::common_storage::CommonStorageModule
     ) {
         // if amount is not given, delegate total prestaked amount
         let delegating_amount = match opt_amount {
-            OptionalValue::Some(v) => max(v, self.prestaked_egld_amount().get()),
+            OptionalValue::Some(v) => min(v, self.prestaked_egld_amount().get()),
             OptionalValue::None => self.prestaked_egld_amount().get(),
         };
 
@@ -77,7 +77,7 @@ crate::storages::common_storage::CommonStorageModule
     ) {
         // if amount is not given, undelegate total preunstaked amount
         let undelegating_amount = match opt_amount {
-            OptionalValue::Some(v) => max(v, self.preunstaked_egld_amount().get()),
+            OptionalValue::Some(v) => min(v, self.preunstaked_egld_amount().get()),
             OptionalValue::None => self.preunstaked_egld_amount().get(),
         };
 

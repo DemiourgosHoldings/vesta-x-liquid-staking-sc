@@ -46,20 +46,6 @@ issueValarAndSetAllRoles() {
     --value ${ISSUE_COST}
 }
 
-setDelegateAddress() {
-    erdpy --verbose contract call ${ADDRESS} --send --proxy=${PROXY} --chain=${CHAIN_ID} --recall-nonce --pem=${WALLET} \
-    --gas-limit=6000000 \
-    --function="setDelegateAddress" \
-    --arguments ${DELEGATE_ADDRESS_HEX}
-}
-
-setAutoDelegateEnabled() {
-    erdpy --verbose contract call ${ADDRESS} --send --proxy=${PROXY} --chain=${CHAIN_ID} --recall-nonce --pem=${WALLET} \
-    --gas-limit=6000000 \
-    --function="setAutoDelegateEnabled" \
-    --arguments 1
-}
-
 stake() {
     erdpy --verbose contract call ${ADDRESS} --send --proxy=${PROXY} --chain=${CHAIN_ID} --recall-nonce --pem=${WALLET} \
     --gas-limit=30000000 \
