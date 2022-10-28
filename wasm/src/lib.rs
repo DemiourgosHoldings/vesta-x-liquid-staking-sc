@@ -13,6 +13,7 @@ elrond_wasm_node::wasm_endpoints! {
         adminRedelegateRewards
         adminUndelegate
         adminWithdraw
+        donate
         getEgldPrice
         getPoolEgldAmount
         getPoolValarAmount
@@ -30,6 +31,7 @@ elrond_wasm_node::wasm_endpoints! {
         quoteEgld
         quoteValar
         setTreasuryWallet
+        setUnbondingPeriod
         stake
         unstake
         updateMainPool

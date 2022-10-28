@@ -40,6 +40,13 @@ pub trait EventModule
         #[indexed] egld_amount: &BigUint,
     );
 
+    #[event("Donate")]
+    fn donate_event(
+        &self,
+        #[indexed] caller: &ManagedAddress,
+        #[indexed] egld_amount: &BigUint,
+    );
+
     // Admin
     #[event("AdminDelegateSuccess")]
     fn admin_delegate_success_event(

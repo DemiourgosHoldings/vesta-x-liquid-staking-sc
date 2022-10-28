@@ -4,6 +4,8 @@ WALLET="./wallets/shard1-wallet.pem"
 ADDRESS=$(erdpy data load --key=address-testnet)
 ######################################################################
 
+UNBONDING_PERIOD=14400 # 4 hours
+
 DELEGATE_ADDRESS="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp0llllswfeycs"
 DELEGATE_ADDRESS_HEX="0x$(erdpy wallet bech32 --decode ${DELEGATE_ADDRESS})"
 
@@ -44,6 +46,13 @@ issueValarAndSetAllRoles() {
     --gas-limit=80000000 \
     --function="issueValarAndSetAllRoles" \
     --value ${ISSUE_COST}
+}
+
+setUnbondingPeriod() {
+    erdpy --verbose contract call ${ADDRESS} --send --proxy=${PROXY} --chain=${CHAIN_ID} --recall-nonce --pem=${WALLET} \
+    --gas-limit=6000000 \
+    --function="setUnbondingPeriod" \
+    --arguments ${UNBONDING_PERIOD}
 }
 
 stake() {

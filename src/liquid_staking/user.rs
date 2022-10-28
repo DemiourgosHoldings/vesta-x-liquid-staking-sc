@@ -65,10 +65,9 @@ pub trait UserModule:
         self.send().esdt_local_burn(&self.valar_identifier().get_token_id(), 0, &unstaking_valar_amount);
         //
         let unstaking_egld_amount = self.quote_egld(&unstaking_valar_amount);
-
+    
         self.preunstaked_egld_amount().update(|v| *v += &unstaking_egld_amount);
 
-        self.unstaking_egld_amount().update(|v| *v += &unstaking_egld_amount);
         self.unstaking_users().insert(caller.clone());
         self.unstaking_packs(&caller).push_back(UnstakingPack {
             amount: unstaking_egld_amount.clone(),
@@ -128,5 +127,20 @@ pub trait UserModule:
         self.send().direct_egld(&caller, &unbonded_amount);
         
         self.user_withdraw_event(&caller, &unbonded_amount);
+    }
+
+
+    /// Put EGLD to PreUnstake Pool without minting VALAR
+    #[payable("EGLD")]
+    #[endpoint]
+    fn donate(&self) {
+        let staking_egld_amount = self.call_value().egld_value();
+        let caller = self.blockchain().get_caller();
+
+        self.prestaked_egld_amount().update(|v| *v += &staking_egld_amount);
+        self.pool_egld_amount().update(|v| *v += &staking_egld_amount);
+
+        //
+        self.donate_event(&caller, &staking_egld_amount);
     }
 }

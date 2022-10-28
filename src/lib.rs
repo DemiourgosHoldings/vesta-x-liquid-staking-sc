@@ -50,4 +50,13 @@ pub trait ValarLiquidStaking:
         self.treasury_wallet().set(&treasury_wallet);
         self.change_treasury_wallet(&treasury_wallet);
     }
+
+    #[only_owner]
+    #[endpoint(setUnbondingPeriod)]
+    fn set_unbonding_period(
+        &self,
+        unbonding_period: u64,
+    ) {
+        self.unbonding_period().set(unbonding_period);
+    }
 }
