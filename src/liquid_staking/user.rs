@@ -9,10 +9,13 @@ pub trait UserModule:
     + crate::storages::pool_storage::PoolStorageModule
     + crate::event::EventModule
     + crate::amm::AmmModule
+    + crate::validation::ValidationModule
 {
     #[payable("EGLD")]
     #[endpoint]
     fn stake(&self) {
+        self.require_user_action_allowed();
+
         let staking_egld_amount = self.call_value().egld_value();
         let caller = self.blockchain().get_caller();
 
@@ -52,6 +55,8 @@ pub trait UserModule:
     #[payable("*")]
     #[endpoint]
     fn unstake(&self) {
+        self.require_user_action_allowed();
+
         let (payment_token, _, unstaking_valar_amount) = self.call_value().single_esdt().into_tuple();
 
         require!(
@@ -80,6 +85,8 @@ pub trait UserModule:
     //
     #[endpoint]
     fn withdraw(&self) {
+        self.require_user_action_allowed();
+
         let caller = self.blockchain().get_caller();
         let current_timestamp = self.blockchain().get_block_timestamp();
         let unbonding_period = self.unbonding_period().get();
@@ -134,6 +141,8 @@ pub trait UserModule:
     #[payable("EGLD")]
     #[endpoint]
     fn donate(&self) {
+        self.require_user_action_allowed();
+
         let staking_egld_amount = self.call_value().egld_value();
         let caller = self.blockchain().get_caller();
 

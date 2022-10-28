@@ -125,6 +125,13 @@ pub trait EventModule
         #[indexed] delegate_address: &ManagedAddress,
     );
 
+    #[event("AdminTransferEgld")]
+    fn admin_transfer_egld_event(
+        &self,
+        #[indexed] to: &ManagedAddress,
+        #[indexed] egld_amount: &BigUint,
+    );
+
     // Pool
     #[event("UpdateMainPool")]
     fn update_main_pool_event(
@@ -142,7 +149,7 @@ pub trait EventModule
     );
 
     #[event("ChangeTreasuryWallet")]
-    fn change_treasury_wallet(
+    fn change_treasury_wallet_event(
         &self,
         #[indexed] to: &ManagedAddress,
     );

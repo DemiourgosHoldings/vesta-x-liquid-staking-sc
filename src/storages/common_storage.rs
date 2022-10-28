@@ -19,4 +19,18 @@ pub trait CommonStorageModule
     #[view(getUnbondingPeriod)]
     #[storage_mapper("unbonding_period")]
     fn unbonding_period(&self) -> SingleValueMapper<u64>;
+
+    //
+    #[view(getAdmins)]
+    #[storage_mapper("admins")]
+    fn admins(&self) -> UnorderedSetMapper<ManagedAddress>;
+
+    //
+    #[view(getUserActionAllowed)]
+    #[storage_mapper("user_action_allowed")]
+    fn user_action_allowed(&self) -> SingleValueMapper<bool>;
+
+    #[view(getAdminActionAllowed)]
+    #[storage_mapper("admin_action_allowed")]
+    fn admin_action_allowed(&self) -> SingleValueMapper<bool>;
 }

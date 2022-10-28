@@ -8,21 +8,24 @@ use crate::config::{ DELEGATE_MIN_AMOUNT };
 
 #[elrond_wasm::module]
 pub trait AdminModule:
-crate::storages::common_storage::CommonStorageModule
-+ crate::storages::pool_storage::PoolStorageModule
-+ crate::event::EventModule
-+ crate::amm::AmmModule
+    crate::storages::common_storage::CommonStorageModule
+    + crate::storages::pool_storage::PoolStorageModule
+    + crate::event::EventModule
+    + crate::amm::AmmModule
+    + crate::validation::ValidationModule
 {
     #[proxy]
     fn delegate_contract(&self, sc_address: ManagedAddress) -> delegate_proxy::Proxy<Self::Api>;
     
-    #[only_owner]
     #[endpoint(adminDelegate)]
     fn admin_delegate(
         &self,
         delegate_address: ManagedAddress,
         opt_amount: OptionalValue<BigUint>,
     ) {
+        self.require_is_owner_or_admin();
+        self.require_admin_action_allowed();
+
         // if amount is not given, delegate total prestaked amount
         let delegating_amount = match opt_amount {
             OptionalValue::Some(v) => min(v, self.prestaked_egld_amount().get()),
@@ -68,13 +71,15 @@ crate::storages::common_storage::CommonStorageModule
         }
     }
 
-    #[only_owner]
     #[endpoint(adminUndelegate)]
     fn admin_undelegate(
         &self,
         delegate_address: ManagedAddress,
         opt_amount: OptionalValue<BigUint>,
     ) {
+        self.require_is_owner_or_admin();
+        self.require_admin_action_allowed();
+
         // if amount is not given, undelegate total preunstaked amount
         let undelegating_amount = match opt_amount {
             OptionalValue::Some(v) => min(v, self.preunstaked_egld_amount().get()),
@@ -121,9 +126,11 @@ crate::storages::common_storage::CommonStorageModule
     }
 
     ///
-    #[only_owner]
     #[endpoint(adminWithdraw)]
     fn admin_withdraw(&self, delegate_address: ManagedAddress) {
+        self.require_is_owner_or_admin();
+        self.require_admin_action_allowed();
+
         let caller = self.blockchain().get_caller();
 
         self.delegate_contract(delegate_address.clone())
@@ -151,9 +158,11 @@ crate::storages::common_storage::CommonStorageModule
     }
 
     ///
-    #[only_owner]
     #[endpoint(adminRedelegateRewards)]
     fn admin_redelegate_rewards(&self, delegate_address: ManagedAddress) {
+        self.require_is_owner_or_admin();
+        self.require_admin_action_allowed();
+
         let caller = self.blockchain().get_caller();
 
         self.delegate_contract(delegate_address.clone())
@@ -181,9 +190,11 @@ crate::storages::common_storage::CommonStorageModule
     }
 
     ///
-    #[only_owner]
     #[endpoint(adminClaimRewards)]
     fn admin_claim_rewards(&self, delegate_address: ManagedAddress) {
+        self.require_is_owner_or_admin();
+        self.require_admin_action_allowed();
+
         let caller = self.blockchain().get_caller();
         self.delegate_contract(delegate_address.clone())
             .claimRewards()

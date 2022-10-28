@@ -9,6 +9,12 @@ UNBONDING_PERIOD=14400 # 4 hours
 DELEGATE_ADDRESS="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp0llllswfeycs"
 DELEGATE_ADDRESS_HEX="0x$(erdpy wallet bech32 --decode ${DELEGATE_ADDRESS})"
 
+ADMIN_ADDRESS="erd15936k9pw34xyzmcaupyn7lpr7f6p20q50h4wlgemxg7h9zasdfysmhg50z"
+ADMIN_ADDRESS_HEX="0x$(erdpy wallet bech32 --decode ${ADMIN_ADDRESS})"
+
+TREASURY_WALLET="erd16yr7tyck8d4ewp68uzd29jxwa3kj57nuhm6z37lxcp6w6xx8vemsnl5paf"
+TREASURY_WALLET_HEX="0x$(erdpy wallet bech32 --decode ${TREASURY_WALLET})"
+
 ###
 ISSUE_COST=50000000000000000 # 0.05 EGLD
 
@@ -48,11 +54,39 @@ issueValarAndSetAllRoles() {
     --value ${ISSUE_COST}
 }
 
+setSettings() {
+    erdpy --verbose contract call ${ADDRESS} --send --proxy=${PROXY} --chain=${CHAIN_ID} --recall-nonce --pem=${WALLET} \
+    --gas-limit=6000000 \
+    --function="setSettings" \
+    --arguments ${UNBONDING_PERIOD} ${TREASURY_WALLET_HEX}
+}
+
 setUnbondingPeriod() {
     erdpy --verbose contract call ${ADDRESS} --send --proxy=${PROXY} --chain=${CHAIN_ID} --recall-nonce --pem=${WALLET} \
     --gas-limit=6000000 \
     --function="setUnbondingPeriod" \
     --arguments ${UNBONDING_PERIOD}
+}
+
+setUserActionAllowed() {
+    erdpy --verbose contract call ${ADDRESS} --send --proxy=${PROXY} --chain=${CHAIN_ID} --recall-nonce --pem=${WALLET} \
+    --gas-limit=6000000 \
+    --function="setUserActionAllowed" \
+    --arguments 1
+}
+
+setAdminActionAllowed() {
+    erdpy --verbose contract call ${ADDRESS} --send --proxy=${PROXY} --chain=${CHAIN_ID} --recall-nonce --pem=${WALLET} \
+    --gas-limit=6000000 \
+    --function="setAdminActionAllowed" \
+    --arguments 1
+}
+
+addAdmins() {
+    erdpy --verbose contract call ${ADDRESS} --send --proxy=${PROXY} --chain=${CHAIN_ID} --recall-nonce --pem=${WALLET} \
+    --gas-limit=6000000 \
+    --function="addAdmins" \
+    --arguments ${ADMIN_ADDRESS_HEX}
 }
 
 stake() {
@@ -96,32 +130,4 @@ adminClaimRewards() {
 
 getValarIdentifier() {
     erdpy --verbose contract query ${ADDRESS} --proxy=${PROXY} --function="getValarIdentifier"
-}
-
-getDelegateAddress() {
-    erdpy --verbose contract query ${ADDRESS} --proxy=${PROXY} --function="getDelegateAddress"
-}
-
-getValarSupply() {
-    erdpy --verbose contract query ${ADDRESS} --proxy=${PROXY} --function="getValarSupply"
-}
-
-getStakedEgldAmount() {
-    erdpy --verbose contract query ${ADDRESS} --proxy=${PROXY} --function="getStakedEgldAmount"
-}
-
-getUnbondingEgldAmount() {
-    erdpy --verbose contract query ${ADDRESS} --proxy=${PROXY} --function="getUnbondingEgldAmount"
-}
-
-getUnbondingUsers() {
-    erdpy --verbose contract query ${ADDRESS} --proxy=${PROXY} --function="getUnbondingUsers"
-}
-
-getUnbondingEgldAmountPerUser() {
-    erdpy --verbose contract query ${ADDRESS} --proxy=${PROXY} --function="getUnbondingEgldAmountPerUser" --arguments ${CALLER_ADDRESS_HEX}
-}
-
-getUnbondedEgldAmountPerUser() {
-    erdpy --verbose contract query ${ADDRESS} --proxy=${PROXY} --function="getUnbondedEgldAmountPerUser"
 }
