@@ -103,12 +103,16 @@ pub trait UserModule:
 
         require!(
             unbonded_amount != BigUint::zero(),
-            "No EGLD for withdraw."
+            "No EGLD to withdraw."
         );
         // Withdrawable Amount = EGLD_Balance_of_SC - Total_Prestaked_Amount
         require!(
             self.unbonded_egld_amount().get() >= unbonded_amount,
-            "No enough EGLD balance in Smart Contract."
+            "EGLD is not unbonded from delegate providers yet."
+        );
+        require!(
+            unbonded_amount <= self.blockchain().get_balance(&self.blockchain().get_sc_address()),
+            "Not enough EGLD in Smart Contract."
         );
 
         // remove withdrawable packs

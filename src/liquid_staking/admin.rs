@@ -34,8 +34,8 @@ crate::storages::common_storage::CommonStorageModule
             "delegating_amount cannot be less than 1 EGLD."
         );
         require!(
-            delegating_amount >= self.blockchain().get_balance(&self.blockchain().get_sc_address()),
-            "EGLD balance of Smart Contract is smaller than delegating_amount."
+            delegating_amount <= self.blockchain().get_balance(&self.blockchain().get_sc_address()),
+            "Not enough EGLD in Smart Contract."
         );
 
         let caller = self.blockchain().get_caller();
