@@ -105,7 +105,6 @@ pub trait EventModule
         #[indexed] caller: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,
         #[indexed] rewards_amount: &BigUint,
-        #[indexed] left_egld_amount: &BigUint,
         #[indexed] fee_stegld_amount: &BigUint,
     );
 

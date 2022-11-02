@@ -170,14 +170,14 @@ pub trait AdminModule:
         &self,
         delegate_address: ManagedAddress,
         rewards_amount: BigUint,
-        opt_with_fee: OptionalValue<bool>
+        opt_without_fee: OptionalValue<bool>
     ) {
         self.require_is_owner_or_admin();
         self.require_admin_action_allowed();
         self.require_initial_configuration_is_done();
 
         let caller = self.blockchain().get_caller();
-        let with_fee: bool = match opt_with_fee {
+        let without_fee: bool = match opt_without_fee {
             OptionalValue::Some(v) => v,
             OptionalValue::None => false,
         };
@@ -185,7 +185,7 @@ pub trait AdminModule:
         self.delegate_contract(delegate_address.clone())
             .reDelegateRewards()
             .async_call()
-            .with_callback(self.callbacks().redelegate_rewards_callback(&caller, &delegate_address, &rewards_amount, with_fee))
+            .with_callback(self.callbacks().redelegate_rewards_callback(&caller, &delegate_address, &rewards_amount, without_fee))
             .call_and_exit();
     }
 
@@ -196,26 +196,24 @@ pub trait AdminModule:
         caller: &ManagedAddress,
         delegate_address: &ManagedAddress,
         rewards_amount: &BigUint,
-        with_fee: bool,
+        without_fee: bool,
     ) {
         match result {
             ManagedAsyncCallResult::Ok(()) => {
-                let fee = match with_fee {
-                    true => self.fee().get(),
-                    false => 0u64,
+                let fee = match without_fee {
+                    true => 0u64,
+                    false => self.fee().get(),
                 };
-                let fee_egld = rewards_amount.clone() * fee / TOTAL_PERCENTAGE;
-                let left_egld = rewards_amount.clone() - &fee_egld;
-                
+                let fee_egld = rewards_amount.clone() * fee / TOTAL_PERCENTAGE;                
                 let fee_stegld = self.quote_valar(&fee_egld);
                 if fee_stegld != BigUint::zero() {
                     // mint VALAR and send it to the treasury
                     self.valar_identifier().mint_and_send(&self.treasury_wallet().get(), fee_stegld.clone());
                 }
 
-                self.pool_egld_amount().update(|v| *v += &left_egld);
+                self.pool_egld_amount().update(|v| *v += rewards_amount);
 
-                self.admin_redelegate_rewards_success_event(caller, delegate_address, rewards_amount, &left_egld, &fee_stegld);
+                self.admin_redelegate_rewards_success_event(caller, delegate_address, rewards_amount, &fee_stegld);
             },
             ManagedAsyncCallResult::Err(_) => {
                 self.admin_redelegate_rewards_fail_event(caller, delegate_address, rewards_amount);
