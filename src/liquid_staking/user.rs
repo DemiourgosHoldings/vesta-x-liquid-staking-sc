@@ -15,6 +15,7 @@ pub trait UserModule:
     #[endpoint]
     fn stake(&self) {
         self.require_user_action_allowed();
+        self.require_initial_configuration_is_done();
 
         let staking_egld_amount = self.call_value().egld_value();
         let caller = self.blockchain().get_caller();
@@ -56,6 +57,7 @@ pub trait UserModule:
     #[endpoint]
     fn unstake(&self) {
         self.require_user_action_allowed();
+        self.require_initial_configuration_is_done();
 
         let (payment_token, _, unstaking_valar_amount) = self.call_value().single_esdt().into_tuple();
 
@@ -86,6 +88,7 @@ pub trait UserModule:
     #[endpoint]
     fn withdraw(&self) {
         self.require_user_action_allowed();
+        self.require_initial_configuration_is_done();
 
         let caller = self.blockchain().get_caller();
         let current_timestamp = self.blockchain().get_block_timestamp();
@@ -142,6 +145,7 @@ pub trait UserModule:
     #[endpoint]
     fn donate(&self) {
         self.require_user_action_allowed();
+        self.require_initial_configuration_is_done();
 
         let staking_egld_amount = self.call_value().egld_value();
         let caller = self.blockchain().get_caller();

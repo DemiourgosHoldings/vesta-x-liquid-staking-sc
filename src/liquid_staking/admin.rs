@@ -25,6 +25,7 @@ pub trait AdminModule:
     ) {
         self.require_is_owner_or_admin();
         self.require_admin_action_allowed();
+        self.require_initial_configuration_is_done();
 
         // if amount is not given, delegate total prestaked amount
         let delegating_amount = match opt_amount {
@@ -79,6 +80,7 @@ pub trait AdminModule:
     ) {
         self.require_is_owner_or_admin();
         self.require_admin_action_allowed();
+        self.require_initial_configuration_is_done();
 
         // if amount is not given, undelegate total preunstaked amount
         let undelegating_amount = match opt_amount {
@@ -130,6 +132,7 @@ pub trait AdminModule:
     fn admin_withdraw(&self, delegate_address: ManagedAddress, withdraw_amount: BigUint) {
         self.require_is_owner_or_admin();
         self.require_admin_action_allowed();
+        self.require_initial_configuration_is_done();
 
         let caller = self.blockchain().get_caller();
 
@@ -171,6 +174,7 @@ pub trait AdminModule:
     ) {
         self.require_is_owner_or_admin();
         self.require_admin_action_allowed();
+        self.require_initial_configuration_is_done();
 
         let caller = self.blockchain().get_caller();
         let with_fee: bool = match opt_with_fee {
@@ -224,6 +228,7 @@ pub trait AdminModule:
     // fn admin_claim_rewards(&self, delegate_address: ManagedAddress) {
     //     self.require_is_owner_or_admin();
     //     self.require_admin_action_allowed();
+    //     self.require_initial_configuration_is_done();
 
     //     let caller = self.blockchain().get_caller();
     //     self.delegate_contract(delegate_address.clone())

@@ -31,4 +31,12 @@ pub trait ValidationModule:
             "Admin Action is not allowed."
         );
     }
+
+    #[inline]
+    fn require_initial_configuration_is_done(&self) {
+        require!(
+            !self.treasury_wallet().get().is_zero(),
+            "Initial Configuration is not done yet."
+        );
+    }
 }
