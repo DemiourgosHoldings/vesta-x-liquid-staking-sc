@@ -1,4 +1,2 @@
-pub mod rewards;
-pub mod stake;
-pub mod unstake;
-pub mod pool;
+pub mod admin;
+pub mod user;

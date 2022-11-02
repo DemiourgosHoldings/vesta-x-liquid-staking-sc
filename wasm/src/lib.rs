@@ -8,40 +8,43 @@ elrond_wasm_node::wasm_endpoints! {
     valar_liquid_staking
     (
         callBack
-        adminClaimRewards
-        adminDelegateFixedAmount
+        addAdmins
+        adminDelegate
+        adminMoveTreasury
         adminRedelegateRewards
-        adminUnbondFixedAmount
-        adminUndelegateFixedAmount
-        getAutoDelegateEnabled
-        getDelegateAddress
+        adminUndelegate
+        adminWithdraw
+        donate
+        getAdminActionAllowed
+        getAdmins
         getEgldPrice
+        getFee
         getPoolEgldAmount
         getPoolValarAmount
         getPrestakedEgldAmount
-        getPrestakedEgldAmountMap
-        getPreunstakedValarAmount
-        getPreunstakedValarAmountQueue
+        getPreunstakedEgldAmount
         getTreasuryWallet
         getUnbondedEgldAmount
-        getUnbondedEgldAmountMap
-        getUnbondingEgldAmount
-        getUnbondingEgldAmountQueue
+        getUnbondingPeriod
+        getUnstakingEgldAmount
+        getUnstakingPacks
+        getUnstakingUsers
+        getUserActionAllowed
         getValarIdentifier
         getValarPrice
+        isOwnerOrAdmin
         issueValarAndSetAllRoles
         quoteEgld
         quoteValar
-        setAutoDelegateEnabled
-        setDelegateAddress
+        removeAdmins
+        setAdminActionAllowed
+        setFee
+        setSettings
         setTreasuryWallet
+        setUnbondingPeriod
+        setUserActionAllowed
         stake
         unstake
-        updateMainPool
-        viewPrestakedAmount
-        viewPreunstakedPacks
-        viewUnbondedAmount
-        viewUnbondingPacks
         withdraw
     )
 }

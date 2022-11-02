@@ -4,7 +4,7 @@ elrond_wasm::derive_imports!();
 use crate::config::{ ONE_VALAR_IN_WEI, ONE_EGLD_IN_WEI };
 
 #[elrond_wasm::module]
-pub trait ViewPoolModule:
+pub trait ViewModule:
     crate::storages::common_storage::CommonStorageModule
     + crate::storages::pool_storage::PoolStorageModule
     + crate::amm::AmmModule
@@ -18,5 +18,10 @@ pub trait ViewPoolModule:
     #[view(getEgldPrice)]
     fn get_egld_price(&self) -> BigUint {
         self.quote_valar(&BigUint::from(ONE_EGLD_IN_WEI))
+    }
+
+    #[view(isOwnerOrAdmin)]
+    fn is_owner_or_admin(&self, caller: ManagedAddress) -> bool {
+        caller == self.blockchain().get_owner_address() || self.admins().contains(&caller)
     }
 }

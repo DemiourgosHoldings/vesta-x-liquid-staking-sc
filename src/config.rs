@@ -1,5 +1,6 @@
 pub const TOKEN_ISSUE_COST: u64 = 50_000_000_000_000_000; // 0.05 EGLD
 pub const ONE_EGLD_IN_WEI: u64 = 1_000_000_000_000_000_000;
+pub const TOTAL_PERCENTAGE: u64 = 10_000;
 
 // Valar Token
 pub const VALAR_DISPLAY_NAME: &[u8] = b"Valar";

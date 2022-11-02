@@ -17,36 +17,19 @@ pub trait EventModule
     );
 
     // User Activities
-    #[event("UserPrestake")]
-    fn user_prestake_event(
+    #[event("UserStake")]
+    fn user_stake_event(
         &self,
         #[indexed] user: &ManagedAddress,
         #[indexed] egld_amount: &BigUint,
-        #[indexed] auto_delegate_enabled: bool,
-    );
-
-    #[event("UserDelegateSuccess")]
-    fn user_delegate_success_event(
-        &self,
-        #[indexed] user: &ManagedAddress,
-        #[indexed] delegate_address: &ManagedAddress,
         #[indexed] valar_amount: &BigUint,
-        #[indexed] egld_amount: &BigUint,
     );
 
-    #[event("UserDelegateFail")]
-    fn user_delegate_fail_event(
+    #[event("UserUnstake")]
+    fn user_unstake_event(
         &self,
         #[indexed] user: &ManagedAddress,
-        #[indexed] delegate_address: &ManagedAddress,
-        #[indexed] egld_amount: &BigUint,
-        err_msg: &ManagedBuffer,
-    );
-
-    #[event("UserPreunstake")]
-    fn user_preunstake_event(
-        &self,
-        #[indexed] user: &ManagedAddress,
+        #[indexed] valar_amount: &BigUint,
         #[indexed] egld_amount: &BigUint,
     );
 
@@ -57,13 +40,19 @@ pub trait EventModule
         #[indexed] egld_amount: &BigUint,
     );
 
+    #[event("Donate")]
+    fn donate_event(
+        &self,
+        #[indexed] caller: &ManagedAddress,
+        #[indexed] egld_amount: &BigUint,
+    );
+
     // Admin
     #[event("AdminDelegateSuccess")]
     fn admin_delegate_success_event(
         &self,
         #[indexed] caller: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,
-        #[indexed] valar_amount: &BigUint,
         #[indexed] egld_amount: &BigUint,
     );
 
@@ -81,7 +70,6 @@ pub trait EventModule
         &self,
         #[indexed] caller: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,
-        #[indexed] valar_amount: &BigUint,
         #[indexed] egld_amount: &BigUint,
     );
 
@@ -90,17 +78,24 @@ pub trait EventModule
         &self,
         #[indexed] caller: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,
-        #[indexed] valar_amount: &BigUint,
         #[indexed] egld_amount: &BigUint,
         err_msg: &ManagedBuffer,
     );
 
-    #[event("AdminUnbondEvent")]
-    fn admin_unbond_event(
+    #[event("AdminWithdrawSuccess")]
+    fn admin_withdraw_success_event(
         &self,
         #[indexed] caller: &ManagedAddress,
-        #[indexed] target_unbond_egld_amount: &BigUint,
-        #[indexed] real_unbond_egld_amount: &BigUint,
+        #[indexed] delegate_address: &ManagedAddress,
+        #[indexed] egld_amount: &BigUint,
+    );
+
+    #[event("AdminWithdrawFail")]
+    fn admin_withdraw_fail_event(
+        &self,
+        #[indexed] caller: &ManagedAddress,
+        #[indexed] delegate_address: &ManagedAddress,
+        #[indexed] egld_amount: &BigUint,
     );
 
     // Rewards
@@ -109,6 +104,8 @@ pub trait EventModule
         &self,
         #[indexed] caller: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,
+        #[indexed] rewards_amount: &BigUint,
+        #[indexed] fee_stegld_amount: &BigUint,
     );
 
     #[event("AdminRedelegateRewardsFail")]
@@ -116,6 +113,7 @@ pub trait EventModule
         &self,
         #[indexed] caller: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,
+        #[indexed] rewards_amount: &BigUint,
     );
 
     #[event("AdminClaimRewardsSuccess")]
@@ -132,6 +130,13 @@ pub trait EventModule
         #[indexed] delegate_address: &ManagedAddress,
     );
 
+    #[event("AdminMoveTreasury")]
+    fn admin_move_treasury_event(
+        &self,
+        #[indexed] to: &ManagedAddress,
+        #[indexed] egld_amount: &BigUint,
+    );
+
     // Pool
     #[event("UpdateMainPool")]
     fn update_main_pool_event(
@@ -143,20 +148,20 @@ pub trait EventModule
 
     // Admin Settings
     #[event("ChangeDelegateAddress")]
-    fn change_delegate_address(
+    fn change_delegate_address_event(
         &self,
         #[indexed] to: &ManagedAddress,
     );
 
     #[event("ChangeTreasuryWallet")]
-    fn change_treasury_wallet(
+    fn change_treasury_wallet_event(
         &self,
         #[indexed] to: &ManagedAddress,
     );
 
-    #[event("ChangeAutoDelegateEnabled")]
-    fn change_auto_delegate_enabled(
+    #[event("ChangeFee")]
+    fn change_fee_event(
         &self,
-        #[indexed] value: bool,
+        #[indexed] fee: u64,
     );
 }

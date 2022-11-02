@@ -1,7 +1,7 @@
 elrond_wasm::imports!();
 elrond_wasm::derive_imports!();
 
-use crate::state::{ UserActionItem };
+use crate::state::{ UnstakingPack };
 
 #[elrond_wasm::module]
 pub trait PoolStorageModule
@@ -24,44 +24,31 @@ pub trait PoolStorageModule
     #[storage_mapper("prestaked_egld_amount")]
     fn prestaked_egld_amount(&self) -> SingleValueMapper<BigUint>;
 
-    // prestaked egld amount of each wallet
-    #[view(getPrestakedEgldAmountMap)]
-    #[storage_mapper("prestaked_egld_amount_map")]
-    fn prestaked_egld_amount_map(&self) -> MapMapper<ManagedAddress, BigUint>;
-
 
     /* PreUnstake Pool */
-    // total preunstaked VALAR amount
-    #[view(getPreunstakedValarAmount)]
-    #[storage_mapper("preunstaked_valar_amount")]
-    fn preunstaked_valar_amount(&self) -> SingleValueMapper<BigUint>;
-
-    // preunstaked VALAR amount queue
-    #[view(getPreunstakedValarAmountQueue)]
-    #[storage_mapper("preunstaked_valar_amount_queue")]
-    fn preunstaked_valar_amount_queue(&self) -> LinkedListMapper<UserActionItem<Self::Api>>;
+    // total preunstaked EGLD amount
+    #[view(getPreunstakedEgldAmount)]
+    #[storage_mapper("preunstaked_egld_amount")]
+    fn preunstaked_egld_amount(&self) -> SingleValueMapper<BigUint>;
 
 
-    /* Unbonding Pool */
-    // total unbonding EGLD amount
-    #[view(getUnbondingEgldAmount)]
-    #[storage_mapper("unbonding_egld_amount")]
-    fn unbonding_egld_amount(&self) -> SingleValueMapper<BigUint>;
+    /* Unstaking Packs */
+    // total unstaking EGLD amount
+    #[view(getUnstakingEgldAmount)]
+    #[storage_mapper("unstaking_egld_amount")]
+    fn unstaking_egld_amount(&self) -> SingleValueMapper<BigUint>;
 
-    // unbonding EGLD amount queue
-    #[view(getUnbondingEgldAmountQueue)]
-    #[storage_mapper("unbonding_egld_amount_queue")]
-    fn unbonding_egld_amount_queue(&self) -> LinkedListMapper<UserActionItem<Self::Api>>;
+    #[view(getUnstakingUsers)]
+    #[storage_mapper("unstaking_users")]
+    fn unstaking_users(&self) -> UnorderedSetMapper<ManagedAddress>;
 
+    #[view(getUnstakingPacks)]
+    #[storage_mapper("unstaking_packs")]
+    fn unstaking_packs(&self, user: &ManagedAddress) -> LinkedListMapper<UnstakingPack<Self::Api>>;
 
     /* Unbonded Pool */
     // total unbonded EGLD amount
     #[view(getUnbondedEgldAmount)]
     #[storage_mapper("unbonded_egld_amount")]
     fn unbonded_egld_amount(&self) -> SingleValueMapper<BigUint>;
-
-    // unbonded EGLD amount map
-    #[view(getUnbondedEgldAmountMap)]
-    #[storage_mapper("unbonded_egld_amount_map")]
-    fn unbonded_egld_amount_map(&self) -> MapMapper<ManagedAddress, BigUint>;
 }
