@@ -87,6 +87,7 @@ pub trait EventModule
         &self,
         #[indexed] caller: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,
+        #[indexed] egld_amount: &BigUint,
     );
 
     #[event("AdminWithdrawFail")]
@@ -94,6 +95,7 @@ pub trait EventModule
         &self,
         #[indexed] caller: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,
+        #[indexed] egld_amount: &BigUint,
     );
 
     // Rewards
@@ -102,6 +104,9 @@ pub trait EventModule
         &self,
         #[indexed] caller: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,
+        #[indexed] rewards_amount: &BigUint,
+        #[indexed] left_egld_amount: &BigUint,
+        #[indexed] fee_stegld_amount: &BigUint,
     );
 
     #[event("AdminRedelegateRewardsFail")]
@@ -109,6 +114,7 @@ pub trait EventModule
         &self,
         #[indexed] caller: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,
+        #[indexed] rewards_amount: &BigUint,
     );
 
     #[event("AdminClaimRewardsSuccess")]
@@ -125,8 +131,8 @@ pub trait EventModule
         #[indexed] delegate_address: &ManagedAddress,
     );
 
-    #[event("AdminTransferEgld")]
-    fn admin_transfer_egld_event(
+    #[event("AdminMoveTreasury")]
+    fn admin_move_treasury_event(
         &self,
         #[indexed] to: &ManagedAddress,
         #[indexed] egld_amount: &BigUint,
@@ -143,7 +149,7 @@ pub trait EventModule
 
     // Admin Settings
     #[event("ChangeDelegateAddress")]
-    fn change_delegate_address(
+    fn change_delegate_address_event(
         &self,
         #[indexed] to: &ManagedAddress,
     );
@@ -154,9 +160,9 @@ pub trait EventModule
         #[indexed] to: &ManagedAddress,
     );
 
-    #[event("ChangeAutoDelegateEnabled")]
-    fn change_auto_delegate_enabled(
+    #[event("ChangeFee")]
+    fn change_fee_event(
         &self,
-        #[indexed] value: bool,
+        #[indexed] fee: u64,
     );
 }

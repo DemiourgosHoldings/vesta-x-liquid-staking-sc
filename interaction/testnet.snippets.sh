@@ -9,7 +9,8 @@ UNBONDING_PERIOD=14400 # 4 hours
 DELEGATE_ADDRESS="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp0llllswfeycs"
 DELEGATE_ADDRESS_HEX="0x$(erdpy wallet bech32 --decode ${DELEGATE_ADDRESS})"
 
-ADMIN_ADDRESS="erd15936k9pw34xyzmcaupyn7lpr7f6p20q50h4wlgemxg7h9zasdfysmhg50z"
+# ADMIN_ADDRESS="erd15936k9pw34xyzmcaupyn7lpr7f6p20q50h4wlgemxg7h9zasdfysmhg50z"
+ADMIN_ADDRESS="erd1a9nnpdgmr42rm7x6cm994amcffn3usha8r73cqc32fauh2hrstrqe2t529"
 ADMIN_ADDRESS_HEX="0x$(erdpy wallet bech32 --decode ${ADMIN_ADDRESS})"
 
 TREASURY_WALLET="erd16yr7tyck8d4ewp68uzd29jxwa3kj57nuhm6z37lxcp6w6xx8vemsnl5paf"

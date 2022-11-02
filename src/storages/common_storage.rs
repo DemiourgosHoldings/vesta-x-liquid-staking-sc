@@ -16,6 +16,11 @@ pub trait CommonStorageModule
     fn treasury_wallet(&self) -> SingleValueMapper<ManagedAddress>;
 
     //
+    #[view(getFee)]
+    #[storage_mapper("fee")]
+    fn fee(&self) -> SingleValueMapper<u64>;
+
+    //
     #[view(getUnbondingPeriod)]
     #[storage_mapper("unbonding_period")]
     fn unbonding_period(&self) -> SingleValueMapper<u64>;

@@ -9,7 +9,6 @@ use storages::pool_storage;
 mod liquid_staking;
 use liquid_staking::admin;
 use liquid_staking::user;
-use liquid_staking::pool;
 
 pub mod event;
 pub mod valar;
@@ -20,6 +19,8 @@ pub mod state;
 pub mod validation;
 pub mod view;
 
+use config::{ TOTAL_PERCENTAGE };
+
 #[elrond_wasm::contract]
 pub trait ValarLiquidStaking:
     common_storage::CommonStorageModule
@@ -27,7 +28,6 @@ pub trait ValarLiquidStaking:
 
     + admin::AdminModule
     + user::UserModule
-    + pool::PoolModule
 
     + event::EventModule
     + valar::ValarModule
@@ -46,13 +46,13 @@ pub trait ValarLiquidStaking:
         &self,
         unbonding_period: u64,
         treasury_wallet: ManagedAddress,
+        fee: u64,
     ) {
         self.unbonding_period().set(unbonding_period);
-        self.treasury_wallet().set(&treasury_wallet);
+        self.set_treasury_wallet(treasury_wallet);
+        self.set_fee(fee);
         self.user_action_allowed().set(true);
         self.admin_action_allowed().set(true);
-
-        self.change_treasury_wallet_event(&treasury_wallet);
     }
 
     #[only_owner]
@@ -64,6 +64,21 @@ pub trait ValarLiquidStaking:
         self.treasury_wallet().set(&treasury_wallet);
         
         self.change_treasury_wallet_event(&treasury_wallet);
+    }
+
+    #[only_owner]
+    #[endpoint(setFee)]
+    fn set_fee(
+        &self,
+        fee: u64,
+    ) {
+        require!(
+            fee <= TOTAL_PERCENTAGE,
+            "fee cannot be higher than 100%."
+        );
+        self.fee().set(fee);
+
+        self.change_fee_event(fee);
     }
 
     #[only_owner]
@@ -121,8 +136,8 @@ pub trait ValarLiquidStaking:
     }
 
     ///
-    #[endpoint(adminTransferEgld)]
-    fn admin_transfer_egld(
+    #[endpoint(adminMoveTreasury)]
+    fn admin_move_treasury(
         &self,
         opt_amount: OptionalValue<BigUint>
     ) {
@@ -137,6 +152,6 @@ pub trait ValarLiquidStaking:
         let treasury_wallet = self.treasury_wallet().get();
         self.send().direct_egld(&treasury_wallet, &amount);
 
-        self.admin_transfer_egld_event(&treasury_wallet, &amount);
+        self.admin_move_treasury_event(&treasury_wallet, &amount);
     }
 }

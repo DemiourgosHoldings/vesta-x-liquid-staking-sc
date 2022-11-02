@@ -4,7 +4,7 @@ elrond_wasm::derive_imports!();
 use core::cmp::min;
 
 use crate::delegate_proxy;
-use crate::config::{ DELEGATE_MIN_AMOUNT };
+use crate::config::{ DELEGATE_MIN_AMOUNT, TOTAL_PERCENTAGE };
 
 #[elrond_wasm::module]
 pub trait AdminModule:
@@ -127,7 +127,7 @@ pub trait AdminModule:
 
     ///
     #[endpoint(adminWithdraw)]
-    fn admin_withdraw(&self, delegate_address: ManagedAddress) {
+    fn admin_withdraw(&self, delegate_address: ManagedAddress, withdraw_amount: BigUint) {
         self.require_is_owner_or_admin();
         self.require_admin_action_allowed();
 
@@ -136,7 +136,7 @@ pub trait AdminModule:
         self.delegate_contract(delegate_address.clone())
             .withdraw()
             .async_call()
-            .with_callback(self.callbacks().withdraw_callback(&caller, &delegate_address))
+            .with_callback(self.callbacks().withdraw_callback(&caller, &delegate_address, &withdraw_amount))
             .call_and_exit();
     }
 
@@ -146,29 +146,42 @@ pub trait AdminModule:
         #[call_result] result: ManagedAsyncCallResult<()>,
         caller: &ManagedAddress,
         delegate_address: &ManagedAddress,
+        withdraw_amount: &BigUint,
     ) {
         match result {
             ManagedAsyncCallResult::Ok(()) => {
-                self.admin_withdraw_success_event(caller, delegate_address);
+                self.unstaking_egld_amount().update(|v| *v -= withdraw_amount);
+                self.unbonded_egld_amount().update(|v| *v += withdraw_amount);
+
+                self.admin_withdraw_success_event(caller, delegate_address, withdraw_amount);
             },
             ManagedAsyncCallResult::Err(_) => {
-                self.admin_withdraw_fail_event(caller, delegate_address);
+                self.admin_withdraw_fail_event(caller, delegate_address, withdraw_amount);
             },
         }
     }
 
     ///
     #[endpoint(adminRedelegateRewards)]
-    fn admin_redelegate_rewards(&self, delegate_address: ManagedAddress) {
+    fn admin_redelegate_rewards(
+        &self,
+        delegate_address: ManagedAddress,
+        rewards_amount: BigUint,
+        opt_with_fee: OptionalValue<bool>
+    ) {
         self.require_is_owner_or_admin();
         self.require_admin_action_allowed();
 
         let caller = self.blockchain().get_caller();
+        let with_fee: bool = match opt_with_fee {
+            OptionalValue::Some(v) => v,
+            OptionalValue::None => false,
+        };
 
         self.delegate_contract(delegate_address.clone())
             .reDelegateRewards()
             .async_call()
-            .with_callback(self.callbacks().redelegate_rewards_callback(&caller, &delegate_address))
+            .with_callback(self.callbacks().redelegate_rewards_callback(&caller, &delegate_address, &rewards_amount, with_fee))
             .call_and_exit();
     }
 
@@ -178,46 +191,63 @@ pub trait AdminModule:
         #[call_result] result: ManagedAsyncCallResult<()>,
         caller: &ManagedAddress,
         delegate_address: &ManagedAddress,
+        rewards_amount: &BigUint,
+        with_fee: bool,
     ) {
         match result {
             ManagedAsyncCallResult::Ok(()) => {
-                self.admin_redelegate_rewards_success_event(caller, delegate_address);
+                let fee = match with_fee {
+                    true => self.fee().get(),
+                    false => 0u64,
+                };
+                let fee_egld = rewards_amount.clone() * fee / TOTAL_PERCENTAGE;
+                let left_egld = rewards_amount.clone() - &fee_egld;
+                
+                let fee_stegld = self.quote_valar(&fee_egld);
+                if fee_stegld != BigUint::zero() {
+                    // mint VALAR and send it to the treasury
+                    self.valar_identifier().mint_and_send(&self.treasury_wallet().get(), fee_stegld.clone());
+                }
+
+                self.pool_egld_amount().update(|v| *v += &left_egld);
+
+                self.admin_redelegate_rewards_success_event(caller, delegate_address, rewards_amount, &left_egld, &fee_stegld);
             },
             ManagedAsyncCallResult::Err(_) => {
-                self.admin_redelegate_rewards_fail_event(caller, delegate_address);
+                self.admin_redelegate_rewards_fail_event(caller, delegate_address, rewards_amount);
             },
         }
     }
 
-    ///
-    #[endpoint(adminClaimRewards)]
-    fn admin_claim_rewards(&self, delegate_address: ManagedAddress) {
-        self.require_is_owner_or_admin();
-        self.require_admin_action_allowed();
+    // deprecated - it may cause mismatching or security risk
+    // #[endpoint(adminClaimRewards)]
+    // fn admin_claim_rewards(&self, delegate_address: ManagedAddress) {
+    //     self.require_is_owner_or_admin();
+    //     self.require_admin_action_allowed();
 
-        let caller = self.blockchain().get_caller();
-        self.delegate_contract(delegate_address.clone())
-            .claimRewards()
-            .async_call()
-            .with_callback(self.callbacks().claim_rewards_callback(&caller, &delegate_address))
-            .call_and_exit();
-    }
+    //     let caller = self.blockchain().get_caller();
+    //     self.delegate_contract(delegate_address.clone())
+    //         .claimRewards()
+    //         .async_call()
+    //         .with_callback(self.callbacks().claim_rewards_callback(&caller, &delegate_address))
+    //         .call_and_exit();
+    // }
 
-    #[callback]
-    fn claim_rewards_callback(
-        &self,
-        #[call_result] result: ManagedAsyncCallResult<()>,
-        caller: &ManagedAddress,
-        delegate_address: &ManagedAddress,
+    // #[callback]
+    // fn claim_rewards_callback(
+    //     &self,
+    //     #[call_result] result: ManagedAsyncCallResult<()>,
+    //     caller: &ManagedAddress,
+    //     delegate_address: &ManagedAddress,
 
-    ) {
-        match result {
-            ManagedAsyncCallResult::Ok(()) => {
-                self.admin_claim_rewards_success_event(caller, delegate_address);
-            },
-            ManagedAsyncCallResult::Err(_) => {
-                self.admin_claim_rewards_fail_event(caller, delegate_address);
-            },
-        }
-    }
+    // ) {
+    //     match result {
+    //         ManagedAsyncCallResult::Ok(()) => {
+    //             self.admin_claim_rewards_success_event(caller, delegate_address);
+    //         },
+    //         ManagedAsyncCallResult::Err(_) => {
+    //             self.admin_claim_rewards_fail_event(caller, delegate_address);
+    //         },
+    //     }
+    // }
 }

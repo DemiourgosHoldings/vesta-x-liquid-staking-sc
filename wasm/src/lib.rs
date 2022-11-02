@@ -9,16 +9,16 @@ elrond_wasm_node::wasm_endpoints! {
     (
         callBack
         addAdmins
-        adminClaimRewards
         adminDelegate
+        adminMoveTreasury
         adminRedelegateRewards
-        adminTransferEgld
         adminUndelegate
         adminWithdraw
         donate
         getAdminActionAllowed
         getAdmins
         getEgldPrice
+        getFee
         getPoolEgldAmount
         getPoolValarAmount
         getPrestakedEgldAmount
@@ -38,13 +38,13 @@ elrond_wasm_node::wasm_endpoints! {
         quoteValar
         removeAdmins
         setAdminActionAllowed
+        setFee
         setSettings
         setTreasuryWallet
         setUnbondingPeriod
         setUserActionAllowed
         stake
         unstake
-        updateMainPool
         withdraw
     )
 }
