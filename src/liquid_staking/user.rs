@@ -70,9 +70,10 @@ pub trait UserModule:
         
         // burn VALAR
         self.send().esdt_local_burn(&self.valar_identifier().get_token_id(), 0, &unstaking_valar_amount);
-        //
         let unstaking_egld_amount = self.quote_egld(&unstaking_valar_amount);
     
+        self.pool_valar_amount().update(|v| *v -= &unstaking_valar_amount);
+        self.pool_egld_amount().update(|v| *v -= &unstaking_egld_amount);
         self.preunstaked_egld_amount().update(|v| *v += &unstaking_egld_amount);
 
         self.unstaking_users().insert(caller.clone());
