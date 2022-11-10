@@ -1,5 +1,5 @@
 [package]
-name = "valar-liquid-staking-meta"
+name = "vesta-x-liquid-staking-meta"
 version = "0.0.0"
 edition = "2018"
 publish = false
@@ -7,7 +7,7 @@ authors = [ "you",]
 
 [dev-dependencies]
 
-[dependencies.valar-liquid-staking]
+[dependencies.vesta-x-liquid-staking]
 path = ".."
 
 [dependencies.elrond-wasm-debug]

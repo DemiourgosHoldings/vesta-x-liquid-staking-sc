@@ -7,10 +7,10 @@ use crate::state::{ UnstakingPack };
 pub trait PoolStorageModule
 {
     /* LP Share Pool - Main Pool */
-    // VALAR token total supply
-    #[view(getPoolValarAmount)]
-    #[storage_mapper("pool_valar_amount")]
-    fn pool_valar_amount(&self) -> SingleValueMapper<BigUint>;
+    // VEGLD token total supply
+    #[view(getPoolVegldAmount)]
+    #[storage_mapper("pool_vegld_amount")]
+    fn pool_vegld_amount(&self) -> SingleValueMapper<BigUint>;
 
     // total delegated EGLD amount in Delegate SCs (excluding undelegating or undelegated EGLD)
     #[view(getPoolEgldAmount)]

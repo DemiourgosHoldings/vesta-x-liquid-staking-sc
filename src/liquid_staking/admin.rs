@@ -205,10 +205,10 @@ pub trait AdminModule:
                     false => self.fee().get(),
                 };
                 let fee_egld = rewards_amount.clone() * fee / TOTAL_PERCENTAGE;                
-                let fee_stegld = self.quote_valar(&fee_egld);
+                let fee_stegld = self.quote_vegld(&fee_egld);
                 if fee_stegld != BigUint::zero() {
-                    // mint VALAR and send it to the treasury
-                    self.valar_identifier().mint_and_send(&self.treasury_wallet().get(), fee_stegld.clone());
+                    // mint VEGLD and send it to the treasury
+                    self.vegld_identifier().mint_and_send(&self.treasury_wallet().get(), fee_stegld.clone());
                 }
 
                 self.pool_egld_amount().update(|v| *v += rewards_amount);

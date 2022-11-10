@@ -20,36 +20,36 @@ pub trait UserModule:
         let staking_egld_amount = self.call_value().egld_value();
         let caller = self.blockchain().get_caller();
 
-        // VALAR supply should be increased only after successful Delegation
-        let pool_valar_amount = self.pool_valar_amount().get();
+        // VEGLD supply should be increased only after successful Delegation
+        let pool_vegld_amount = self.pool_vegld_amount().get();
         let pool_egld_amount = self.pool_egld_amount().get();
 
-        let valar_mint_amount = if pool_valar_amount == BigUint::zero() {
-            // when LP Share Pool is empty, mint the same amount of VALAR as EGLD amount
-            // VALAR : EGLD = 1 : 1
+        let vegld_mint_amount = if pool_vegld_amount == BigUint::zero() {
+            // when LP Share Pool is empty, mint the same amount of VEGLD as EGLD amount
+            // VEGLD : EGLD = 1 : 1
             staking_egld_amount.clone()
         } else {
             require!(
                 pool_egld_amount != BigUint::zero(),
-                "staked_egld_amount is zero while staked_valar_amount is not zero."
+                "staked_egld_amount is zero while staked_vegld_amount is not zero."
             );
 
-            // VALAR : EGLD = pool_valar_amount : pool_egld_amount
-            self.quote_valar(&staking_egld_amount)
+            // VEGLD : EGLD = pool_vegld_amount : pool_egld_amount
+            self.quote_vegld(&staking_egld_amount)
         };
 
         // update Prestake Pool
         self.prestaked_egld_amount().update(|v| *v += &staking_egld_amount);
 
         // update LP Share Pool
-        self.pool_valar_amount().set(pool_valar_amount + &valar_mint_amount);
+        self.pool_vegld_amount().set(pool_vegld_amount + &vegld_mint_amount);
         self.pool_egld_amount().set(pool_egld_amount + &staking_egld_amount);
 
-        // mint VALAR and send it to the caller
-        self.valar_identifier().mint_and_send(&caller, valar_mint_amount.clone());
+        // mint VEGLD and send it to the caller
+        self.vegld_identifier().mint_and_send(&caller, vegld_mint_amount.clone());
 
         //
-        self.user_stake_event(&caller, &staking_egld_amount, &valar_mint_amount);
+        self.user_stake_event(&caller, &staking_egld_amount, &vegld_mint_amount);
     }
 
     //
@@ -59,20 +59,20 @@ pub trait UserModule:
         self.require_user_action_allowed();
         self.require_initial_configuration_is_done();
 
-        let (payment_token, _, unstaking_valar_amount) = self.call_value().single_esdt().into_tuple();
+        let (payment_token, _, unstaking_vegld_amount) = self.call_value().single_esdt().into_tuple();
 
         require!(
-            payment_token == self.valar_identifier().get_token_id(),
+            payment_token == self.vegld_identifier().get_token_id(),
             "You sent wrong token."
         );
 
         let caller = self.blockchain().get_caller();
         
-        // burn VALAR
-        self.send().esdt_local_burn(&self.valar_identifier().get_token_id(), 0, &unstaking_valar_amount);
-        let unstaking_egld_amount = self.quote_egld(&unstaking_valar_amount);
+        // burn VEGLD
+        self.send().esdt_local_burn(&self.vegld_identifier().get_token_id(), 0, &unstaking_vegld_amount);
+        let unstaking_egld_amount = self.quote_egld(&unstaking_vegld_amount);
     
-        self.pool_valar_amount().update(|v| *v -= &unstaking_valar_amount);
+        self.pool_vegld_amount().update(|v| *v -= &unstaking_vegld_amount);
         self.pool_egld_amount().update(|v| *v -= &unstaking_egld_amount);
         self.preunstaked_egld_amount().update(|v| *v += &unstaking_egld_amount);
 
@@ -82,7 +82,7 @@ pub trait UserModule:
             timestamp: self.blockchain().get_block_timestamp(),
         });
 
-        self.user_unstake_event(&caller, &unstaking_valar_amount, &unstaking_egld_amount);
+        self.user_unstake_event(&caller, &unstaking_vegld_amount, &unstaking_egld_amount);
     }
 
     //
@@ -141,7 +141,7 @@ pub trait UserModule:
     }
 
 
-    /// Put EGLD to PreUnstake Pool without minting VALAR
+    /// Put EGLD to PreUnstake Pool without minting VEGLD
     #[payable("EGLD")]
     #[endpoint]
     fn donate(&self) {

@@ -11,7 +11,7 @@ use liquid_staking::admin;
 use liquid_staking::user;
 
 pub mod event;
-pub mod valar;
+pub mod brand;
 pub mod config;
 pub mod delegate_proxy;
 pub mod amm;
@@ -22,7 +22,7 @@ pub mod view;
 use config::{ TOTAL_PERCENTAGE };
 
 #[elrond_wasm::contract]
-pub trait ValarLiquidStaking:
+pub trait VestaXLiquidStaking:
     common_storage::CommonStorageModule
     + pool_storage::PoolStorageModule
 
@@ -30,7 +30,7 @@ pub trait ValarLiquidStaking:
     + user::UserModule
 
     + event::EventModule
-    + valar::ValarModule
+    + brand::BrandModule
     + amm::AmmModule
     + validation::ValidationModule
 

@@ -1,5 +1,5 @@
 {
-    "name": "valar-liquid-staking",
+    "name": "vegld-liquid-staking",
     "comment": "add then check",
     "gasSchedule": "v3",
     "steps": [
@@ -24,7 +24,7 @@
             "id": "1",
             "tx": {
                 "from": "address:owner",
-                "contractCode": "file:../output/valar-liquid-staking.wasm",
+                "contractCode": "file:../output/vegld-liquid-staking.wasm",
                 "arguments": [
                     "5"
                 ],
@@ -91,7 +91,7 @@
                     "storage": {
                         "str:sum": "8"
                     },
-                    "code": "file:../output/valar-liquid-staking.wasm"
+                    "code": "file:../output/vegld-liquid-staking.wasm"
                 }
             }
         }

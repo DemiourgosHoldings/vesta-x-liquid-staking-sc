@@ -5,7 +5,7 @@
 #![no_std]
 
 elrond_wasm_node::wasm_endpoints! {
-    valar_liquid_staking
+    vesta_x_liquid_staking
     (
         callBack
         addAdmins
@@ -20,7 +20,7 @@ elrond_wasm_node::wasm_endpoints! {
         getEgldPrice
         getFee
         getPoolEgldAmount
-        getPoolValarAmount
+        getPoolVegldAmount
         getPrestakedEgldAmount
         getPreunstakedEgldAmount
         getTreasuryWallet
@@ -30,12 +30,12 @@ elrond_wasm_node::wasm_endpoints! {
         getUnstakingPacks
         getUnstakingUsers
         getUserActionAllowed
-        getValarIdentifier
-        getValarPrice
+        getVegldIdentifier
+        getVegldPrice
         isOwnerOrAdmin
-        issueValarAndSetAllRoles
+        issueVegldAndSetAllRoles
         quoteEgld
-        quoteValar
+        quoteVegld
         removeAdmins
         setAdminActionAllowed
         setFee

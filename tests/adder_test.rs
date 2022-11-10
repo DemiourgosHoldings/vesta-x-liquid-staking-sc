@@ -1,4 +1,4 @@
-use valar_liquid_staking::*;
+use vegld_liquid_staking::*;
 use elrond_wasm::types::BigUint;
 use elrond_wasm_debug::DebugApi;
 
@@ -6,7 +6,7 @@ use elrond_wasm_debug::DebugApi;
 fn test_add() {
     let _ = DebugApi::dummy();
 
-    let adder = valar_liquid_staking::contract_obj::<DebugApi>();
+    let adder = vegld_liquid_staking::contract_obj::<DebugApi>();
 
     adder.init(BigUint::from(5u32));
     assert_eq!(BigUint::from(5u32), adder.sum().get());

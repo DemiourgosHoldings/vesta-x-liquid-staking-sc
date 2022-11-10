@@ -6,9 +6,9 @@ elrond_wasm::derive_imports!();
 pub trait CommonStorageModule
 {
     // Liquid Staking Token
-    #[view(getValarIdentifier)]
-    #[storage_mapper("valar_identifier")]
-    fn valar_identifier(&self) -> FungibleTokenMapper<Self::Api>;
+    #[view(getVegldIdentifier)]
+    #[storage_mapper("vegld_identifier")]
+    fn vegld_identifier(&self) -> FungibleTokenMapper<Self::Api>;
 
     //
     #[view(getTreasuryWallet)]

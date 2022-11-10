@@ -3,25 +3,25 @@ elrond_wasm::derive_imports!();
 
 use crate::config::{
     TOKEN_ISSUE_COST,
-    VALAR_DISPLAY_NAME,
-    VALAR_TICKER,
-    VALAR_DECIMALS,
+    VEGLD_DISPLAY_NAME,
+    VEGLD_TICKER,
+    VEGLD_DECIMALS,
 };
 
 #[elrond_wasm::module]
-pub trait ValarModule:
+pub trait BrandModule:
     crate::common_storage::CommonStorageModule
     + crate::event::EventModule
 {
     #[only_owner]
     #[payable("EGLD")]
-    #[endpoint(issueValarAndSetAllRoles)]
-    fn issue_valar_and_set_all_roles(
+    #[endpoint(issueVegldAndSetAllRoles)]
+    fn issue_vegld_and_set_all_roles(
         &self,
     ) {
         require!(
-            self.valar_identifier().is_empty(),
-            "Valar token is already issued."
+            self.vegld_identifier().is_empty(),
+            "Vegld token is already issued."
         );
 
         let payment_amount = self.call_value().egld_value();
@@ -30,11 +30,11 @@ pub trait ValarModule:
             "Invalid payment amount. Issue costs exactly 0.05 EGLD"
         );
 
-        self.valar_identifier().issue_and_set_all_roles(
+        self.vegld_identifier().issue_and_set_all_roles(
             payment_amount,
-            ManagedBuffer::new_from_bytes(VALAR_DISPLAY_NAME),
-            ManagedBuffer::new_from_bytes(VALAR_TICKER),
-            VALAR_DECIMALS,
+            ManagedBuffer::new_from_bytes(VEGLD_DISPLAY_NAME),
+            ManagedBuffer::new_from_bytes(VEGLD_TICKER),
+            VEGLD_DECIMALS,
             Some(self.callbacks().issue_callback()),
         );
     }
@@ -46,11 +46,11 @@ pub trait ValarModule:
     ) {
         match result {
             ManagedAsyncCallResult::Ok(token_id) => {
-                self.valar_issue_success_event(&token_id);
-                self.valar_identifier().set_token_id(token_id);
+                self.vegld_issue_success_event(&token_id);
+                self.vegld_identifier().set_token_id(token_id);
             }
             ManagedAsyncCallResult::Err(_) => {
-                self.valar_issue_fail_event();
+                self.vegld_issue_fail_event();
             }
         }
     }
