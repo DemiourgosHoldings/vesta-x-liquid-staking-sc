@@ -48,6 +48,8 @@ pub trait ViewModule:
             preunstaked_egld_amount: self.preunstaked_egld_amount().get(),
             unstaking_egld_amount: self.unstaking_egld_amount().get(),
             unbonded_egld_amount: self.unbonded_egld_amount().get(),
+
+            vegld_price: self.get_vegld_price(),
         }
     }
 }

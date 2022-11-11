@@ -24,4 +24,6 @@ pub struct LiquidStakingSettings<M: ManagedTypeApi>  {
     pub preunstaked_egld_amount: BigUint<M>,
     pub unstaking_egld_amount: BigUint<M>,
     pub unbonded_egld_amount: BigUint<M>,
+
+    pub vegld_price: BigUint<M>,
 }
