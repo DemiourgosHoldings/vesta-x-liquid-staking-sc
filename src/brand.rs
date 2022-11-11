@@ -21,7 +21,7 @@ pub trait BrandModule:
     ) {
         require!(
             self.vegld_identifier().is_empty(),
-            "Vegld token is already issued."
+            "vEGLD token is already issued."
         );
 
         let payment_amount = self.call_value().egld_value();

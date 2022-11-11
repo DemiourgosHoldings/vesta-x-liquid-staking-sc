@@ -80,43 +80,6 @@ addAdmins() {
     --arguments ${ADMIN_ADDRESS_HEX}
 }
 
-stake() {
-    erdpy --verbose contract call ${ADDRESS} --send --proxy=${PROXY} --chain=${CHAIN_ID} --recall-nonce --pem=${WALLET} \
-    --gas-limit=30000000 \
-    --function="stake" \
-    --value ${STAKE_AMOUNT}
-}
-
-unstakeOneVegld() {
-    erdpy --verbose tx new --receiver ${ADDRESS} --recall-nonce --pem=${WALLET} --send --proxy=${PROXY} --chain=${CHAIN_ID} \
-    --gas-limit=30000000 \
-    --data=${DATA_UNSTAKE_ONE_VEGLD}
-}
-
-claim() {
-    erdpy --verbose contract call ${ADDRESS} --send --proxy=${PROXY} --chain=${CHAIN_ID} --recall-nonce --pem=${WALLET} \
-    --gas-limit=6000000 \
-    --function="claim"
-}
-
-adminRedelegateRewards() {
-    erdpy --verbose contract call ${ADDRESS} --send --proxy=${PROXY} --chain=${CHAIN_ID} --recall-nonce --pem=${WALLET} \
-    --gas-limit=30000000 \
-    --function="adminRedelegateRewards"
-}
-
-adminWithdraw() {
-    erdpy --verbose contract call ${ADDRESS} --send --proxy=${PROXY} --chain=${CHAIN_ID} --recall-nonce --pem=${WALLET} \
-    --gas-limit=30000000 \
-    --function="adminWithdraw"
-}
-
-adminClaimRewards() {
-    erdpy --verbose contract call ${ADDRESS} --send --proxy=${PROXY} --chain=${CHAIN_ID} --recall-nonce --pem=${WALLET} \
-    --gas-limit=30000000 \
-    --function="adminClaimRewards"
-}
-
 adminMoveTreasury() {
     erdpy --verbose contract call ${ADDRESS} --send --proxy=${PROXY} --chain=${CHAIN_ID} --recall-nonce --pem=${WALLET} \
     --gas-limit=30000000 \
