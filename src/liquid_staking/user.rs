@@ -2,6 +2,7 @@ elrond_wasm::imports!();
 elrond_wasm::derive_imports!();
 
 use crate::state::{ UnstakingPack };
+use crate::config::{ DELEGATE_MIN_AMOUNT };
 
 #[elrond_wasm::module]
 pub trait UserModule:
@@ -53,7 +54,7 @@ pub trait UserModule:
         self.user_stake_event(&caller, &staking_egld_amount, &vegld_mint_amount);
 
         // auto-delegate
-        if !self.auto_delegate_address().is_empty() {
+        if !self.auto_delegate_address().is_empty() && staking_egld_amount >= BigUint::from(DELEGATE_MIN_AMOUNT) {
             self._delegate(self.auto_delegate_address().get(), staking_egld_amount);
         }
     }
