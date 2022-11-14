@@ -38,4 +38,11 @@ pub trait CommonStorageModule
     #[view(getAdminActionAllowed)]
     #[storage_mapper("admin_action_allowed")]
     fn admin_action_allowed(&self) -> SingleValueMapper<bool>;
+
+    ///////////////////////////////////////////////////////////
+
+    // if this address is given, user stakes will be auto-delegated
+    #[view(getAutoDelegateAddress)]
+    #[storage_mapper("auto_delegate_address")]
+    fn auto_delegate_address(&self) -> SingleValueMapper<ManagedAddress>;
 }

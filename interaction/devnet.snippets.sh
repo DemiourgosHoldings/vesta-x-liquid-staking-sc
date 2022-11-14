@@ -12,6 +12,9 @@ FEE=1500 # 15%
 ADMIN_ADDRESS="erd1ygdttzrulwfspme2s4qrx5y2qyfqalju0k2vcyy8z3979whlj9qssl5uay"
 ADMIN_ADDRESS_HEX="0x$(erdpy wallet bech32 --decode ${ADMIN_ADDRESS})"
 
+AUTO_DELEGATE_ADDRESS="erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqx0llllsdx93z0" # staking agency
+AUTO_DELEGATE_ADDRESS_HEX="0x$(erdpy wallet bech32 --decode ${AUTO_DELEGATE_ADDRESS})"
+
 ###
 ISSUE_COST=50000000000000000 # 0.05 EGLD
 
@@ -98,6 +101,13 @@ adminMoveTreasury() {
     erdpy --verbose contract call ${ADDRESS} --send --proxy=${PROXY} --chain=${CHAIN_ID} --recall-nonce --pem=${WALLET} \
     --gas-limit=30000000 \
     --function="adminMoveTreasury"
+}
+
+setAutoDelegateAddress() {
+    erdpy --verbose contract call ${ADDRESS} --send --proxy=${PROXY} --chain=${CHAIN_ID} --recall-nonce --pem=${WALLET} \
+    --gas-limit=30000000 \
+    --function="setAutoDelegateAddress" \
+    --arguments ${AUTO_DELEGATE_ADDRESS_HEX}
 }
 
 ###

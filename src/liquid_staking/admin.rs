@@ -33,6 +33,15 @@ pub trait AdminModule:
             OptionalValue::None => self.prestaked_egld_amount().get(),
         };
 
+        self._delegate(delegate_address, delegating_amount);
+    }
+
+    #[inline]
+    fn _delegate(
+        &self,
+        delegate_address: ManagedAddress,
+        delegating_amount: BigUint,
+    ) {
         require!(
             delegating_amount >= BigUint::from(DELEGATE_MIN_AMOUNT),
             "delegating_amount cannot be less than 1 EGLD."

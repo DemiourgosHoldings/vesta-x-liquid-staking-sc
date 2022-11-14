@@ -10,6 +10,7 @@ pub trait UserModule:
     + crate::event::EventModule
     + crate::amm::AmmModule
     + crate::validation::ValidationModule
+    + crate::admin::AdminModule
 {
     #[payable("EGLD")]
     #[endpoint]
@@ -50,6 +51,11 @@ pub trait UserModule:
 
         //
         self.user_stake_event(&caller, &staking_egld_amount, &vegld_mint_amount);
+
+        // auto-delegate
+        if !self.auto_delegate_address().is_empty() {
+            self._delegate(self.auto_delegate_address().get(), staking_egld_amount);
+        }
     }
 
     //

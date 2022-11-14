@@ -154,4 +154,23 @@ pub trait VestaXLiquidStaking:
 
         self.admin_move_treasury_event(&treasury_wallet, &amount);
     }
+
+    #[endpoint(setAutoDelegateAddress)]
+    fn set_auto_delegate_address(
+        &self,
+        auto_delegate_address: ManagedAddress,
+    ) {
+        self.require_is_owner_or_admin();
+
+        self.auto_delegate_address().set(&auto_delegate_address);
+    }
+
+    #[endpoint(removeAutoDelegateAddress)]
+    fn remove_auto_delegate_address(
+        &self,
+    ) {
+        self.require_is_owner_or_admin();
+
+        self.auto_delegate_address().clear();
+    }
 }
