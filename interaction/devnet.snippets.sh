@@ -5,9 +5,9 @@ ADDRESS=$(erdpy data load --key=address-devnet)
 ######################################################################
 
 UNBONDING_PERIOD=14400 # 4 hours
-TREASURY_WALLET="erd16yr7tyck8d4ewp68uzd29jxwa3kj57nuhm6z37lxcp6w6xx8vemsnl5paf"
+TREASURY_WALLET="erd15936k9pw34xyzmcaupyn7lpr7f6p20q50h4wlgemxg7h9zasdfysmhg50z"
 TREASURY_WALLET_HEX="0x$(erdpy wallet bech32 --decode ${TREASURY_WALLET})"
-FEE=1000 # 10%
+FEE=1500 # 15%
 
 ADMIN_ADDRESS="erd1ygdttzrulwfspme2s4qrx5y2qyfqalju0k2vcyy8z3979whlj9qssl5uay"
 ADMIN_ADDRESS_HEX="0x$(erdpy wallet bech32 --decode ${ADMIN_ADDRESS})"
@@ -78,6 +78,20 @@ addAdmins() {
     --gas-limit=6000000 \
     --function="addAdmins" \
     --arguments ${ADMIN_ADDRESS_HEX}
+}
+
+setFee() {
+    erdpy --verbose contract call ${ADDRESS} --send --proxy=${PROXY} --chain=${CHAIN_ID} --recall-nonce --pem=${WALLET} \
+    --gas-limit=6000000 \
+    --function="setFee" \
+    --arguments ${FEE}
+}
+
+setTreasuryWallet() {
+    erdpy --verbose contract call ${ADDRESS} --send --proxy=${PROXY} --chain=${CHAIN_ID} --recall-nonce --pem=${WALLET} \
+    --gas-limit=6000000 \
+    --function="setTreasuryWallet" \
+    --arguments ${TREASURY_WALLET_HEX}
 }
 
 adminMoveTreasury() {
