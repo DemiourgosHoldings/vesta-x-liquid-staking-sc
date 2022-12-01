@@ -4,7 +4,7 @@ elrond_wasm::derive_imports!();
 use core::cmp::min;
 
 use crate::delegate_proxy;
-use crate::config::{ DELEGATE_MIN_AMOUNT, TOTAL_PERCENTAGE };
+use crate::constant::{ DELEGATE_MIN_AMOUNT, TOTAL_PERCENTAGE };
 
 #[elrond_wasm::module]
 pub trait AdminModule:
@@ -230,37 +230,4 @@ pub trait AdminModule:
             },
         }
     }
-
-    // deprecated - it may cause mismatching or security risk
-    // #[endpoint(adminClaimRewards)]
-    // fn admin_claim_rewards(&self, delegate_address: ManagedAddress) {
-    //     self.require_is_owner_or_admin();
-    //     self.require_admin_action_allowed();
-    //     self.require_initial_configuration_is_done();
-
-    //     let caller = self.blockchain().get_caller();
-    //     self.delegate_contract(delegate_address.clone())
-    //         .claimRewards()
-    //         .async_call()
-    //         .with_callback(self.callbacks().claim_rewards_callback(&caller, &delegate_address))
-    //         .call_and_exit();
-    // }
-
-    // #[callback]
-    // fn claim_rewards_callback(
-    //     &self,
-    //     #[call_result] result: ManagedAsyncCallResult<()>,
-    //     caller: &ManagedAddress,
-    //     delegate_address: &ManagedAddress,
-
-    // ) {
-    //     match result {
-    //         ManagedAsyncCallResult::Ok(()) => {
-    //             self.admin_claim_rewards_success_event(caller, delegate_address);
-    //         },
-    //         ManagedAsyncCallResult::Err(_) => {
-    //             self.admin_claim_rewards_fail_event(caller, delegate_address);
-    //         },
-    //     }
-    // }
 }

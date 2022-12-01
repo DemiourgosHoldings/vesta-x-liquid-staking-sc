@@ -10,7 +10,6 @@ elrond_wasm_node::wasm_endpoints! {
         callBack
         addAdmins
         adminDelegate
-        adminMoveTreasury
         adminRedelegateRewards
         adminUndelegate
         adminWithdraw

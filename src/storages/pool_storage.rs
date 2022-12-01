@@ -1,7 +1,7 @@
 elrond_wasm::imports!();
 elrond_wasm::derive_imports!();
 
-use crate::state::{ UnstakingPack };
+use crate::context::{ UnstakingPack };
 
 #[elrond_wasm::module]
 pub trait PoolStorageModule

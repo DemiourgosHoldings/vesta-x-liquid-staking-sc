@@ -1,7 +1,7 @@
 elrond_wasm::imports!();
 elrond_wasm::derive_imports!();
 
-use crate::config::{
+use crate::constant::{
     TOKEN_ISSUE_COST,
     VEGLD_DISPLAY_NAME,
     VEGLD_TICKER,

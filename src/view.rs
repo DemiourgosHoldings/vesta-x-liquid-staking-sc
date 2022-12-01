@@ -1,8 +1,8 @@
 elrond_wasm::imports!();
 elrond_wasm::derive_imports!();
 
-use crate::config::{ ONE_VEGLD_IN_WEI, ONE_EGLD_IN_WEI };
-use crate::state::{ LiquidStakingSettings };
+use crate::constant::{ ONE_VEGLD_IN_WEI, ONE_EGLD_IN_WEI };
+use crate::context::{ LiquidStakingSettings };
 
 #[elrond_wasm::module]
 pub trait ViewModule:
