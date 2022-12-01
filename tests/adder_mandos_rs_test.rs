@@ -4,7 +4,7 @@ fn world() -> BlockchainMock {
     let mut blockchain = BlockchainMock::new();
     blockchain.set_current_dir_from_workspace("contracts/examples/adder");
 
-    blockchain.register_contract_builder("file:output/adder.wasm", valar_liquid_staking::ContractBuilder);
+    blockchain.register_contract_builder("file:output/adder.wasm", vegld_liquid_staking::ContractBuilder);
     blockchain
 }
 

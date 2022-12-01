@@ -11,3 +11,4 @@ trace*.scen.json
 
 wallets/
 upgrade.json
+.vscode

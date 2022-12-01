@@ -1,3 +1,3 @@
 fn main() {
-    elrond_wasm_debug::meta::perform::<valar_liquid_staking::AbiProvider>();
+    elrond_wasm_debug::meta::perform::<vesta_x_liquid_staking::AbiProvider>();
 }

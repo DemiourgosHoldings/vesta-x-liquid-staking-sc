@@ -4,15 +4,15 @@ elrond_wasm::derive_imports!();
 #[elrond_wasm::module]
 pub trait EventModule
 {
-    // Valar Token
-    #[event("ValarIssueSuccess")]
-    fn valar_issue_success_event(
+    // Vegld Token
+    #[event("VegldIssueSuccess")]
+    fn vegld_issue_success_event(
         &self,
         #[indexed] token_id: &TokenIdentifier,
     );
 
-    #[event("ValarIssueFail")]
-    fn valar_issue_fail_event(
+    #[event("VegldIssueFail")]
+    fn vegld_issue_fail_event(
         &self,
     );
 
@@ -22,14 +22,14 @@ pub trait EventModule
         &self,
         #[indexed] user: &ManagedAddress,
         #[indexed] egld_amount: &BigUint,
-        #[indexed] valar_amount: &BigUint,
+        #[indexed] vegld_amount: &BigUint,
     );
 
     #[event("UserUnstake")]
     fn user_unstake_event(
         &self,
         #[indexed] user: &ManagedAddress,
-        #[indexed] valar_amount: &BigUint,
+        #[indexed] vegld_amount: &BigUint,
         #[indexed] egld_amount: &BigUint,
     );
 
@@ -142,7 +142,7 @@ pub trait EventModule
     fn update_main_pool_event(
         &self,
         #[indexed] caller: &ManagedAddress,
-        #[indexed] pool_valar_amount: &BigUint,
+        #[indexed] pool_vegld_amount: &BigUint,
         #[indexed] pool_egld_amount: &BigUint,
     );
 

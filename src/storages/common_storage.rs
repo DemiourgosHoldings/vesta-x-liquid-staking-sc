@@ -6,9 +6,9 @@ elrond_wasm::derive_imports!();
 pub trait CommonStorageModule
 {
     // Liquid Staking Token
-    #[view(getValarIdentifier)]
-    #[storage_mapper("valar_identifier")]
-    fn valar_identifier(&self) -> FungibleTokenMapper<Self::Api>;
+    #[view(getVegldIdentifier)]
+    #[storage_mapper("vegld_identifier")]
+    fn vegld_identifier(&self) -> FungibleTokenMapper<Self::Api>;
 
     //
     #[view(getTreasuryWallet)]
@@ -38,4 +38,11 @@ pub trait CommonStorageModule
     #[view(getAdminActionAllowed)]
     #[storage_mapper("admin_action_allowed")]
     fn admin_action_allowed(&self) -> SingleValueMapper<bool>;
+
+    ///////////////////////////////////////////////////////////
+
+    // if this address is given, user stakes will be auto-delegated
+    #[view(getAutoDelegateAddress)]
+    #[storage_mapper("auto_delegate_address")]
+    fn auto_delegate_address(&self) -> SingleValueMapper<ManagedAddress>;
 }

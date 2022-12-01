@@ -1,5 +1,5 @@
 [package]
-name = "valar-liquid-staking-wasm"
+name = "vesta-x-liquid-staking-wasm"
 version = "0.0.0"
 authors = [ "you",]
 edition = "2018"
@@ -20,7 +20,7 @@ lto = true
 debug = false
 panic = "abort"
 
-[dependencies.valar-liquid-staking]
+[dependencies.vesta-x-liquid-staking]
 path = ".."
 
 [dependencies.elrond-wasm-node]

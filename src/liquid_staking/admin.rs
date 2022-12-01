@@ -33,6 +33,15 @@ pub trait AdminModule:
             OptionalValue::None => self.prestaked_egld_amount().get(),
         };
 
+        self._delegate(delegate_address, delegating_amount);
+    }
+
+    #[inline]
+    fn _delegate(
+        &self,
+        delegate_address: ManagedAddress,
+        delegating_amount: BigUint,
+    ) {
         require!(
             delegating_amount >= BigUint::from(DELEGATE_MIN_AMOUNT),
             "delegating_amount cannot be less than 1 EGLD."
@@ -205,15 +214,16 @@ pub trait AdminModule:
                     false => self.fee().get(),
                 };
                 let fee_egld = rewards_amount.clone() * fee / TOTAL_PERCENTAGE;                
-                let fee_stegld = self.quote_valar(&fee_egld);
-                if fee_stegld != BigUint::zero() {
-                    // mint VALAR and send it to the treasury
-                    self.valar_identifier().mint_and_send(&self.treasury_wallet().get(), fee_stegld.clone());
+                let fee_vegld = self.quote_vegld(&fee_egld);
+                if fee_vegld != BigUint::zero() {
+                    // mint vEGLD and send it to the treasury
+                    self.vegld_identifier().mint_and_send(&self.treasury_wallet().get(), fee_vegld.clone());
+                    self.pool_vegld_amount().update(|v| *v += &fee_vegld);
                 }
 
                 self.pool_egld_amount().update(|v| *v += rewards_amount);
 
-                self.admin_redelegate_rewards_success_event(caller, delegate_address, rewards_amount, &fee_stegld);
+                self.admin_redelegate_rewards_success_event(caller, delegate_address, rewards_amount, &fee_vegld);
             },
             ManagedAsyncCallResult::Err(_) => {
                 self.admin_redelegate_rewards_fail_event(caller, delegate_address, rewards_amount);

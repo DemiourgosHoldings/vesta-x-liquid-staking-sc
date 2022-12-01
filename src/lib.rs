@@ -11,7 +11,7 @@ use liquid_staking::admin;
 use liquid_staking::user;
 
 pub mod event;
-pub mod valar;
+pub mod brand;
 pub mod config;
 pub mod delegate_proxy;
 pub mod amm;
@@ -22,7 +22,7 @@ pub mod view;
 use config::{ TOTAL_PERCENTAGE };
 
 #[elrond_wasm::contract]
-pub trait ValarLiquidStaking:
+pub trait VestaXLiquidStaking:
     common_storage::CommonStorageModule
     + pool_storage::PoolStorageModule
 
@@ -30,7 +30,7 @@ pub trait ValarLiquidStaking:
     + user::UserModule
 
     + event::EventModule
-    + valar::ValarModule
+    + brand::BrandModule
     + amm::AmmModule
     + validation::ValidationModule
 
@@ -153,5 +153,24 @@ pub trait ValarLiquidStaking:
         self.send().direct_egld(&treasury_wallet, &amount);
 
         self.admin_move_treasury_event(&treasury_wallet, &amount);
+    }
+
+    #[endpoint(setAutoDelegateAddress)]
+    fn set_auto_delegate_address(
+        &self,
+        auto_delegate_address: ManagedAddress,
+    ) {
+        self.require_is_owner_or_admin();
+
+        self.auto_delegate_address().set(&auto_delegate_address);
+    }
+
+    #[endpoint(removeAutoDelegateAddress)]
+    fn remove_auto_delegate_address(
+        &self,
+    ) {
+        self.require_is_owner_or_admin();
+
+        self.auto_delegate_address().clear();
     }
 }
