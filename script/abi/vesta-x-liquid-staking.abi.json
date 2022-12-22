@@ -10,7 +10,7 @@
         "contractCrate": {
             "name": "vesta-x-liquid-staking",
             "version": "0.1.0",
-            "git_version": "3a0c7d9-modified"
+            "git_version": "6e16059-modified"
         },
         "framework": {
             "name": "elrond-wasm",
@@ -337,6 +337,16 @@
             "outputs": [
                 {
                     "type": "BigUint"
+                }
+            ]
+        },
+        {
+            "name": "isTokenRolesSet",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "bool"
                 }
             ]
         },
@@ -1028,6 +1038,10 @@
                 },
                 {
                     "name": "admin_action_allowed",
+                    "type": "bool"
+                },
+                {
+                    "name": "is_token_roles_set",
                     "type": "bool"
                 },
                 {

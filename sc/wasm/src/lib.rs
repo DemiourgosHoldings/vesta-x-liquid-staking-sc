@@ -33,6 +33,7 @@ elrond_wasm_node::wasm_endpoints! {
         getVegldIdentifier
         getVegldPrice
         isOwnerOrAdmin
+        isTokenRolesSet
         issueVegldAndSetAllRoles
         quoteEgld
         quoteVegld

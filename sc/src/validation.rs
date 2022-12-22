@@ -38,5 +38,21 @@ pub trait ValidationModule:
             !self.treasury_wallet().get().is_zero(),
             "Initial Configuration is not done yet."
         );
+
+        let roles = self.blockchain().get_esdt_local_roles(self.vegld_identifier().get_token_id_ref());
+        require!(
+            roles.has_role(&EsdtLocalRole::Mint),
+            "Smart Contract does not have Mint role of vEGLD token"
+        );
+        require!(
+            roles.has_role(&EsdtLocalRole::Burn),
+            "Smart Contract does not have Burn role of vEGLD token"
+        );
+    }
+
+    #[view(isTokenRolesSet)]
+    fn is_token_roles_set(&self) -> bool {
+        let roles = self.blockchain().get_esdt_local_roles(self.vegld_identifier().get_token_id_ref());
+        roles.has_role(&EsdtLocalRole::Mint) && roles.has_role(&EsdtLocalRole::Burn)
     }
 }
