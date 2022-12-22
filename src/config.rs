@@ -33,7 +33,7 @@ pub trait ConfigModule:
     ) {
         self.treasury_wallet().set(&treasury_wallet);
         
-        self.change_treasury_wallet_event(&treasury_wallet);
+        self.change_treasury_wallet_event(&self.blockchain().get_caller(), &treasury_wallet, self.blockchain().get_block_timestamp());
     }
 
     #[only_owner]
@@ -48,7 +48,7 @@ pub trait ConfigModule:
         );
         self.fee().set(fee);
 
-        self.change_fee_event(fee);
+        self.change_fee_event(&self.blockchain().get_caller(), fee, self.blockchain().get_block_timestamp());
     }
 
     #[only_owner]

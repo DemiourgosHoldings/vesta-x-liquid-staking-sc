@@ -51,7 +51,7 @@ pub trait UserModule:
         self.vegld_identifier().mint_and_send(&caller, vegld_mint_amount.clone());
 
         //
-        self.user_stake_event(&caller, &staking_egld_amount, &vegld_mint_amount);
+        self.user_stake_event(&caller, &staking_egld_amount, &vegld_mint_amount, self.blockchain().get_block_timestamp());
 
         // auto-delegate
         if !self.auto_delegate_address().is_empty() && staking_egld_amount >= BigUint::from(DELEGATE_MIN_AMOUNT) {
@@ -89,7 +89,7 @@ pub trait UserModule:
             timestamp: self.blockchain().get_block_timestamp(),
         });
 
-        self.user_unstake_event(&caller, &unstaking_vegld_amount, &unstaking_egld_amount);
+        self.user_unstake_event(&caller, &unstaking_vegld_amount, &unstaking_egld_amount, self.blockchain().get_block_timestamp());
     }
 
     //
@@ -144,7 +144,7 @@ pub trait UserModule:
         
         self.send().direct_egld(&caller, &unbonded_amount);
         
-        self.user_withdraw_event(&caller, &unbonded_amount);
+        self.user_withdraw_event(&caller, &unbonded_amount, self.blockchain().get_block_timestamp());
     }
 
 
@@ -162,6 +162,6 @@ pub trait UserModule:
         self.pool_egld_amount().update(|v| *v += &staking_egld_amount);
 
         //
-        self.donate_event(&caller, &staking_egld_amount);
+        self.donate_event(&caller, &staking_egld_amount, self.blockchain().get_block_timestamp());
     }
 }

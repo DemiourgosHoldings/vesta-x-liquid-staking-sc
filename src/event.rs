@@ -9,35 +9,40 @@ pub trait EventModule
     fn vegld_issue_success_event(
         &self,
         #[indexed] token_id: &TokenIdentifier,
+        #[indexed] timestamp: u64,
     );
 
     #[event("VegldIssueFail")]
     fn vegld_issue_fail_event(
         &self,
+        #[indexed] timestamp: u64,
     );
 
     // User Activities
     #[event("UserStake")]
     fn user_stake_event(
         &self,
-        #[indexed] user: &ManagedAddress,
+        #[indexed] caller: &ManagedAddress,
         #[indexed] egld_amount: &BigUint,
         #[indexed] vegld_amount: &BigUint,
+        #[indexed] timestamp: u64,
     );
 
     #[event("UserUnstake")]
     fn user_unstake_event(
         &self,
-        #[indexed] user: &ManagedAddress,
+        #[indexed] caller: &ManagedAddress,
         #[indexed] vegld_amount: &BigUint,
         #[indexed] egld_amount: &BigUint,
+        #[indexed] timestamp: u64,
     );
 
     #[event("UserWithdraw")]
     fn user_withdraw_event(
         &self,
-        #[indexed] user: &ManagedAddress,
+        #[indexed] caller: &ManagedAddress,
         #[indexed] egld_amount: &BigUint,
+        #[indexed] timestamp: u64,
     );
 
     #[event("Donate")]
@@ -45,6 +50,7 @@ pub trait EventModule
         &self,
         #[indexed] caller: &ManagedAddress,
         #[indexed] egld_amount: &BigUint,
+        #[indexed] timestamp: u64,
     );
 
     // Admin
@@ -54,6 +60,7 @@ pub trait EventModule
         #[indexed] caller: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,
         #[indexed] egld_amount: &BigUint,
+        #[indexed] timestamp: u64,
     );
 
     #[event("AdminDelegateFail")]
@@ -62,6 +69,7 @@ pub trait EventModule
         #[indexed] caller: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,
         #[indexed] egld_amount: &BigUint,
+        #[indexed] timestamp: u64,
         err_msg: &ManagedBuffer,
     );
 
@@ -71,6 +79,7 @@ pub trait EventModule
         #[indexed] caller: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,
         #[indexed] egld_amount: &BigUint,
+        #[indexed] timestamp: u64,
     );
 
     #[event("AdminUndelegateFail")]
@@ -79,6 +88,7 @@ pub trait EventModule
         #[indexed] caller: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,
         #[indexed] egld_amount: &BigUint,
+        #[indexed] timestamp: u64,
         err_msg: &ManagedBuffer,
     );
 
@@ -88,6 +98,7 @@ pub trait EventModule
         #[indexed] caller: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,
         #[indexed] egld_amount: &BigUint,
+        #[indexed] timestamp: u64,
     );
 
     #[event("AdminWithdrawFail")]
@@ -96,6 +107,7 @@ pub trait EventModule
         #[indexed] caller: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,
         #[indexed] egld_amount: &BigUint,
+        #[indexed] timestamp: u64,
     );
 
     // Rewards
@@ -106,6 +118,7 @@ pub trait EventModule
         #[indexed] delegate_address: &ManagedAddress,
         #[indexed] rewards_amount: &BigUint,
         #[indexed] fee_stegld_amount: &BigUint,
+        #[indexed] timestamp: u64,
     );
 
     #[event("AdminRedelegateRewardsFail")]
@@ -114,6 +127,7 @@ pub trait EventModule
         #[indexed] caller: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,
         #[indexed] rewards_amount: &BigUint,
+        #[indexed] timestamp: u64,
     );
 
     #[event("AdminClaimRewardsSuccess")]
@@ -121,6 +135,7 @@ pub trait EventModule
         &self,
         #[indexed] caller: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,
+        #[indexed] timestamp: u64,
     );
 
     #[event("AdminClaimRewardsFail")]
@@ -128,13 +143,16 @@ pub trait EventModule
         &self,
         #[indexed] caller: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,
+        #[indexed] timestamp: u64,
     );
 
     #[event("AdminMoveTreasury")]
     fn admin_move_treasury_event(
         &self,
+        #[indexed] caller: &ManagedAddress,
         #[indexed] to: &ManagedAddress,
         #[indexed] egld_amount: &BigUint,
+        #[indexed] timestamp: u64,
     );
 
     // Pool
@@ -144,24 +162,31 @@ pub trait EventModule
         #[indexed] caller: &ManagedAddress,
         #[indexed] pool_vegld_amount: &BigUint,
         #[indexed] pool_egld_amount: &BigUint,
+        #[indexed] timestamp: u64,
     );
 
     // Admin Settings
     #[event("ChangeDelegateAddress")]
     fn change_delegate_address_event(
         &self,
+        #[indexed] caller: &ManagedAddress,
         #[indexed] to: &ManagedAddress,
+        #[indexed] timestamp: u64,
     );
 
     #[event("ChangeTreasuryWallet")]
     fn change_treasury_wallet_event(
         &self,
+        #[indexed] caller: &ManagedAddress,
         #[indexed] to: &ManagedAddress,
+        #[indexed] timestamp: u64,
     );
 
     #[event("ChangeFee")]
     fn change_fee_event(
         &self,
+        #[indexed] caller: &ManagedAddress,
         #[indexed] fee: u64,
+        #[indexed] timestamp: u64,
     );
 }

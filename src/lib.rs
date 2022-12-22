@@ -3,12 +3,12 @@
 elrond_wasm::imports!();
 elrond_wasm::derive_imports!();
 
-mod storages;
-use storages::common_storage;
-use storages::pool_storage;
-mod liquid_staking;
-use liquid_staking::admin;
-use liquid_staking::user;
+pub mod storages;
+pub use storages::common_storage;
+pub use storages::pool_storage;
+pub mod liquid_staking;
+pub use liquid_staking::admin;
+pub use liquid_staking::user;
 
 pub mod event;
 pub mod brand;

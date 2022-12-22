@@ -46,11 +46,11 @@ pub trait BrandModule:
     ) {
         match result {
             ManagedAsyncCallResult::Ok(token_id) => {
-                self.vegld_issue_success_event(&token_id);
+                self.vegld_issue_success_event(&token_id, self.blockchain().get_block_timestamp());
                 self.vegld_identifier().set_token_id(token_id);
             }
             ManagedAsyncCallResult::Err(_) => {
-                self.vegld_issue_fail_event();
+                self.vegld_issue_fail_event(self.blockchain().get_block_timestamp());
             }
         }
     }

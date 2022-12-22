@@ -73,10 +73,10 @@ pub trait AdminModule:
             ManagedAsyncCallResult::Ok(()) => {
                 // update Prestake Pool
                 self.prestaked_egld_amount().update(|v| *v -= delegated_amount);
-                self.admin_delegate_success_event(caller, delegate_address, delegated_amount);
+                self.admin_delegate_success_event(caller, delegate_address, delegated_amount, self.blockchain().get_block_timestamp());
             },
             ManagedAsyncCallResult::Err(err) => {
-                self.admin_delegate_fail_event(caller, delegate_address, delegated_amount, &err.err_msg);
+                self.admin_delegate_fail_event(caller, delegate_address, delegated_amount, self.blockchain().get_block_timestamp(), &err.err_msg);
             },
         }
     }
@@ -128,10 +128,10 @@ pub trait AdminModule:
                 self.preunstaked_egld_amount().update(|v| *v -= undelegated_amount);
                 self.unstaking_egld_amount().update(|v| *v += undelegated_amount);
 
-                self.admin_undelegate_success_event(caller, delegate_address, undelegated_amount);
+                self.admin_undelegate_success_event(caller, delegate_address, undelegated_amount, self.blockchain().get_block_timestamp());
             },
             ManagedAsyncCallResult::Err(err) => {
-                self.admin_undelegate_fail_event(caller, delegate_address, undelegated_amount, &err.err_msg);
+                self.admin_undelegate_fail_event(caller, delegate_address, undelegated_amount, self.blockchain().get_block_timestamp(), &err.err_msg);
             },
         } 
     }
@@ -165,10 +165,10 @@ pub trait AdminModule:
                 self.unstaking_egld_amount().update(|v| *v -= withdraw_amount);
                 self.unbonded_egld_amount().update(|v| *v += withdraw_amount);
 
-                self.admin_withdraw_success_event(caller, delegate_address, withdraw_amount);
+                self.admin_withdraw_success_event(caller, delegate_address, withdraw_amount, self.blockchain().get_block_timestamp());
             },
             ManagedAsyncCallResult::Err(_) => {
-                self.admin_withdraw_fail_event(caller, delegate_address, withdraw_amount);
+                self.admin_withdraw_fail_event(caller, delegate_address, withdraw_amount, self.blockchain().get_block_timestamp());
             },
         }
     }
@@ -223,10 +223,10 @@ pub trait AdminModule:
 
                 self.pool_egld_amount().update(|v| *v += rewards_amount);
 
-                self.admin_redelegate_rewards_success_event(caller, delegate_address, rewards_amount, &fee_vegld);
+                self.admin_redelegate_rewards_success_event(caller, delegate_address, rewards_amount, &fee_vegld, self.blockchain().get_block_timestamp());
             },
             ManagedAsyncCallResult::Err(_) => {
-                self.admin_redelegate_rewards_fail_event(caller, delegate_address, rewards_amount);
+                self.admin_redelegate_rewards_fail_event(caller, delegate_address, rewards_amount, self.blockchain().get_block_timestamp());
             },
         }
     }
