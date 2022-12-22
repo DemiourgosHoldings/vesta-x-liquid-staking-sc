@@ -10,7 +10,7 @@
         "contractCrate": {
             "name": "vesta-x-liquid-staking",
             "version": "0.1.0",
-            "git_version": "ff2bbd7-modified"
+            "git_version": "8d5adc0-modified"
         },
         "framework": {
             "name": "elrond-wasm",
@@ -856,71 +856,6 @@
                 },
                 {
                     "name": "rewards_amount",
-                    "type": "BigUint",
-                    "indexed": true
-                },
-                {
-                    "name": "timestamp",
-                    "type": "u64",
-                    "indexed": true
-                }
-            ]
-        },
-        {
-            "identifier": "AdminClaimRewardsSuccess",
-            "inputs": [
-                {
-                    "name": "caller",
-                    "type": "Address",
-                    "indexed": true
-                },
-                {
-                    "name": "delegate_address",
-                    "type": "Address",
-                    "indexed": true
-                },
-                {
-                    "name": "timestamp",
-                    "type": "u64",
-                    "indexed": true
-                }
-            ]
-        },
-        {
-            "identifier": "AdminClaimRewardsFail",
-            "inputs": [
-                {
-                    "name": "caller",
-                    "type": "Address",
-                    "indexed": true
-                },
-                {
-                    "name": "delegate_address",
-                    "type": "Address",
-                    "indexed": true
-                },
-                {
-                    "name": "timestamp",
-                    "type": "u64",
-                    "indexed": true
-                }
-            ]
-        },
-        {
-            "identifier": "AdminMoveTreasury",
-            "inputs": [
-                {
-                    "name": "caller",
-                    "type": "Address",
-                    "indexed": true
-                },
-                {
-                    "name": "to",
-                    "type": "Address",
-                    "indexed": true
-                },
-                {
-                    "name": "egld_amount",
                     "type": "BigUint",
                     "indexed": true
                 },

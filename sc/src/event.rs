@@ -130,31 +130,6 @@ pub trait EventModule
         #[indexed] timestamp: u64,
     );
 
-    #[event("AdminClaimRewardsSuccess")]
-    fn admin_claim_rewards_success_event(
-        &self,
-        #[indexed] caller: &ManagedAddress,
-        #[indexed] delegate_address: &ManagedAddress,
-        #[indexed] timestamp: u64,
-    );
-
-    #[event("AdminClaimRewardsFail")]
-    fn admin_claim_rewards_fail_event(
-        &self,
-        #[indexed] caller: &ManagedAddress,
-        #[indexed] delegate_address: &ManagedAddress,
-        #[indexed] timestamp: u64,
-    );
-
-    #[event("AdminMoveTreasury")]
-    fn admin_move_treasury_event(
-        &self,
-        #[indexed] caller: &ManagedAddress,
-        #[indexed] to: &ManagedAddress,
-        #[indexed] egld_amount: &BigUint,
-        #[indexed] timestamp: u64,
-    );
-
     // Pool
     #[event("UpdateMainPool")]
     fn update_main_pool_event(
