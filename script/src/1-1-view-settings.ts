@@ -25,7 +25,7 @@ import {
 	U32Value,
 } from "@elrondnetwork/erdjs/out";
 import {
-	EXPLORER_URL,
+	EXPLORER_URL, ZERO_ADDRESS,
 } from "./config";
 
 import {
@@ -61,6 +61,7 @@ async function main() {
         user_action_allowed: value.user_action_allowed,
         admin_action_allowed: value.admin_action_allowed,
         is_token_roles_set: value.is_token_roles_set,
+		auto_delegate_address: value.auto_delegate_address.toString() == ZERO_ADDRESS ? '' : value.auto_delegate_address.toString(),
 
         pool_vegld_amount: value.pool_vegld_amount.toFixed(),
         pool_egld_amount: value.pool_egld_amount.toFixed(),

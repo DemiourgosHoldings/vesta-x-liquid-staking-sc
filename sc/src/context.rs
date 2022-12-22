@@ -18,6 +18,7 @@ pub struct LiquidStakingSettings<M: ManagedTypeApi>  {
     pub user_action_allowed: bool,
     pub admin_action_allowed: bool,
     pub is_token_roles_set: bool,
+    pub auto_delegate_address: ManagedAddress<M>,
 
     pub pool_vegld_amount: BigUint<M>,
     pub pool_egld_amount: BigUint<M>,

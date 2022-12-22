@@ -37,7 +37,10 @@ export const HEIDI_ADDRESS = 'erd1dc3yzxxeq69wvf583gw0h67td226gu2ahpk3k50qdgzzym
 //
 export const SET_SETTINGS_GAS_LIMIT = 6_000_000;
 export const ISSUE_GAS_LIMIT = 100_000_000;
-export const USER_STAKE_GAS_LIMIT = 6_000_000;
+
+// export const USER_STAKE_GAS_LIMIT = 6_000_000;   // when auto-delegate disalbled
+export const USER_STAKE_GAS_LIMIT = 20_000_000;     // when auto-delegate enabled
+
 export const USER_UNSTAKE_GAS_LIMIT = 8_000_000;
 export const USER_WITHDRAW_GAS_LIMIT = 8_000_000;
 export const ADMIN_DELEGATE_GAS_LIMIT = 20_000_000;
@@ -49,6 +52,12 @@ export const ADMIN_REDELEGATE_GAS_LIMIT = 20_000_000;
 export const UNBONDING_PERIOD = 3600 * 24 * 2; // 2 hours on testnet & devnet
 export const TREASURY_WALLET = 'erd15936k9pw34xyzmcaupyn7lpr7f6p20q50h4wlgemxg7h9zasdfysmhg50z';
 export const FEE = 1500; // 15%
+export const ADMIN_ADDRESSES = [
+    'erd1ygdttzrulwfspme2s4qrx5y2qyfqalju0k2vcyy8z3979whlj9qssl5uay',
+    'erd1a2g46tj6lxjf0fhy760awqej4g5040kcfcuzjkfqx7g8fydr03as92g0q2',
+];
+export const USER_ACTION_ALLOWED = true;
+export const ADMIN_ACTION_ALLOWED = true;
 
 //
 export const VEGLD_TOKEN = 'VEGLD-b9383c';

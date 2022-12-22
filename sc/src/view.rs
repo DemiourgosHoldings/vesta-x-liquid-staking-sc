@@ -35,13 +35,6 @@ pub trait ViewModule:
             admins.push(admin);
         }
 
-        // to prevent panic when pool_vegld_amount is zero
-        let vegld_price = if self.pool_vegld_amount().get() != BigUint::zero() {
-            self.get_vegld_price()
-        } else {
-            BigUint::zero()
-        };
-
         LiquidStakingSettings {
             vegld_identifier: self.vegld_identifier().get_token_id(),
             treasury_wallet: self.treasury_wallet().get(),
@@ -51,6 +44,7 @@ pub trait ViewModule:
             user_action_allowed: self.user_action_allowed().get(),
             admin_action_allowed: self.admin_action_allowed().get(),
             is_token_roles_set: self.is_token_roles_set(),
+            auto_delegate_address: if self.auto_delegate_address().is_empty() { ManagedAddress::zero() } else { self.auto_delegate_address().get() },
 
             pool_vegld_amount: self.pool_vegld_amount().get(),
             pool_egld_amount: self.pool_egld_amount().get(),
@@ -58,7 +52,9 @@ pub trait ViewModule:
             preunstaked_egld_amount: self.preunstaked_egld_amount().get(),
             unstaking_egld_amount: self.unstaking_egld_amount().get(),
             unbonded_egld_amount: self.unbonded_egld_amount().get(),
-            vegld_price,
+
+            // to prevent panic when pool_vegld_amount is zero
+            vegld_price: if self.pool_vegld_amount().get() != BigUint::zero() { self.get_vegld_price() } else { BigUint::zero() },
         }
     }
 
