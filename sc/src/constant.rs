@@ -1,6 +1,6 @@
 pub const TOKEN_ISSUE_COST: u64 = 50_000_000_000_000_000; // 0.05 EGLD
 pub const ONE_EGLD_IN_WEI: u64 = 1_000_000_000_000_000_000;
-pub const TOTAL_PERCENTAGE: u64 = 10_000;
+pub const TOTAL_PERCENTAGE: u64 = 100_00;
 
 // Vegld Token
 pub const VEGLD_DISPLAY_NAME: &[u8] = b"VestaXStakedEGLD";
@@ -10,6 +10,3 @@ pub const ONE_VEGLD_IN_WEI: u64 = 1_000_000_000_000_000_000;
 
 // Delegate
 pub const DELEGATE_MIN_AMOUNT: u64 = 1_000_000_000_000_000_000;
-
-// Undelegate
-pub const UNBONDING_PERIOD: u64 = 3600 * 24 * 11; // 11 days

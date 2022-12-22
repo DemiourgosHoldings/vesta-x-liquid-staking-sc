@@ -38,11 +38,18 @@ export const HEIDI_ADDRESS = 'erd1dc3yzxxeq69wvf583gw0h67td226gu2ahpk3k50qdgzzym
 export const SET_SETTINGS_GAS_LIMIT = 6_000_000;
 export const ISSUE_GAS_LIMIT = 100_000_000;
 export const USER_STAKE_GAS_LIMIT = 6_000_000;
+export const USER_UNSTAKE_GAS_LIMIT = 8_000_000;
+export const USER_WITHDRAW_GAS_LIMIT = 8_000_000;
 
 //
 export const UNBONDING_PERIOD = 3600 * 24 * 2; // 2 hours on testnet & devnet
 export const TREASURY_WALLET = 'erd15936k9pw34xyzmcaupyn7lpr7f6p20q50h4wlgemxg7h9zasdfysmhg50z';
 export const FEE = 1500; // 15%
+
+//
+export const VEGLD_TOKEN = 'VEGLD-b9383c';
+export const VEGLD_DECIMALS = 18;
+export const VEGLD_TICKER = 'vEGLD';
 
 //
 export const USER_STAKE_AMOUNT = 1_000_000_000_000_000_000;
