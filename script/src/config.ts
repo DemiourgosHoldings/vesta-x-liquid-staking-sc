@@ -40,6 +40,10 @@ export const ISSUE_GAS_LIMIT = 100_000_000;
 export const USER_STAKE_GAS_LIMIT = 6_000_000;
 export const USER_UNSTAKE_GAS_LIMIT = 8_000_000;
 export const USER_WITHDRAW_GAS_LIMIT = 8_000_000;
+export const ADMIN_DELEGATE_GAS_LIMIT = 20_000_000;
+export const ADMIN_UNDELEGATE_GAS_LIMIT = 20_000_000;
+export const ADMIN_WITHDRAW_GAS_LIMIT = 20_000_000;
+export const ADMIN_REDELEGATE_GAS_LIMIT = 20_000_000;
 
 //
 export const UNBONDING_PERIOD = 3600 * 24 * 2; // 2 hours on testnet & devnet
@@ -52,4 +56,9 @@ export const VEGLD_DECIMALS = 18;
 export const VEGLD_TICKER = 'vEGLD';
 
 //
+export const DELEGATE_ADDRESS = 'erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp0llllswfeycs'; // should be Parasco in default
+
+//
 export const USER_STAKE_AMOUNT = 1_000_000_000_000_000_000;
+export const ADMIN_WITDRAW_AMOUNT = 1_000_000_000_000_000_000;
+export const REDELEGATE_AMOUNT = 1_000_000;
