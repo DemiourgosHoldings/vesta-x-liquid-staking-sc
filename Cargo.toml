@@ -4,6 +4,7 @@ version = "0.1.0"
 authors = [ "Ice <icegriffin1122@gmail.com>",]
 edition = "2018"
 publish = false
+license = "GPL3 or later"
 
 [lib]
 path = "src/lib.rs"
