@@ -49,6 +49,7 @@ elrond_wasm_node::wasm_endpoints! {
         stake
         unstake
         viewLiquidStakingSettings
+        viewUserUnstakingPacks
         withdraw
     )
 }

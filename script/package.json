@@ -4,7 +4,9 @@
     "description": "",
     "scripts": {
       "1": "ts-node src/1-0-set-settings",
-      "1-1": "ts-node src/1-1-view-settings"
+      "1-1": "ts-node src/1-1-view-settings",
+      "2": "ts-node src/2-0-issue-vegld-and-set-all-roles",
+      "3": "ts-node src/3-1-user-stake"
     },
     "author": "Ice <icegriffin1122@gmail.com>",
     "license": "GPL3 or later",

@@ -2,7 +2,7 @@ elrond_wasm::imports!();
 elrond_wasm::derive_imports!();
 
 use crate::constant::{ ONE_VEGLD_IN_WEI, ONE_EGLD_IN_WEI };
-use crate::context::{ LiquidStakingSettings };
+use crate::context::{ LiquidStakingSettings, UserUnstakingPacks };
 
 #[elrond_wasm::module]
 pub trait ViewModule:
@@ -60,5 +60,22 @@ pub trait ViewModule:
             unbonded_egld_amount: self.unbonded_egld_amount().get(),
             vegld_price,
         }
+    }
+
+    #[view(viewUserUnstakingPacks)]
+    fn view_user_unstaking_packs(&self) -> ManagedVec<UserUnstakingPacks<Self::Api>> {
+        let mut user_unstaking_packs = ManagedVec::new();
+        for address in self.unstaking_users().iter() {
+            let unstaking_packs = self.unstaking_packs(&address);
+            let mut packs = ManagedVec::new();
+            for node_pack in unstaking_packs.iter() {
+                packs.push(node_pack.into_value());
+            }
+            user_unstaking_packs.push(UserUnstakingPacks {
+                address,
+                packs,
+            });
+        }
+        user_unstaking_packs
     }
 }

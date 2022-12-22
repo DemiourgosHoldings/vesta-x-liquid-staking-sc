@@ -28,3 +28,9 @@ pub struct LiquidStakingSettings<M: ManagedTypeApi>  {
 
     pub vegld_price: BigUint<M>,
 }
+
+#[derive(TopEncode, TopDecode, NestedEncode, NestedDecode, TypeAbi, ManagedVecItem, Clone)]
+pub struct UserUnstakingPacks<M: ManagedTypeApi>  {
+    pub address: ManagedAddress<M>,
+    pub packs: ManagedVec<M, UnstakingPack<M>>,
+}

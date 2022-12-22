@@ -10,7 +10,7 @@
         "contractCrate": {
             "name": "vesta-x-liquid-staking",
             "version": "0.1.0",
-            "git_version": "6e16059-modified"
+            "git_version": "3256a6e-modified"
         },
         "framework": {
             "name": "elrond-wasm",
@@ -395,6 +395,16 @@
             "outputs": [
                 {
                     "type": "LiquidStakingSettings"
+                }
+            ]
+        },
+        {
+            "name": "viewUserUnstakingPacks",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "List<UserUnstakingPacks>"
                 }
             ]
         },
@@ -1084,6 +1094,19 @@
                 {
                     "name": "timestamp",
                     "type": "u64"
+                }
+            ]
+        },
+        "UserUnstakingPacks": {
+            "type": "struct",
+            "fields": [
+                {
+                    "name": "address",
+                    "type": "Address"
+                },
+                {
+                    "name": "packs",
+                    "type": "List<UnstakingPack>"
                 }
             ]
         }
