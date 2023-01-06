@@ -84,7 +84,7 @@ pub trait AdminModule:
     #[endpoint(adminUndelegate)]
     fn admin_undelegate(
         &self,
-        delegate_address: ManagedAddress,
+        undelegate_address: ManagedAddress,
         opt_amount: OptionalValue<BigUint>,
     ) {
         self.require_is_owner_or_admin();
@@ -97,6 +97,15 @@ pub trait AdminModule:
             OptionalValue::None => self.preunstaked_egld_amount().get(),
         };
 
+        self._undelegate(undelegate_address, undelegating_amount);
+    }
+
+    #[inline]
+    fn _undelegate(
+        &self,
+        undelegate_address: ManagedAddress,
+        undelegating_amount: BigUint,
+    ) {
         require!(
             undelegating_amount >= BigUint::from(DELEGATE_MIN_AMOUNT),
             "undelegating_amount cannot be less than 1 EGLD."
@@ -104,12 +113,12 @@ pub trait AdminModule:
 
         let caller = self.blockchain().get_caller();
 
-        self.delegate_contract(delegate_address.clone())
+        self.delegate_contract(undelegate_address.clone())
             .unDelegate(undelegating_amount.clone())
             .async_call()
             .with_callback(self.callbacks().admin_undelegate_callback(
                 &caller,
-                &delegate_address,
+                &undelegate_address,
                 &undelegating_amount,
             ))
             .call_and_exit();

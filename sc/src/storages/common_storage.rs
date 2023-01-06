@@ -45,4 +45,9 @@ pub trait CommonStorageModule
     #[view(getAutoDelegateAddress)]
     #[storage_mapper("auto_delegate_address")]
     fn auto_delegate_address(&self) -> SingleValueMapper<ManagedAddress>;
+
+    // if this address is given, user stakes will be auto-delegated
+    #[view(getAutoUndelegateAddress)]
+    #[storage_mapper("auto_undelegate_address")]
+    fn auto_undelegate_address(&self) -> SingleValueMapper<ManagedAddress>;
 }

@@ -90,6 +90,11 @@ pub trait UserModule:
         });
 
         self.user_unstake_event(&caller, &unstaking_vegld_amount, &unstaking_egld_amount, self.blockchain().get_block_timestamp());
+
+        // auto-undelegate
+        if !self.auto_undelegate_address().is_empty() && unstaking_egld_amount >= BigUint::from(DELEGATE_MIN_AMOUNT) {
+            self._undelegate(self.auto_undelegate_address().get(), unstaking_egld_amount);
+        }
     }
 
     //

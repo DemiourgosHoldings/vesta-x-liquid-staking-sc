@@ -36,10 +36,10 @@ export const SET_SETTINGS_GAS_LIMIT = 6_000_000;
 export const ISSUE_GAS_LIMIT = 100_000_000;
 
 // export const USER_STAKE_GAS_LIMIT = 6_000_000;   // when auto-delegate disalbled
-export const USER_STAKE_GAS_LIMIT = 20_000_000;     // when auto-delegate enabled
+export const USER_STAKE_GAS_LIMIT = 25_000_000;     // when auto-delegate enabled
 
-export const USER_UNSTAKE_GAS_LIMIT = 8_000_000;
-export const USER_WITHDRAW_GAS_LIMIT = 8_000_000;
+export const USER_UNSTAKE_GAS_LIMIT = 25_000_000;
+export const USER_WITHDRAW_GAS_LIMIT = 15_000_000;
 export const ADMIN_DELEGATE_GAS_LIMIT = 20_000_000;
 export const ADMIN_UNDELEGATE_GAS_LIMIT = 20_000_000;
 export const ADMIN_WITHDRAW_GAS_LIMIT = 20_000_000;
@@ -63,6 +63,7 @@ export const VEGLD_TICKER = 'vEGLD';
 
 //
 export const DELEGATE_ADDRESS = 'erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqq50lllls8dl5vl'; // should be Parasco in default
+export const UNDELEGATE_ADDRESS = 'erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqq50lllls8dl5vl'; // should be Parasco in default
 
 //
 export const USER_STAKE_AMOUNT = 1_000_000_000_000_000_000;

@@ -45,6 +45,7 @@ pub trait ViewModule:
             admin_action_allowed: self.admin_action_allowed().get(),
             is_token_roles_set: self.is_token_roles_set(),
             auto_delegate_address: if self.auto_delegate_address().is_empty() { ManagedAddress::zero() } else { self.auto_delegate_address().get() },
+            auto_undelegate_address: if self.auto_undelegate_address().is_empty() { ManagedAddress::zero() } else { self.auto_undelegate_address().get() },
 
             pool_vegld_amount: self.pool_vegld_amount().get(),
             pool_egld_amount: self.pool_egld_amount().get(),
