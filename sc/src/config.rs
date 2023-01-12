@@ -105,6 +105,7 @@ pub trait ConfigModule:
         self.admin_action_allowed().set(admin_action_allowed);
     }
 
+    //
     #[endpoint(setAutoDelegateAddress)]
     fn set_auto_delegate_address(
         &self,
@@ -122,5 +123,24 @@ pub trait ConfigModule:
         self.require_is_owner_or_admin();
 
         self.auto_delegate_address().clear();
+    }
+
+    #[endpoint(setAutoUndelegateAddress)]
+    fn set_auto_undelegate_address(
+        &self,
+        auto_undelegate_address: ManagedAddress,
+    ) {
+        self.require_is_owner_or_admin();
+
+        self.auto_undelegate_address().set(&auto_undelegate_address);
+    }
+
+    #[endpoint(removeAutoUndelegateAddress)]
+    fn remove_auto_undelegate_address(
+        &self,
+    ) {
+        self.require_is_owner_or_admin();
+
+        self.auto_undelegate_address().clear();
     }
 }

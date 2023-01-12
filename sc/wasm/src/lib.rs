@@ -17,6 +17,7 @@ elrond_wasm_node::wasm_endpoints! {
         getAdminActionAllowed
         getAdmins
         getAutoDelegateAddress
+        getAutoUndelegateAddress
         getEgldPrice
         getFee
         getPoolEgldAmount
@@ -39,8 +40,10 @@ elrond_wasm_node::wasm_endpoints! {
         quoteVegld
         removeAdmins
         removeAutoDelegateAddress
+        removeAutoUndelegateAddress
         setAdminActionAllowed
         setAutoDelegateAddress
+        setAutoUndelegateAddress
         setFee
         setSettings
         setTreasuryWallet

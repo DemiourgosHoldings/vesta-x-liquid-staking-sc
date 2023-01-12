@@ -10,7 +10,7 @@
         "contractCrate": {
             "name": "vesta-x-liquid-staking",
             "version": "0.1.0",
-            "git_version": "8d5adc0-modified"
+            "git_version": "687176b-modified"
         },
         "framework": {
             "name": "elrond-wasm",
@@ -96,6 +96,16 @@
         },
         {
             "name": "getAutoDelegateAddress",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "Address"
+                }
+            ]
+        },
+        {
+            "name": "getAutoUndelegateAddress",
             "mutability": "readonly",
             "inputs": [],
             "outputs": [
@@ -212,7 +222,7 @@
             "mutability": "mutable",
             "inputs": [
                 {
-                    "name": "delegate_address",
+                    "name": "undelegate_address",
                     "type": "Address"
                 },
                 {
@@ -532,6 +542,23 @@
         },
         {
             "name": "removeAutoDelegateAddress",
+            "mutability": "mutable",
+            "inputs": [],
+            "outputs": []
+        },
+        {
+            "name": "setAutoUndelegateAddress",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "auto_undelegate_address",
+                    "type": "Address"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "removeAutoUndelegateAddress",
             "mutability": "mutable",
             "inputs": [],
             "outputs": []
@@ -991,6 +1018,10 @@
                 },
                 {
                     "name": "auto_delegate_address",
+                    "type": "Address"
+                },
+                {
+                    "name": "auto_undelegate_address",
                     "type": "Address"
                 },
                 {
