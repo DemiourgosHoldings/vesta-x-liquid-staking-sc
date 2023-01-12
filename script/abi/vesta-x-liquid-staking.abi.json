@@ -10,7 +10,7 @@
         "contractCrate": {
             "name": "vesta-x-liquid-staking",
             "version": "0.1.0",
-            "git_version": "687176b-modified"
+            "git_version": "4e0912e-modified"
         },
         "framework": {
             "name": "elrond-wasm",
@@ -243,33 +243,17 @@
                 {
                     "name": "delegate_address",
                     "type": "Address"
-                },
-                {
-                    "name": "withdraw_amount",
-                    "type": "BigUint"
                 }
             ],
             "outputs": []
         },
         {
-            "docs": [
-                ""
-            ],
-            "name": "adminRedelegateRewards",
+            "name": "adminClaimRewards",
             "mutability": "mutable",
             "inputs": [
                 {
                     "name": "delegate_address",
                     "type": "Address"
-                },
-                {
-                    "name": "rewards_amount",
-                    "type": "BigUint"
-                },
-                {
-                    "name": "opt_without_fee",
-                    "type": "optional<bool>",
-                    "multi_arg": true
                 }
             ],
             "outputs": []
@@ -827,11 +811,6 @@
                     "indexed": true
                 },
                 {
-                    "name": "egld_amount",
-                    "type": "BigUint",
-                    "indexed": true
-                },
-                {
                     "name": "timestamp",
                     "type": "u64",
                     "indexed": true
@@ -839,7 +818,7 @@
             ]
         },
         {
-            "identifier": "AdminRedelegateRewardsSuccess",
+            "identifier": "AdminClaimRewardsSuccess",
             "inputs": [
                 {
                     "name": "caller",
@@ -852,12 +831,12 @@
                     "indexed": true
                 },
                 {
-                    "name": "rewards_amount",
+                    "name": "rewards_egld_amount",
                     "type": "BigUint",
                     "indexed": true
                 },
                 {
-                    "name": "fee_stegld_amount",
+                    "name": "fee_vegld_amount",
                     "type": "BigUint",
                     "indexed": true
                 },
@@ -869,7 +848,7 @@
             ]
         },
         {
-            "identifier": "AdminRedelegateRewardsFail",
+            "identifier": "AdminClaimRewardsFail",
             "inputs": [
                 {
                     "name": "caller",
@@ -878,56 +857,6 @@
                 },
                 {
                     "name": "delegate_address",
-                    "type": "Address",
-                    "indexed": true
-                },
-                {
-                    "name": "rewards_amount",
-                    "type": "BigUint",
-                    "indexed": true
-                },
-                {
-                    "name": "timestamp",
-                    "type": "u64",
-                    "indexed": true
-                }
-            ]
-        },
-        {
-            "identifier": "UpdateMainPool",
-            "inputs": [
-                {
-                    "name": "caller",
-                    "type": "Address",
-                    "indexed": true
-                },
-                {
-                    "name": "pool_vegld_amount",
-                    "type": "BigUint",
-                    "indexed": true
-                },
-                {
-                    "name": "pool_egld_amount",
-                    "type": "BigUint",
-                    "indexed": true
-                },
-                {
-                    "name": "timestamp",
-                    "type": "u64",
-                    "indexed": true
-                }
-            ]
-        },
-        {
-            "identifier": "ChangeDelegateAddress",
-            "inputs": [
-                {
-                    "name": "caller",
-                    "type": "Address",
-                    "indexed": true
-                },
-                {
-                    "name": "to",
                     "type": "Address",
                     "indexed": true
                 },

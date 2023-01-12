@@ -42,10 +42,8 @@ import {
 	ADMIN_DELEGATE_GAS_LIMIT,
 	DELEGATE_ADDRESS,
 	ADMIN_UNDELEGATE_GAS_LIMIT,
-	ADMIN_WITDRAW_AMOUNT,
 	ADMIN_WITHDRAW_GAS_LIMIT,
-	REDELEGATE_AMOUNT,
-	ADMIN_REDELEGATE_GAS_LIMIT,
+	ADMIN_CLAIM_REWARDS_GAS_LIMIT,
 } from "./config";
 
 import {
@@ -63,16 +61,15 @@ import {
 async function main() {
 	const args: TypedValue[] = [
 		new AddressValue(new Address(DELEGATE_ADDRESS)),
-        new BigUIntValue(REDELEGATE_AMOUNT),	// withdraw amount
 	];
 	const { argumentsString } = new ArgSerializer().valuesToString(args);
-	const data = new TransactionPayload(`adminRedelegateRewards@${argumentsString}`);
+	const data = new TransactionPayload(`adminClaimRewards@${argumentsString}`);
 
 	const tx = new Transaction({
 		nonce: account.getNonceThenIncrement(),
 		receiver: new Address(SMART_CONRACT_ADDRESS),
 		data: data,
-		gasLimit: new GasLimit(ADMIN_REDELEGATE_GAS_LIMIT),
+		gasLimit: new GasLimit(ADMIN_CLAIM_REWARDS_GAS_LIMIT),
 	});
 
 	await signer.sign(tx);

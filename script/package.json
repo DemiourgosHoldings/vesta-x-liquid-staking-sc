@@ -25,7 +25,7 @@
       "5-1": "ts-node src/5-1-admin-delegate",
       "5-2": "ts-node src/5-2-admin-undelegate",
       "5-3": "ts-node src/5-3-admin-withdraw",
-      "5-4": "ts-node src/5-4-admin-redelegate-rewards"
+      "5-5": "ts-node src/5-5-admin-claim-rewards"
     },
     "author": "Ice <icegriffin1122@gmail.com>",
     "license": "GPL3 or later",

@@ -4,7 +4,7 @@ elrond_wasm::derive_imports!();
 use core::cmp::min;
 
 use crate::delegate_proxy;
-use crate::constant::{ DELEGATE_MIN_AMOUNT, TOTAL_PERCENTAGE };
+use crate::constant::{ DELEGATE_MIN_AMOUNT, MAX_PERCENTAGE };
 
 #[elrond_wasm::module]
 pub trait AdminModule:
@@ -147,7 +147,7 @@ pub trait AdminModule:
 
     ///
     #[endpoint(adminWithdraw)]
-    fn admin_withdraw(&self, delegate_address: ManagedAddress, withdraw_amount: BigUint) {
+    fn admin_withdraw(&self, delegate_address: ManagedAddress) {
         self.require_is_owner_or_admin();
         self.require_admin_action_allowed();
         self.require_initial_configuration_is_done();
@@ -157,7 +157,7 @@ pub trait AdminModule:
         self.delegate_contract(delegate_address.clone())
             .withdraw()
             .async_call()
-            .with_callback(self.callbacks().withdraw_callback(&caller, &delegate_address, &withdraw_amount))
+            .with_callback(self.callbacks().withdraw_callback(&caller, &delegate_address))
             .call_and_exit();
     }
 
@@ -167,62 +167,57 @@ pub trait AdminModule:
         #[call_result] result: ManagedAsyncCallResult<()>,
         caller: &ManagedAddress,
         delegate_address: &ManagedAddress,
-        withdraw_amount: &BigUint,
     ) {
         match result {
             ManagedAsyncCallResult::Ok(()) => {
-                self.unstaking_egld_amount().update(|v| *v -= withdraw_amount);
-                self.unbonded_egld_amount().update(|v| *v += withdraw_amount);
+                let received_egld_amount = self.call_value().egld_value();
 
-                self.admin_withdraw_success_event(caller, delegate_address, withdraw_amount, self.blockchain().get_block_timestamp());
+                self.unstaking_egld_amount().update(|v| *v -= &received_egld_amount);
+                self.unbonded_egld_amount().update(|v| *v += &received_egld_amount);
+
+                self.admin_withdraw_success_event(caller, delegate_address, &received_egld_amount, self.blockchain().get_block_timestamp());
             },
             ManagedAsyncCallResult::Err(_) => {
-                self.admin_withdraw_fail_event(caller, delegate_address, withdraw_amount, self.blockchain().get_block_timestamp());
+                self.admin_withdraw_fail_event(caller, delegate_address, self.blockchain().get_block_timestamp());
             },
         }
     }
 
-    ///
-    #[endpoint(adminRedelegateRewards)]
-    fn admin_redelegate_rewards(
-        &self,
-        delegate_address: ManagedAddress,
-        rewards_amount: BigUint,
-        opt_without_fee: OptionalValue<bool>
-    ) {
+    //
+    #[endpoint(adminClaimRewards)]
+    fn admin_claim_rewards(&self, delegate_address: ManagedAddress) {
         self.require_is_owner_or_admin();
         self.require_admin_action_allowed();
         self.require_initial_configuration_is_done();
 
         let caller = self.blockchain().get_caller();
-        let without_fee: bool = match opt_without_fee {
-            OptionalValue::Some(v) => v,
-            OptionalValue::None => false,
-        };
-
         self.delegate_contract(delegate_address.clone())
-            .reDelegateRewards()
+            .claimRewards()
             .async_call()
-            .with_callback(self.callbacks().redelegate_rewards_callback(&caller, &delegate_address, &rewards_amount, without_fee))
+            .with_callback(self.callbacks().claim_rewards_callback(&caller, &delegate_address))
             .call_and_exit();
     }
 
     #[callback]
-    fn redelegate_rewards_callback(
+    fn claim_rewards_callback(
         &self,
         #[call_result] result: ManagedAsyncCallResult<()>,
         caller: &ManagedAddress,
         delegate_address: &ManagedAddress,
-        rewards_amount: &BigUint,
-        without_fee: bool,
     ) {
         match result {
             ManagedAsyncCallResult::Ok(()) => {
-                let fee = match without_fee {
-                    true => 0u64,
-                    false => self.fee().get(),
-                };
-                let fee_egld = rewards_amount.clone() * fee / TOTAL_PERCENTAGE;                
+                let received_egld_amount = self.call_value().egld_value();
+
+                // add received_egld_amount to EGLD pool to increase vEGLD/EGLD index
+                // update Prestake Pool
+                self.prestaked_egld_amount().update(|v| *v += &received_egld_amount);
+                // update LP Share Pool
+                self.pool_egld_amount().update(|v| *v += &received_egld_amount);
+
+                // take fee
+                let fee = self.fee().get();
+                let fee_egld = &received_egld_amount * fee / MAX_PERCENTAGE;                
                 let fee_vegld = self.quote_vegld(&fee_egld);
                 if fee_vegld != BigUint::zero() {
                     // mint vEGLD and send it to the treasury
@@ -230,12 +225,10 @@ pub trait AdminModule:
                     self.pool_vegld_amount().update(|v| *v += &fee_vegld);
                 }
 
-                self.pool_egld_amount().update(|v| *v += rewards_amount);
-
-                self.admin_redelegate_rewards_success_event(caller, delegate_address, rewards_amount, &fee_vegld, self.blockchain().get_block_timestamp());
+                self.emit_admin_claim_rewards_success_event(caller, delegate_address, &received_egld_amount, &fee_vegld, self.blockchain().get_block_timestamp());
             },
             ManagedAsyncCallResult::Err(_) => {
-                self.admin_redelegate_rewards_fail_event(caller, delegate_address, rewards_amount, self.blockchain().get_block_timestamp());
+                self.emit_admin_claim_rewards_fail_event(caller, delegate_address, self.blockchain().get_block_timestamp());
             },
         }
     }

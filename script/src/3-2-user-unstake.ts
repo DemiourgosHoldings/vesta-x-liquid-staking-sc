@@ -41,6 +41,7 @@ import {
     USER_STAKE_GAS_LIMIT,
 	VEGLD_TOKEN,
 	USER_UNSTAKE_GAS_LIMIT,
+	USER_UNSTAKE_AMOUNT,
 } from "./config";
 
 import {
@@ -59,7 +60,7 @@ import { loadContractCode } from '@elrondnetwork/erdjs/out/testutils';
 async function main() {
 	const args: TypedValue[] = [
 		new StringValue(VEGLD_TOKEN),
-		new BigUIntValue(USER_STAKE_AMOUNT),
+		new BigUIntValue(USER_UNSTAKE_AMOUNT),
 		new StringValue('unstake'),
 	];
 	const { argumentsString } = new ArgSerializer().valuesToString(args);

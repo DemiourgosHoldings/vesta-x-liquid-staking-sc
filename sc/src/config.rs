@@ -1,7 +1,7 @@
 elrond_wasm::imports!();
 elrond_wasm::derive_imports!();
 
-use crate::constant::{ TOTAL_PERCENTAGE };
+use crate::constant::{ MAX_PERCENTAGE };
 
 #[elrond_wasm::module]
 pub trait ConfigModule:
@@ -43,7 +43,7 @@ pub trait ConfigModule:
         fee: u64,
     ) {
         require!(
-            fee <= TOTAL_PERCENTAGE,
+            fee <= MAX_PERCENTAGE,
             "fee cannot be higher than 100%."
         );
         self.fee().set(fee);

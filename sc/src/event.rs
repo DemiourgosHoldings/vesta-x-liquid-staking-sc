@@ -106,49 +106,29 @@ pub trait EventModule
         &self,
         #[indexed] caller: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,
-        #[indexed] egld_amount: &BigUint,
         #[indexed] timestamp: u64,
     );
 
     // Rewards
-    #[event("AdminRedelegateRewardsSuccess")]
-    fn admin_redelegate_rewards_success_event(
+    #[event("AdminClaimRewardsSuccess")]
+    fn emit_admin_claim_rewards_success_event(
         &self,
         #[indexed] caller: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,
-        #[indexed] rewards_amount: &BigUint,
-        #[indexed] fee_stegld_amount: &BigUint,
+        #[indexed] rewards_egld_amount: &BigUint,
+        #[indexed] fee_vegld_amount: &BigUint,
         #[indexed] timestamp: u64,
     );
 
-    #[event("AdminRedelegateRewardsFail")]
-    fn admin_redelegate_rewards_fail_event(
+    #[event("AdminClaimRewardsFail")]
+    fn emit_admin_claim_rewards_fail_event(
         &self,
         #[indexed] caller: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,
-        #[indexed] rewards_amount: &BigUint,
-        #[indexed] timestamp: u64,
-    );
-
-    // Pool
-    #[event("UpdateMainPool")]
-    fn update_main_pool_event(
-        &self,
-        #[indexed] caller: &ManagedAddress,
-        #[indexed] pool_vegld_amount: &BigUint,
-        #[indexed] pool_egld_amount: &BigUint,
         #[indexed] timestamp: u64,
     );
 
     // Admin Settings
-    #[event("ChangeDelegateAddress")]
-    fn change_delegate_address_event(
-        &self,
-        #[indexed] caller: &ManagedAddress,
-        #[indexed] to: &ManagedAddress,
-        #[indexed] timestamp: u64,
-    );
-
     #[event("ChangeTreasuryWallet")]
     fn change_treasury_wallet_event(
         &self,

@@ -9,8 +9,8 @@ elrond_wasm_node::wasm_endpoints! {
     (
         callBack
         addAdmins
+        adminClaimRewards
         adminDelegate
-        adminRedelegateRewards
         adminUndelegate
         adminWithdraw
         donate

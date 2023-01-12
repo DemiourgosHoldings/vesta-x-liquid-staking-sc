@@ -42,7 +42,6 @@ import {
 	ADMIN_DELEGATE_GAS_LIMIT,
 	DELEGATE_ADDRESS,
 	ADMIN_UNDELEGATE_GAS_LIMIT,
-	ADMIN_WITDRAW_AMOUNT,
 	ADMIN_WITHDRAW_GAS_LIMIT,
 } from "./config";
 
@@ -61,7 +60,6 @@ import {
 async function main() {
 	const args: TypedValue[] = [
 		new AddressValue(new Address(DELEGATE_ADDRESS)),
-        new BigUIntValue(ADMIN_WITDRAW_AMOUNT),	// withdraw amount
 	];
 	const { argumentsString } = new ArgSerializer().valuesToString(args);
 	const data = new TransactionPayload(`adminWithdraw@${argumentsString}`);
