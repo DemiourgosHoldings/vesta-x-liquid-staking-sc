@@ -47,7 +47,7 @@ export const ADMIN_REDELEGATE_GAS_LIMIT = 20_000_000;
 
 //
 export const UNBONDING_PERIOD = 3600 * 24 * 11; // 11 days
-export const TREASURY_WALLET = 'erd15936k9pw34xyzmcaupyn7lpr7f6p20q50h4wlgemxg7h9zasdfysmhg50z';    // shard1-odin
+export const TREASURY_WALLET = 'erd1qqqqqqqqqqqqqpgqc0e2y2fsv8mcxja6vqz7k7wh33mtclj027rsxry8a2';    // shard1-odin
 export const FEE = 500; // 5%
 export const ADMIN_ADDRESSES = [
     'erd1ygdttzrulwfspme2s4qrx5y2qyfqalju0k2vcyy8z3979whlj9qssl5uay', // my shard1
