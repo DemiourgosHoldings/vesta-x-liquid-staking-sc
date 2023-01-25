@@ -10,3 +10,7 @@ pub const ONE_VEGLD_IN_WEI: u64 = 1_000_000_000_000_000_000;
 
 // Delegate
 pub const DELEGATE_MIN_AMOUNT: u64 = 1_000_000_000_000_000_000;
+
+// Unbond
+pub const MIN_UNBONDING_PERIOD: u64 = 864000;   // 10 days
+pub const MAX_UNBONDING_PERIOD: u64 = 2592000;  // 30 days

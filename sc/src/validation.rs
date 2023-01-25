@@ -35,7 +35,7 @@ pub trait ValidationModule:
     #[inline]
     fn require_initial_configuration_is_done(&self) {
         require!(
-            !self.treasury_wallet().get().is_zero(),
+            !self.treasury_wallet().is_empty(),
             "Initial Configuration is not done yet."
         );
 
@@ -54,5 +54,13 @@ pub trait ValidationModule:
     fn is_token_roles_set(&self) -> bool {
         let roles = self.blockchain().get_esdt_local_roles(self.vegld_identifier().get_token_id_ref());
         roles.has_role(&EsdtLocalRole::Mint) && roles.has_role(&EsdtLocalRole::Burn)
+    }
+
+    #[inline]
+    fn require_whitelisted_staking_provider(&self, address: &ManagedAddress) {
+        require!(
+            self.whitelisted_sp_addresses().contains(address),
+            "Given Staking Provider is not whitelisted"
+        );
     }
 }

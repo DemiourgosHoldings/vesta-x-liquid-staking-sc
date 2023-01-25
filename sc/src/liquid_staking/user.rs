@@ -2,7 +2,6 @@ elrond_wasm::imports!();
 elrond_wasm::derive_imports!();
 
 use crate::context::{ UnstakingPack };
-use crate::constant::{ DELEGATE_MIN_AMOUNT };
 
 #[elrond_wasm::module]
 pub trait UserModule:
@@ -22,7 +21,6 @@ pub trait UserModule:
         let staking_egld_amount = self.call_value().egld_value();
         let caller = self.blockchain().get_caller();
 
-        // VEGLD supply should be increased only after successful Delegation
         let pool_vegld_amount = self.pool_vegld_amount().get();
         let pool_egld_amount = self.pool_egld_amount().get();
 
@@ -52,11 +50,6 @@ pub trait UserModule:
 
         //
         self.user_stake_event(&caller, &staking_egld_amount, &vegld_mint_amount, self.blockchain().get_block_timestamp());
-
-        // auto-delegate
-        if !self.auto_delegate_address().is_empty() && staking_egld_amount >= BigUint::from(DELEGATE_MIN_AMOUNT) {
-            self._delegate(self.auto_delegate_address().get(), staking_egld_amount);
-        }
     }
 
     //
@@ -90,11 +83,6 @@ pub trait UserModule:
         });
 
         self.user_unstake_event(&caller, &unstaking_vegld_amount, &unstaking_egld_amount, self.blockchain().get_block_timestamp());
-
-        // auto-undelegate
-        if !self.auto_undelegate_address().is_empty() && unstaking_egld_amount >= BigUint::from(DELEGATE_MIN_AMOUNT) {
-            self._undelegate(self.auto_undelegate_address().get(), unstaking_egld_amount);
-        }
     }
 
     //

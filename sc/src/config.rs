@@ -1,7 +1,7 @@
 elrond_wasm::imports!();
 elrond_wasm::derive_imports!();
 
-use crate::constant::{ MAX_PERCENTAGE };
+use crate::constant::{ MAX_PERCENTAGE, MIN_UNBONDING_PERIOD, MAX_UNBONDING_PERIOD };
 
 #[elrond_wasm::module]
 pub trait ConfigModule:
@@ -17,12 +17,28 @@ pub trait ConfigModule:
         unbonding_period: u64,
         treasury_wallet: ManagedAddress,
         fee: u64,
+        user_action_allowed: bool,
+        admin_action_allowed: bool,
     ) {
-        self.unbonding_period().set(unbonding_period);
+        self.set_unbonding_period(unbonding_period);
         self.set_treasury_wallet(treasury_wallet);
         self.set_fee(fee);
-        self.user_action_allowed().set(true);
-        self.admin_action_allowed().set(true);
+        self.set_user_action_allowed(user_action_allowed);
+        self.set_admin_action_allowed(admin_action_allowed);
+    }
+
+    #[only_owner]
+    #[endpoint(setUnbondingPeriod)]
+    fn set_unbonding_period(
+        &self,
+        unbonding_period: u64,
+    ) {
+        require!(
+            MIN_UNBONDING_PERIOD <= unbonding_period && unbonding_period <= MAX_UNBONDING_PERIOD,
+            "unbonding_period must be in range of {} and {}",
+            MIN_UNBONDING_PERIOD, MAX_UNBONDING_PERIOD
+        );
+        self.unbonding_period().set(unbonding_period);
     }
 
     #[only_owner]
@@ -49,15 +65,6 @@ pub trait ConfigModule:
         self.fee().set(fee);
 
         self.change_fee_event(&self.blockchain().get_caller(), fee, self.blockchain().get_block_timestamp());
-    }
-
-    #[only_owner]
-    #[endpoint(setUnbondingPeriod)]
-    fn set_unbonding_period(
-        &self,
-        unbonding_period: u64,
-    ) {
-        self.unbonding_period().set(unbonding_period);
     }
 
     ///
@@ -103,6 +110,30 @@ pub trait ConfigModule:
         admin_action_allowed: bool,
     ) {
         self.admin_action_allowed().set(admin_action_allowed);
+    }
+
+    ////////////////////////////////////////////////////////////
+    
+    #[only_owner]
+    #[endpoint(addWhitelistedStakingProviderAddresses)]
+    fn add_whitelisted_sp_addresses(
+        &self,
+        addresses: MultiValueEncoded<ManagedAddress>,
+    ) {
+        for address in addresses.into_iter() {
+            self.whitelisted_sp_addresses().insert(address);
+        }
+    }
+
+    #[only_owner]
+    #[endpoint(removeWhitelistedStakingProviderAddresses)]
+    fn remove_whitelisted_sp_addresses(
+        &self,
+        addresses: MultiValueEncoded<ManagedAddress>,
+    ) {
+        for address in addresses.into_iter() {
+            self.whitelisted_sp_addresses().swap_remove(&address);
+        }
     }
 
     //

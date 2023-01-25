@@ -41,12 +41,17 @@ pub trait CommonStorageModule
 
     ///////////////////////////////////////////////////////////
 
-    // if this address is given, user stakes will be auto-delegated
+    // only whitelisted Staking Providers can participate in delegation & undelegation
+    #[view(getWhitelistedStakingProviderAddresses)]
+    #[storage_mapper("whitelisted_sp_addresses")]
+    fn whitelisted_sp_addresses(&self) -> UnorderedSetMapper<ManagedAddress>;
+
+    // if this address is set, adminDelegate will use this address in default
     #[view(getAutoDelegateAddress)]
     #[storage_mapper("auto_delegate_address")]
     fn auto_delegate_address(&self) -> SingleValueMapper<ManagedAddress>;
 
-    // if this address is given, user stakes will be auto-delegated
+    // if this address is set, adminUndelegate will use this address in default
     #[view(getAutoUndelegateAddress)]
     #[storage_mapper("auto_undelegate_address")]
     fn auto_undelegate_address(&self) -> SingleValueMapper<ManagedAddress>;

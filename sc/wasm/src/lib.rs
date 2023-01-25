@@ -9,6 +9,7 @@ elrond_wasm_node::wasm_endpoints! {
     (
         callBack
         addAdmins
+        addWhitelistedStakingProviderAddresses
         adminClaimRewards
         adminDelegate
         adminUndelegate
@@ -33,6 +34,7 @@ elrond_wasm_node::wasm_endpoints! {
         getUserActionAllowed
         getVegldIdentifier
         getVegldPrice
+        getWhitelistedStakingProviderAddresses
         isOwnerOrAdmin
         isTokenRolesSet
         issueVegldAndSetAllRoles
@@ -41,6 +43,7 @@ elrond_wasm_node::wasm_endpoints! {
         removeAdmins
         removeAutoDelegateAddress
         removeAutoUndelegateAddress
+        removeWhitelistedStakingProviderAddresses
         setAdminActionAllowed
         setAutoDelegateAddress
         setAutoUndelegateAddress

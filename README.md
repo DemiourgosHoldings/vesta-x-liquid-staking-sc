@@ -177,3 +177,14 @@ This file includes all require & checkup functions similar to Solidity modifier.
 ### view.rs
 
 This file includes all view functions for frontend.
+
+
+## Extra
+
+### `auto_delegate_address` and `auto_undelegate_address` storages
+
+These addresses are used in `adminDelegate` and `adminUndelegate` as default staking provider.
+
+### `whitelisted_sp_addresses`
+
+only whitelisted Staking Providers can participate in delegation & undelegation

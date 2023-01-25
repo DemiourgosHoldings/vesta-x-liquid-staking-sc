@@ -20,12 +20,24 @@ pub trait AdminModule:
     #[endpoint(adminDelegate)]
     fn admin_delegate(
         &self,
-        delegate_address: ManagedAddress,
+        delegate_address_opt: OptionalValue<ManagedAddress>,
         opt_amount: OptionalValue<BigUint>,
     ) {
         self.require_is_owner_or_admin();
         self.require_admin_action_allowed();
         self.require_initial_configuration_is_done();
+
+        // use auto_delegate_address if delegate_address_opt is None
+        let delegate_address = match delegate_address_opt {
+            OptionalValue::Some(v) => v,
+            OptionalValue::None => {
+                require!(
+                    !self.auto_delegate_address().is_empty(),
+                    "auto_delegate_address is empty"
+                );
+                self.auto_delegate_address().get()
+            }
+        };
 
         // if amount is not given, delegate total prestaked amount
         let delegating_amount = match opt_amount {
@@ -50,6 +62,7 @@ pub trait AdminModule:
             delegating_amount <= self.blockchain().get_balance(&self.blockchain().get_sc_address()),
             "Not enough EGLD in Smart Contract."
         );
+        self.require_whitelisted_staking_provider(&delegate_address);
 
         let caller = self.blockchain().get_caller();
 
@@ -84,12 +97,24 @@ pub trait AdminModule:
     #[endpoint(adminUndelegate)]
     fn admin_undelegate(
         &self,
-        undelegate_address: ManagedAddress,
+        undelegate_address_opt: OptionalValue<ManagedAddress>,
         opt_amount: OptionalValue<BigUint>,
     ) {
         self.require_is_owner_or_admin();
         self.require_admin_action_allowed();
         self.require_initial_configuration_is_done();
+
+        // use auto_undelegate_address if undelegate_address_opt is None
+        let undelegate_address = match undelegate_address_opt {
+            OptionalValue::Some(v) => v,
+            OptionalValue::None => {
+                require!(
+                    !self.auto_undelegate_address().is_empty(),
+                    "auto_undelegate_address is empty"
+                );
+                self.auto_undelegate_address().get()
+            }
+        };
 
         // if amount is not given, undelegate total preunstaked amount
         let undelegating_amount = match opt_amount {
@@ -110,6 +135,7 @@ pub trait AdminModule:
             undelegating_amount >= BigUint::from(DELEGATE_MIN_AMOUNT),
             "undelegating_amount cannot be less than 1 EGLD."
         );
+        self.require_whitelisted_staking_provider(&undelegate_address);
 
         let caller = self.blockchain().get_caller();
 
@@ -151,6 +177,7 @@ pub trait AdminModule:
         self.require_is_owner_or_admin();
         self.require_admin_action_allowed();
         self.require_initial_configuration_is_done();
+        self.require_whitelisted_staking_provider(&delegate_address);
 
         let caller = self.blockchain().get_caller();
 
@@ -189,6 +216,7 @@ pub trait AdminModule:
         self.require_is_owner_or_admin();
         self.require_admin_action_allowed();
         self.require_initial_configuration_is_done();
+        self.require_whitelisted_staking_provider(&delegate_address);
 
         let caller = self.blockchain().get_caller();
         self.delegate_contract(delegate_address.clone())
@@ -209,26 +237,34 @@ pub trait AdminModule:
             ManagedAsyncCallResult::Ok(()) => {
                 let received_egld_amount = self.call_value().egld_value();
 
-                // add received_egld_amount to EGLD pool to increase vEGLD/EGLD index
-                // update Prestake Pool
-                self.prestaked_egld_amount().update(|v| *v += &received_egld_amount);
-                // update LP Share Pool
-                self.pool_egld_amount().update(|v| *v += &received_egld_amount);
+                let fee_egld = &received_egld_amount * self.fee().get() / MAX_PERCENTAGE;                
+                let remain_egld = &received_egld_amount - &fee_egld;
 
-                // take fee
-                let fee = self.fee().get();
-                let fee_egld = &received_egld_amount * fee / MAX_PERCENTAGE;                
-                let fee_vegld = self.quote_vegld(&fee_egld);
-                if fee_vegld != BigUint::zero() {
-                    // mint vEGLD and send it to the treasury
-                    self.vegld_identifier().mint_and_send(&self.treasury_wallet().get(), fee_vegld.clone());
-                    self.pool_vegld_amount().update(|v| *v += &fee_vegld);
+                // send fee to the treasury
+                if fee_egld != BigUint::zero() {
+                    self.send().direct_egld(&self.treasury_wallet().get(), &fee_egld);
                 }
 
-                self.emit_admin_claim_rewards_success_event(caller, delegate_address, &received_egld_amount, &fee_vegld, self.blockchain().get_block_timestamp());
+                // add remain_egld to EGLD pool to increase vEGLD/EGLD index
+                // update Prestake Pool
+                self.prestaked_egld_amount().update(|v| *v += &remain_egld);
+                // update LP Share Pool
+                self.pool_egld_amount().update(|v| *v += &remain_egld);
+
+                self.emit_admin_claim_rewards_success_event(
+                    caller,
+                    delegate_address,
+                    &received_egld_amount,
+                    &fee_egld,
+                    self.blockchain().get_block_timestamp()
+                );
             },
             ManagedAsyncCallResult::Err(_) => {
-                self.emit_admin_claim_rewards_fail_event(caller, delegate_address, self.blockchain().get_block_timestamp());
+                self.emit_admin_claim_rewards_fail_event(
+                    caller,
+                    delegate_address,
+                    self.blockchain().get_block_timestamp()
+                );
             },
         }
     }
