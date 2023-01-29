@@ -1,16 +1,16 @@
 {
     "buildInfo": {
         "rustc": {
-            "version": "1.66.0-nightly",
-            "commitHash": "1898c34e923bad763e723c68dd9f23a09f9eb0fc",
-            "commitDate": "2022-10-26",
+            "version": "1.68.0-nightly",
+            "commitHash": "afaf3e07aaa7ca9873bdb439caec53faffa4230c",
+            "commitDate": "2023-01-14",
             "channel": "Nightly",
-            "short": "rustc 1.66.0-nightly (1898c34e9 2022-10-26)"
+            "short": "rustc 1.68.0-nightly (afaf3e07a 2023-01-14)"
         },
         "contractCrate": {
             "name": "vesta-x-liquid-staking",
             "version": "0.1.0",
-            "git_version": "4e0912e-modified"
+            "git_version": "9592fb3-modified"
         },
         "framework": {
             "name": "elrond-wasm",
@@ -95,6 +95,17 @@
             ]
         },
         {
+            "name": "getWhitelistedStakingProviderAddresses",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "variadic<Address>",
+                    "multi_result": true
+                }
+            ]
+        },
+        {
             "name": "getAutoDelegateAddress",
             "mutability": "readonly",
             "inputs": [],
@@ -111,6 +122,27 @@
             "outputs": [
                 {
                     "type": "Address"
+                }
+            ]
+        },
+        {
+            "name": "getLastAsyncCallId",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "u32"
+                }
+            ]
+        },
+        {
+            "name": "getAsyncCallStartBlockMap",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "variadic<multi<u32,u64>>",
+                    "multi_result": true
                 }
             ]
         },
@@ -206,8 +238,9 @@
             "mutability": "mutable",
             "inputs": [
                 {
-                    "name": "delegate_address",
-                    "type": "Address"
+                    "name": "delegate_address_opt",
+                    "type": "optional<Address>",
+                    "multi_arg": true
                 },
                 {
                     "name": "opt_amount",
@@ -222,8 +255,9 @@
             "mutability": "mutable",
             "inputs": [
                 {
-                    "name": "undelegate_address",
-                    "type": "Address"
+                    "name": "undelegate_address_opt",
+                    "type": "optional<Address>",
+                    "multi_arg": true
                 },
                 {
                     "name": "opt_amount",
@@ -254,6 +288,29 @@
                 {
                     "name": "delegate_address",
                     "type": "Address"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "viewFailedAsyncCallIds",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "List<u32>"
+                }
+            ]
+        },
+        {
+            "name": "removeAsyncCallIds",
+            "onlyOwner": true,
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "ids",
+                    "type": "variadic<u32>",
+                    "multi_arg": true
                 }
             ],
             "outputs": []
@@ -418,6 +475,26 @@
                 {
                     "name": "fee",
                     "type": "u64"
+                },
+                {
+                    "name": "user_action_allowed",
+                    "type": "bool"
+                },
+                {
+                    "name": "admin_action_allowed",
+                    "type": "bool"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "setUnbondingPeriod",
+            "onlyOwner": true,
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "unbonding_period",
+                    "type": "u64"
                 }
             ],
             "outputs": []
@@ -441,18 +518,6 @@
             "inputs": [
                 {
                     "name": "fee",
-                    "type": "u64"
-                }
-            ],
-            "outputs": []
-        },
-        {
-            "name": "setUnbondingPeriod",
-            "onlyOwner": true,
-            "mutability": "mutable",
-            "inputs": [
-                {
-                    "name": "unbonding_period",
                     "type": "u64"
                 }
             ],
@@ -509,6 +574,32 @@
                 {
                     "name": "admin_action_allowed",
                     "type": "bool"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "addWhitelistedStakingProviderAddresses",
+            "onlyOwner": true,
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "addresses",
+                    "type": "variadic<Address>",
+                    "multi_arg": true
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "removeWhitelistedStakingProviderAddresses",
+            "onlyOwner": true,
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "addresses",
+                    "type": "variadic<Address>",
+                    "multi_arg": true
                 }
             ],
             "outputs": []
@@ -836,7 +927,7 @@
                     "indexed": true
                 },
                 {
-                    "name": "fee_vegld_amount",
+                    "name": "fee_egld_amount",
                     "type": "BigUint",
                     "indexed": true
                 },

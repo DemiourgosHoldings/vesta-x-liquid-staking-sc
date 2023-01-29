@@ -40,7 +40,6 @@ pub trait CommonStorageModule
     fn admin_action_allowed(&self) -> SingleValueMapper<bool>;
 
     ///////////////////////////////////////////////////////////
-
     // only whitelisted Staking Providers can participate in delegation & undelegation
     #[view(getWhitelistedStakingProviderAddresses)]
     #[storage_mapper("whitelisted_sp_addresses")]
@@ -55,4 +54,14 @@ pub trait CommonStorageModule
     #[view(getAutoUndelegateAddress)]
     #[storage_mapper("auto_undelegate_address")]
     fn auto_undelegate_address(&self) -> SingleValueMapper<ManagedAddress>;
+
+    ///////////////////////////////////////////////////////////
+    // for tracking async call failures
+    #[view(getLastAsyncCallId)]
+    #[storage_mapper("last_async_call_id")]
+    fn last_async_call_id(&self) -> SingleValueMapper<usize>;
+
+    #[view(getAsyncCallStartBlockMap)]
+    #[storage_mapper("async_call_start_block_map")]
+    fn async_call_start_block_map(&self) -> MapMapper<usize, u64>;
 }

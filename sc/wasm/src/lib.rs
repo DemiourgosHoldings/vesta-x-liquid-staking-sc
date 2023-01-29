@@ -17,10 +17,12 @@ elrond_wasm_node::wasm_endpoints! {
         donate
         getAdminActionAllowed
         getAdmins
+        getAsyncCallStartBlockMap
         getAutoDelegateAddress
         getAutoUndelegateAddress
         getEgldPrice
         getFee
+        getLastAsyncCallId
         getPoolEgldAmount
         getPoolVegldAmount
         getPrestakedEgldAmount
@@ -43,6 +45,7 @@ elrond_wasm_node::wasm_endpoints! {
         removeAdmins
         removeAutoDelegateAddress
         removeAutoUndelegateAddress
+        removeFailedAsyncCallIds
         removeWhitelistedStakingProviderAddresses
         setAdminActionAllowed
         setAutoDelegateAddress
@@ -54,6 +57,7 @@ elrond_wasm_node::wasm_endpoints! {
         setUserActionAllowed
         stake
         unstake
+        viewFailedAsyncCallIds
         viewLiquidStakingSettings
         viewUserUnstakingPacks
         withdraw

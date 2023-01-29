@@ -17,6 +17,8 @@
       "2-9": "ts-node src/2-9-remove-auto-delegate-address",
       "2-10": "ts-node src/2-10-set-auto-undelegate-address",
       "2-11": "ts-node src/2-11-remove-auto-undelegate-address",
+      "2-12": "ts-node src/2-12-add-whitelisted-staking-provider-addresses",
+      "2-13": "ts-node src/2-13-remove-whitelisted-staking-provider-addresses",
       "3-1": "ts-node src/3-1-user-stake",
       "3-2": "ts-node src/3-2-user-unstake",
       "3-3": "ts-node src/3-3-user-withdraw",
@@ -25,7 +27,9 @@
       "5-1": "ts-node src/5-1-admin-delegate",
       "5-2": "ts-node src/5-2-admin-undelegate",
       "5-3": "ts-node src/5-3-admin-withdraw",
-      "5-5": "ts-node src/5-5-admin-claim-rewards"
+      "5-5": "ts-node src/5-5-admin-claim-rewards",
+      "6-1": "ts-node src/6-1-view-failed-async-call-ids",
+      "6-2": "ts-node src/6-2-remove-failed-async-call-ids"
     },
     "author": "Ice <icegriffin1122@gmail.com>",
     "license": "GPL3 or later",

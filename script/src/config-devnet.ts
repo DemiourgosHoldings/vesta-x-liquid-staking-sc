@@ -34,10 +34,10 @@ export const USER_STAKE_GAS_LIMIT = 25_000_000;     // when auto-delegate enable
 
 export const USER_UNSTAKE_GAS_LIMIT = 25_000_000;
 export const USER_WITHDRAW_GAS_LIMIT = 15_000_000;
-export const ADMIN_DELEGATE_GAS_LIMIT = 20_000_000;
-export const ADMIN_UNDELEGATE_GAS_LIMIT = 20_000_000;
-export const ADMIN_WITHDRAW_GAS_LIMIT = 20_000_000;
-export const ADMIN_CLAIM_REWARDS_GAS_LIMIT = 20_000_000;
+export const ADMIN_DELEGATE_GAS_LIMIT = 30_000_000;
+export const ADMIN_UNDELEGATE_GAS_LIMIT = 30_000_000;
+export const ADMIN_WITHDRAW_GAS_LIMIT = 30_000_000;
+export const ADMIN_CLAIM_REWARDS_GAS_LIMIT = 30_000_000;
 
 //
 export const UNBONDING_PERIOD = 3600 * 2; // 2 hours
@@ -58,7 +58,13 @@ export const VEGLD_TICKER = 'vEGLD';
 //
 export const DELEGATE_ADDRESS = 'erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr0llllsj732py';
 export const UNDELEGATE_ADDRESS = 'erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr0llllsj732py';
+export const WHITELISTED_SP_ADDRESSES = [
+    'erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr0llllsj732py',
+];
 
 //
 export const USER_STAKE_AMOUNT = 10_000_000_000_000_000_000;
 export const USER_UNSTAKE_AMOUNT = 1_000_000_000_000_000_000;
+
+//
+export const FAILED_ASYNC_CALL_IDS = [1, 2];

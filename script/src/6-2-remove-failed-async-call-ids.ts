@@ -42,6 +42,9 @@ import {
 	ADMIN_DELEGATE_GAS_LIMIT,
 	DELEGATE_ADDRESS,
 	ADMIN_UNDELEGATE_GAS_LIMIT,
+	ADMIN_WITHDRAW_GAS_LIMIT,
+	ADMIN_CLAIM_REWARDS_GAS_LIMIT,
+	FAILED_ASYNC_CALL_IDS,
 } from "./config";
 
 import {
@@ -57,19 +60,16 @@ import {
 } from './util';
 
 async function main() {
-	// const args: TypedValue[] = [
-	// 	new AddressValue(new Address(DELEGATE_ADDRESS)),
-  //       // new BigUIntValue(''),	// undelegate amount
-	// ];
-	// const { argumentsString } = new ArgSerializer().valuesToString(args);
-	// const data = new TransactionPayload(`adminUndelegate@${argumentsString}`);
-	const data = new TransactionPayload('adminUndelegate');
+	const args: TypedValue[] = [];
+	FAILED_ASYNC_CALL_IDS.map(row => args.push(new U64Value(row)));
+	const { argumentsString } = new ArgSerializer().valuesToString(args);
+	const data = new TransactionPayload(`removeFailedAsyncCallIds@${argumentsString}`);
 
 	const tx = new Transaction({
 		nonce: account.getNonceThenIncrement(),
 		receiver: new Address(SMART_CONRACT_ADDRESS),
 		data: data,
-		gasLimit: new GasLimit(ADMIN_UNDELEGATE_GAS_LIMIT),
+		gasLimit: new GasLimit(ADMIN_CLAIM_REWARDS_GAS_LIMIT),
 	});
 
 	await signer.sign(tx);

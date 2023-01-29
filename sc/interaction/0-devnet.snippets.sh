@@ -4,7 +4,7 @@ WALLET="./wallets/shard1-test2.pem"
 ADDRESS=$(mxpy data load --key=address-devnet)
 ######################################################################
 
-DEPLOY_GAS_LIMIT=90000000
+DEPLOY_GAS_LIMIT=120000000
 
 deploy() {
     mxpy --verbose contract deploy  --project=${PROJECT} --recall-nonce --pem=${WALLET} --send --proxy=${PROXY} --chain=${CHAIN_ID} \
