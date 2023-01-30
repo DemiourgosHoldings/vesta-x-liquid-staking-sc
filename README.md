@@ -188,3 +188,13 @@ These addresses are used in `adminDelegate` and `adminUndelegate` as default sta
 ### `whitelisted_sp_addresses`
 
 only whitelisted Staking Providers can participate in delegation & undelegation
+
+## Gas Limit
+
+### `adminDelegate`, `adminUndelegate`, `adminWithdraw`, `adminClaimRewards`
+
+30_000_000
+
+### `stake`, `unstake`, `withdraw`, `donate`
+
+15_000_000

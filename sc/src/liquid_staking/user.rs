@@ -1,7 +1,7 @@
 elrond_wasm::imports!();
 elrond_wasm::derive_imports!();
 
-use crate::context::{ UnstakingPack };
+use crate::{context::{ UnstakingPack }, constant::MAX_LOOP_IN_USER_WITHDRAW};
 
 #[elrond_wasm::module]
 pub trait UserModule:
@@ -106,6 +106,11 @@ pub trait UserModule:
             if current_timestamp >= item.timestamp + unbonding_period {
                 unbonded_amount += &item.amount;
                 unbonded_count += 1;
+
+                // a user can withdraw only MAX_LOOP_IN_USER_WITHDRAW unstaking_packs at one time to prevent tx failure due to too much gas comsumption
+                if unbonded_count > MAX_LOOP_IN_USER_WITHDRAW {
+                    break;
+                }
             } else {
                 break;
             }
