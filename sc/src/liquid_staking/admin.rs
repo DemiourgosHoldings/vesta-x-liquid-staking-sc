@@ -204,7 +204,6 @@ pub trait AdminModule:
     ///
     #[endpoint(adminWithdraw)]
     fn admin_withdraw(&self, delegate_address: ManagedAddress) {
-        self.require_is_owner_or_admin();
         self.require_admin_action_allowed();
         self.require_initial_configuration_is_done();
 
