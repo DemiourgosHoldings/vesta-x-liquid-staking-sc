@@ -12,8 +12,8 @@ pub const ONE_VEGLD_IN_WEI: u64 = 1_000_000_000_000_000_000;
 pub const DELEGATE_MIN_AMOUNT: u64 = 1_000_000_000_000_000_000;
 
 // Unbond
-pub const MIN_UNBONDING_PERIOD: u64 = 864000;   // 10 days
-pub const MAX_UNBONDING_PERIOD: u64 = 2592000;  // 30 days
+pub const MIN_UNBONDING_PERIOD: u64 = 3600 * 24 * 10;   // 10 days
+pub const MAX_UNBONDING_PERIOD: u64 = 3600 * 24 * 30;  // 30 days
 
 // user withdraw
 pub const MAX_LOOP_IN_USER_WITHDRAW: usize = 10;

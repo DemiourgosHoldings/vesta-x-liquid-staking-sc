@@ -47,6 +47,11 @@ pub trait ConfigModule:
         &self,
         treasury_wallet: ManagedAddress,
     ) {
+        require!(
+            !treasury_wallet.is_zero(),
+            "Zero address"
+        );
+
         self.treasury_wallet().set(&treasury_wallet);
         
         self.change_treasury_wallet_event(&self.blockchain().get_caller(), &treasury_wallet, self.blockchain().get_block_timestamp());

@@ -51,7 +51,6 @@ pub trait ViewModule:
             pool_egld_amount: self.pool_egld_amount().get(),
             prestaked_egld_amount: self.prestaked_egld_amount().get(),
             preunstaked_egld_amount: self.preunstaked_egld_amount().get(),
-            unstaking_egld_amount: self.unstaking_egld_amount().get(),
             unbonded_egld_amount: self.unbonded_egld_amount().get(),
 
             // to prevent panic when pool_vegld_amount is zero

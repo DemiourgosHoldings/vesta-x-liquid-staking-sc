@@ -53,6 +53,14 @@ pub trait EventModule
         #[indexed] timestamp: u64,
     );
 
+    #[event("FastWithdraw")]
+    fn emit_fast_withdraw_event(
+        &self,
+        #[indexed] caller: &ManagedAddress,
+        #[indexed] egld_amount: &BigUint,
+        #[indexed] timestamp: u64,
+    );
+
     // Admin
     #[event("AdminDelegateSuccess")]
     fn admin_delegate_success_event(

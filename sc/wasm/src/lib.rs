@@ -15,6 +15,7 @@ elrond_wasm_node::wasm_endpoints! {
         adminUndelegate
         adminWithdraw
         donate
+        fastWithdraw
         getAdminActionAllowed
         getAdmins
         getAsyncCallStartBlockMap
@@ -30,7 +31,6 @@ elrond_wasm_node::wasm_endpoints! {
         getTreasuryWallet
         getUnbondedEgldAmount
         getUnbondingPeriod
-        getUnstakingEgldAmount
         getUnstakingPacks
         getUnstakingUsers
         getUserActionAllowed

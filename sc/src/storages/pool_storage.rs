@@ -33,11 +33,6 @@ pub trait PoolStorageModule
 
 
     /* Unstaking Packs */
-    // total unstaking EGLD amount
-    #[view(getUnstakingEgldAmount)]
-    #[storage_mapper("unstaking_egld_amount")]
-    fn unstaking_egld_amount(&self) -> SingleValueMapper<BigUint>;
-
     #[view(getUnstakingUsers)]
     #[storage_mapper("unstaking_users")]
     fn unstaking_users(&self) -> UnorderedSetMapper<ManagedAddress>;

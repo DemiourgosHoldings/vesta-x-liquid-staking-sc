@@ -162,4 +162,31 @@ pub trait UserModule:
         //
         self.donate_event(&caller, &staking_egld_amount, self.blockchain().get_block_timestamp());
     }
+
+    /// Put EGLD to PreUnstake Pool without minting VEGLD
+    #[endpoint(fastWithdraw)]
+    fn fast_withdraw(&self) {
+        self.require_user_action_allowed();
+        self.require_initial_configuration_is_done();
+
+        let available_egld_amount = core::cmp::min(
+            self.prestaked_egld_amount().get(),
+            self.preunstaked_egld_amount().get()
+        );
+        require!(
+            available_egld_amount != 0u64,
+            "Nothing for FastWithdraw"
+        );
+
+        self.prestaked_egld_amount().update(|v| *v -= &available_egld_amount);
+        self.preunstaked_egld_amount().update(|v| *v -= &available_egld_amount);
+        self.unbonded_egld_amount().update(|v| *v += &available_egld_amount);
+
+        //
+        self.emit_fast_withdraw_event(
+            &self.blockchain().get_caller(),
+            &available_egld_amount,
+            self.blockchain().get_block_timestamp()
+        );
+    }
 }

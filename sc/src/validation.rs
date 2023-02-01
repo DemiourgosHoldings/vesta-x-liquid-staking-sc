@@ -34,11 +34,6 @@ pub trait ValidationModule:
 
     #[inline]
     fn require_initial_configuration_is_done(&self) {
-        require!(
-            !self.treasury_wallet().is_empty(),
-            "Initial Configuration is not done yet."
-        );
-
         let roles = self.blockchain().get_esdt_local_roles(self.vegld_identifier().get_token_id_ref());
         require!(
             roles.has_role(&EsdtLocalRole::Mint),
