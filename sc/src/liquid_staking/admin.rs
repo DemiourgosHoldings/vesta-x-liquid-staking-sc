@@ -71,9 +71,10 @@ pub trait AdminModule:
         let gas_for_async_call = self.get_gas_for_async_call();
 
         // for async call check
-        self.last_async_call_id().update(|v| *v += 1);
+        let last_async_call_id = self.last_async_call_id().get() + 1;
+        self.last_async_call_id().set(last_async_call_id);
         self.async_call_start_block_map().insert(
-            self.last_async_call_id().get(),
+            last_async_call_id,
             self.blockchain().get_block_nonce(),
         );
 
@@ -82,7 +83,12 @@ pub trait AdminModule:
             .with_gas_limit(gas_for_async_call)
             .with_egld_transfer(delegating_amount.clone())
             .async_call()
-            .with_callback(self.callbacks().admin_delegate_callback(&caller, &delegate_address, &delegating_amount))
+            .with_callback(self.callbacks().admin_delegate_callback(
+                &caller,
+                &delegate_address,
+                &delegating_amount,
+                last_async_call_id
+            ))
             .call_and_exit();
     }
 
@@ -93,9 +99,10 @@ pub trait AdminModule:
         caller: &ManagedAddress,
         delegate_address: &ManagedAddress,
         delegated_amount: &BigUint,
+        async_call_id: usize,
     ) {
         // for async call check
-        self.async_call_start_block_map().remove(&self.last_async_call_id().get());
+        self.async_call_start_block_map().remove(&async_call_id);
 
         match result {
             ManagedAsyncCallResult::Ok(()) => {
@@ -159,9 +166,10 @@ pub trait AdminModule:
         let gas_for_async_call = self.get_gas_for_async_call();
 
         // for async call check
-        self.last_async_call_id().update(|v| *v += 1);
+        let last_async_call_id = self.last_async_call_id().get() + 1;
+        self.last_async_call_id().set(last_async_call_id);
         self.async_call_start_block_map().insert(
-            self.last_async_call_id().get(),
+            last_async_call_id,
             self.blockchain().get_block_nonce(),
         );
 
@@ -173,6 +181,7 @@ pub trait AdminModule:
                 &caller,
                 &undelegate_address,
                 &undelegating_amount,
+                last_async_call_id,
             ))
             .call_and_exit();
     }
@@ -184,9 +193,10 @@ pub trait AdminModule:
         caller: &ManagedAddress,
         delegate_address: &ManagedAddress,
         undelegated_amount: &BigUint,
+        async_call_id: usize,
     ){
         // for async call check
-        self.async_call_start_block_map().remove(&self.last_async_call_id().get());
+        self.async_call_start_block_map().remove(&async_call_id);
 
         match result {
             ManagedAsyncCallResult::Ok(()) => {
@@ -211,9 +221,10 @@ pub trait AdminModule:
         let gas_for_async_call = self.get_gas_for_async_call();
 
         // for async call check
-        self.last_async_call_id().update(|v| *v += 1);
+        let last_async_call_id = self.last_async_call_id().get() + 1;
+        self.last_async_call_id().set(last_async_call_id);
         self.async_call_start_block_map().insert(
-            self.last_async_call_id().get(),
+            last_async_call_id,
             self.blockchain().get_block_nonce(),
         );
 
@@ -221,7 +232,11 @@ pub trait AdminModule:
             .withdraw()
             .with_gas_limit(gas_for_async_call)
             .async_call()
-            .with_callback(self.callbacks().withdraw_callback(&caller, &delegate_address))
+            .with_callback(self.callbacks().withdraw_callback(
+                &caller,
+                &delegate_address,
+                last_async_call_id,
+            ))
             .call_and_exit();
     }
 
@@ -231,9 +246,10 @@ pub trait AdminModule:
         #[call_result] result: ManagedAsyncCallResult<()>,
         caller: &ManagedAddress,
         delegate_address: &ManagedAddress,
+        async_call_id: usize,
     ) {
         // for async call check
-        self.async_call_start_block_map().remove(&self.last_async_call_id().get());
+        self.async_call_start_block_map().remove(&async_call_id);
 
         match result {
             ManagedAsyncCallResult::Ok(()) => {
@@ -259,9 +275,10 @@ pub trait AdminModule:
         let gas_for_async_call = self.get_gas_for_async_call();
 
         // for async call check
-        self.last_async_call_id().update(|v| *v += 1);
+        let last_async_call_id = self.last_async_call_id().get() + 1;
+        self.last_async_call_id().set(last_async_call_id);
         self.async_call_start_block_map().insert(
-            self.last_async_call_id().get(),
+            last_async_call_id,
             self.blockchain().get_block_nonce(),
         );
 
@@ -269,7 +286,11 @@ pub trait AdminModule:
             .claimRewards()
             .with_gas_limit(gas_for_async_call)
             .async_call()
-            .with_callback(self.callbacks().claim_rewards_callback(&caller, &delegate_address))
+            .with_callback(self.callbacks().claim_rewards_callback(
+                &caller,
+                &delegate_address,
+                last_async_call_id,
+            ))
             .call_and_exit();
     }
 
@@ -279,9 +300,10 @@ pub trait AdminModule:
         #[call_result] result: ManagedAsyncCallResult<()>,
         caller: &ManagedAddress,
         delegate_address: &ManagedAddress,
+        async_call_id: usize,
     ) {
         // for async call check
-        self.async_call_start_block_map().remove(&self.last_async_call_id().get());
+        self.async_call_start_block_map().remove(&async_call_id);
 
         match result {
             ManagedAsyncCallResult::Ok(()) => {
