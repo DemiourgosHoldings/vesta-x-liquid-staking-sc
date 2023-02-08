@@ -55,13 +55,13 @@ elrond_wasm_node::wasm_endpoints! {
         setUnbondingPeriod
         setUserActionAllowed
         stake
-        undelegateFromPrestaked
         undelegateFromStakingProvider
         unstake
         viewFailedAsyncCallIds
         viewLiquidStakingSettings
         viewUserUnstakingPacks
         withdraw
+        withdrawFromPrestaked
         withdrawFromStakingProvider
     )
 }

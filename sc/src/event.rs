@@ -53,8 +53,8 @@ pub trait EventModule
         #[indexed] timestamp: u64,
     );
 
-    #[event("UndelegateFromPrestaked")]
-    fn emit_undelegate_from_prestaked_event(
+    #[event("WithdrawFromPrestaked")]
+    fn emit_withdraw_from_prestaked_event(
         &self,
         #[indexed] caller: &ManagedAddress,
         #[indexed] egld_amount: &BigUint,

@@ -351,8 +351,8 @@ pub trait AdminModule:
     }
 
     /// Put EGLD to PreUnstake Pool without minting VEGLD
-    #[endpoint(undelegateFromPrestaked)]
-    fn undelegate_from_prestaked(&self) {
+    #[endpoint(withdrawFromPrestaked)]
+    fn withdraw_from_prestaked(&self) {
         self.require_user_action_allowed();
 
         let available_egld_amount = core::cmp::min(
@@ -369,7 +369,7 @@ pub trait AdminModule:
         self.unbonded_egld_amount().update(|v| *v += &available_egld_amount);
 
         //
-        self.emit_undelegate_from_prestaked_event(
+        self.emit_withdraw_from_prestaked_event(
             &self.blockchain().get_caller(),
             &available_egld_amount,
             self.blockchain().get_block_timestamp()
