@@ -10,6 +10,7 @@ pub mod liquid_staking;
 pub use liquid_staking::admin;
 pub use liquid_staking::user;
 
+pub mod error;
 pub mod event;
 pub mod brand;
 pub mod constant;

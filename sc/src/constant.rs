@@ -18,9 +18,6 @@ pub const MAX_UNBONDING_PERIOD: u64 = 3600 * 24 * 30;  // 30 days
 // user withdraw
 pub const MAX_LOOP_IN_USER_WITHDRAW: usize = 10;
 
-// error
-pub static ERROR_INSUFFICIENT_GAS: &[u8] = b"Insufficient gas remaining for the callback";
-
 // async call check
 pub const MAX_BLOCKS_FOR_ASYNC_CALLBACK: u64 = 10;  // 10 blocks = 60 seconds
 

@@ -23,12 +23,15 @@ pub trait PoolStorageModule
     #[storage_mapper("prestaked_egld_amount")]
     fn prestaked_egld_amount(&self) -> SingleValueMapper<BigUint>;
 
+    #[view(getPendingRewardEgldAmount)]
+    #[storage_mapper("pending_reward_egld_amount")]
+    fn pending_reward_egld_amount(&self) -> SingleValueMapper<BigUint>;
+
     /* PreUnstake Pool */
     // total preunstaked EGLD amount
     #[view(getPreunstakedEgldAmount)]
     #[storage_mapper("preunstaked_egld_amount")]
     fn preunstaked_egld_amount(&self) -> SingleValueMapper<BigUint>;
-
 
     /* Unstaking Packs */
     #[view(getUnstakingUsers)]

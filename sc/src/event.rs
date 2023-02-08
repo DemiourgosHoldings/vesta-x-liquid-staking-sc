@@ -124,7 +124,6 @@ pub trait EventModule
         #[indexed] caller: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,
         #[indexed] rewards_egld_amount: &BigUint,
-        #[indexed] fee_egld_amount: &BigUint,
         #[indexed] timestamp: u64,
     );
 

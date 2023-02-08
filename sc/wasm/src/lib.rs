@@ -21,6 +21,7 @@ elrond_wasm_node::wasm_endpoints! {
         getEgldPrice
         getFee
         getLastAsyncCallId
+        getPendingRewardEgldAmount
         getPoolEgldAmount
         getPoolVegldAmount
         getPrestakedEgldAmount
@@ -37,6 +38,7 @@ elrond_wasm_node::wasm_endpoints! {
         isOwnerOrAdmin
         isTokenRolesSet
         issueVegldAndSetAllRoles
+        prestakePendingRewards
         quoteEgld
         quoteVegld
         removeAdmins

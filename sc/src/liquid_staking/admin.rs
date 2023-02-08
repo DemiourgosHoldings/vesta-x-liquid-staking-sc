@@ -4,7 +4,8 @@ elrond_wasm::derive_imports!();
 use core::cmp::min;
 
 use crate::delegate_proxy;
-use crate::constant::{ DELEGATE_MIN_AMOUNT, MAX_PERCENTAGE, MIN_GAS_FOR_ASYNC_CALL, MIN_GAS_FOR_CALLBACK, ERROR_INSUFFICIENT_GAS, MAX_BLOCKS_FOR_ASYNC_CALLBACK };
+use crate::constant::*;
+use crate::error::*;
 
 #[elrond_wasm::module]
 pub trait AdminModule:
@@ -304,26 +305,12 @@ pub trait AdminModule:
         match result {
             ManagedAsyncCallResult::Ok(()) => {
                 let received_egld_amount = self.call_value().egld_value();
-
-                let fee_egld = &received_egld_amount * self.fee().get() / MAX_PERCENTAGE;                
-                let remain_egld = &received_egld_amount - &fee_egld;
-
-                // send fee to the treasury
-                if fee_egld != BigUint::zero() {
-                    self.send().direct_egld(&self.treasury_wallet().get(), &fee_egld);
-                }
-
-                // add remain_egld to EGLD pool to increase vEGLD/EGLD index
-                // update Prestake Pool
-                self.prestaked_egld_amount().update(|v| *v += &remain_egld);
-                // update LP Share Pool
-                self.pool_egld_amount().update(|v| *v += &remain_egld);
+                self.pending_reward_egld_amount().update(|v| *v += &received_egld_amount);
 
                 self.emit_claim_rewards_from_staking_provider_success_event(
                     caller,
                     delegate_address,
                     &received_egld_amount,
-                    &fee_egld,
                     self.blockchain().get_block_timestamp()
                 );
             },
@@ -335,6 +322,32 @@ pub trait AdminModule:
                 );
             },
         }
+    }
+
+    #[endpoint(prestakePendingRewards)]
+    fn prestake_pending_rewards(&self) {
+        self.require_user_action_allowed();
+
+        let pending_reward = self.pending_reward_egld_amount().get();
+        self.pending_reward_egld_amount().set(BigUint::zero());
+        require!(
+            pending_reward != 0u64,
+            ERROR_ZERO_AMOUNT
+        );
+
+        // take fee
+        let fee_egld = &pending_reward * self.fee().get() / MAX_PERCENTAGE;                
+        let remain_egld = &pending_reward - &fee_egld;
+        // send fee to the treasury
+        if fee_egld != BigUint::zero() {
+            self.send().direct_egld(&self.treasury_wallet().get(), &fee_egld);
+        }
+
+        // add remain_egld to EGLD pool to increase vEGLD/EGLD index
+        // update Prestake Pool
+        self.prestaked_egld_amount().update(|v| *v += &remain_egld);
+        // update LP Share Pool
+        self.pool_egld_amount().update(|v| *v += &remain_egld);
     }
 
     /// Put EGLD to PreUnstake Pool without minting VEGLD
