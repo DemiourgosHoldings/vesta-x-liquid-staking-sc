@@ -27,3 +27,6 @@ pub const MIN_GAS_FOR_CALLBACK: u64 = 12_000_000;
 
 //
 pub const METACHAIN_SHARD_ID: u32 = 0;
+
+//
+pub const EXPIRATION_EPOCH_COUNT: u64 = 5;

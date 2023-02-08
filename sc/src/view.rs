@@ -22,11 +22,6 @@ pub trait ViewModule:
         self.quote_vegld(&BigUint::from(ONE_EGLD_IN_WEI))
     }
 
-    #[view(isOwnerOrAdmin)]
-    fn is_owner_or_admin(&self, caller: ManagedAddress) -> bool {
-        caller == self.blockchain().get_owner_address() || self.admins().contains(&caller)
-    }
-
     #[view(viewLiquidStakingSettings)]
     fn view_liquid_staking_settings(&self) -> LiquidStakingSettings<Self::Api> {
         let admins_set = self.admins();

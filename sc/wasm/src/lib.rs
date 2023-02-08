@@ -26,6 +26,9 @@ elrond_wasm_node::wasm_endpoints! {
         getPoolVegldAmount
         getPrestakedEgldAmount
         getPreunstakedEgldAmount
+        getRecentPreunstakedEgldAmountsMap
+        getTotalOldPreunstakedEgldAmount
+        getTotalUndelegatedEgldAmount
         getTreasuryWallet
         getUnbondedEgldAmount
         getUnbondingPeriod

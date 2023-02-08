@@ -74,6 +74,9 @@ pub trait UserModule:
         self.pool_egld_amount().update(|v| *v -= &unstaking_egld_amount);
         self.preunstaked_egld_amount().update(|v| *v += &unstaking_egld_amount);
 
+        //
+        self.update_recent_preunstaked_egld_amounts_map(&unstaking_egld_amount);
+
         self.unstaking_users().insert(caller.clone());
         self.unstaking_packs(&caller).push_back(UnstakingPack {
             amount: unstaking_egld_amount.clone(),

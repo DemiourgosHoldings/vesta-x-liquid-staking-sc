@@ -8,6 +8,11 @@ pub trait ValidationModule:
     crate::storages::common_storage::CommonStorageModule
     + crate::storages::pool_storage::PoolStorageModule
 {    
+    #[view(isOwnerOrAdmin)]
+    fn is_owner_or_admin(&self, address: &ManagedAddress) -> bool {
+        *address == self.blockchain().get_owner_address() || self.admins().contains(address)
+    }
+
     #[inline]
     fn require_is_owner_or_admin(&self) {
         let caller = self.blockchain().get_caller();

@@ -47,4 +47,18 @@ pub trait PoolStorageModule
     #[view(getUnbondedEgldAmount)]
     #[storage_mapper("unbonded_egld_amount")]
     fn unbonded_egld_amount(&self) -> SingleValueMapper<BigUint>;
+
+
+    //////////////////////////////////////////////////////////////
+    #[view(getTotalUndelegatedEgldAmount)]
+    #[storage_mapper("total_undelegated_egld_amount")]
+    fn total_undelegated_egld_amount(&self) -> SingleValueMapper<BigUint>;
+
+    #[view(getTotalOldPreunstakedEgldAmount)]
+    #[storage_mapper("total_old_preunstaked_egld_amount")]
+    fn total_old_preunstaked_egld_amount(&self) -> SingleValueMapper<BigUint>;
+
+    #[view(getRecentPreunstakedEgldAmountsMap)]
+    #[storage_mapper("recent_preunstaked_egld_amounts_map")]
+    fn recent_preunstaked_egld_amounts_map(&self) -> MapMapper<u64, BigUint>;
 }

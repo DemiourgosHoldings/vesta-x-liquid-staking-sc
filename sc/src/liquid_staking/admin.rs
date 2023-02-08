@@ -123,8 +123,11 @@ pub trait AdminModule:
         undelegate_address_opt: OptionalValue<ManagedAddress>,
         opt_amount: OptionalValue<BigUint>,
     ) {
-        self.require_is_owner_or_admin();
         self.require_admin_action_allowed();
+        require!(
+            self.caller_can_undelegate() || self.is_owner_or_admin(&self.blockchain().get_caller()),
+            "Cannot undelegate"
+        );
 
         // use auto_undelegate_address if undelegate_address_opt is None
         let undelegate_address = match undelegate_address_opt {
@@ -199,6 +202,8 @@ pub trait AdminModule:
 
         match result {
             ManagedAsyncCallResult::Ok(()) => {
+                self.total_undelegated_egld_amount().update(|v| *v += undelegated_amount);
+
                 self.undelegate_from_staking_provider_success_event(caller, delegate_address, undelegated_amount, self.blockchain().get_block_timestamp());
             },
             ManagedAsyncCallResult::Err(err) => {
@@ -354,6 +359,10 @@ pub trait AdminModule:
     #[endpoint(withdrawFromPrestaked)]
     fn withdraw_from_prestaked(&self) {
         self.require_user_action_allowed();
+        require!(
+            self.caller_can_undelegate(),
+            "Cannot undelegate"
+        );
 
         let available_egld_amount = core::cmp::min(
             self.prestaked_egld_amount().get(),
@@ -408,5 +417,32 @@ pub trait AdminModule:
         for id in ids.into_iter() {
             async_call_start_block_map.remove(&id);
         }
+    }
+
+    //
+    fn caller_can_undelegate(&self) -> bool {
+        self.update_old_preunstaked_egld_amount();
+
+        self.total_undelegated_egld_amount().get() < self.total_old_preunstaked_egld_amount().get()
+    }
+
+    fn update_old_preunstaked_egld_amount(&self) {
+        let current_epoch = self.blockchain().get_block_epoch();
+        let mut removing_epochs: ManagedVec<u64> = ManagedVec::new();
+        for (epoch, amount) in self.recent_preunstaked_egld_amounts_map().iter() {
+            if epoch + EXPIRATION_EPOCH_COUNT < current_epoch {
+                self.total_old_preunstaked_egld_amount().update(|v| *v += &amount);
+                removing_epochs.push(epoch);
+            }
+        }
+        for epoch in removing_epochs.iter() {
+            self.recent_preunstaked_egld_amounts_map().remove(&epoch);
+        }
+    }
+
+    fn update_recent_preunstaked_egld_amounts_map(&self, amount: &BigUint) {
+        let current_epoch = self.blockchain().get_block_epoch();
+        let old_amount = self.recent_preunstaked_egld_amounts_map().get(&current_epoch).unwrap_or_default();
+        self.recent_preunstaked_egld_amounts_map().insert(current_epoch, &old_amount + amount);
     }
 }
