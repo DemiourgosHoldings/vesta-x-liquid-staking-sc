@@ -17,7 +17,7 @@ use vesta_x_liquid_staking::{
 pub const LIQUID_STAKING_WASM_PATH: &str = "sc/output/vesta-x-liquid-staking.wasm";
 
 pub const UNBONDING_PERIOD: u64 = 3600 * 24 * 11;   // 11 days
-pub const FEE: u64 = 50;     // 5%
+pub const FEE: u64 = 500;     // 5%
 pub const MAX_PERCENTAGE: u64 = 100_00;
 pub const START_TIMESTAMP: u64 = 0;
 

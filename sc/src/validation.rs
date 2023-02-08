@@ -1,6 +1,7 @@
 elrond_wasm::imports!();
 elrond_wasm::derive_imports!();
 
+use crate::constant::*;
 
 #[elrond_wasm::module]
 pub trait ValidationModule:
@@ -56,6 +57,18 @@ pub trait ValidationModule:
         require!(
             self.whitelisted_sp_addresses().contains(address),
             "Given Staking Provider is not whitelisted"
+        );
+    }
+
+    #[inline]
+    fn require_is_address_smart_contract_and_on_metachain(&self, address: &ManagedAddress) {
+        require!(
+            self.blockchain().is_smart_contract(address),
+            "Given address is not smart contract"
+        );
+        require!(
+            self.blockchain().get_shard_of_address(address) == METACHAIN_SHARD_ID,
+            "Given address is on Metachain"
         );
     }
 }

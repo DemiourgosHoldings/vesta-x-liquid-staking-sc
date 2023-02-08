@@ -17,15 +17,14 @@ pub trait AdminModule:
     #[proxy]
     fn delegate_contract(&self, sc_address: ManagedAddress) -> delegate_proxy::Proxy<Self::Api>;
     
-    #[endpoint(adminDelegate)]
-    fn admin_delegate(
+    #[endpoint(delegateToStakingProvider)]
+    fn delegate_to_staking_provider(
         &self,
         delegate_address_opt: OptionalValue<ManagedAddress>,
         opt_amount: OptionalValue<BigUint>,
     ) {
         self.require_is_owner_or_admin();
         self.require_admin_action_allowed();
-        self.require_initial_configuration_is_done();
 
         // use auto_delegate_address if delegate_address_opt is None
         let delegate_address = match delegate_address_opt {
@@ -83,7 +82,7 @@ pub trait AdminModule:
             .with_gas_limit(gas_for_async_call)
             .with_egld_transfer(delegating_amount.clone())
             .async_call()
-            .with_callback(self.callbacks().admin_delegate_callback(
+            .with_callback(self.callbacks().delegate_to_sp_callback(
                 &caller,
                 &delegate_address,
                 &delegating_amount,
@@ -93,7 +92,7 @@ pub trait AdminModule:
     }
 
     #[callback]
-    fn admin_delegate_callback(
+    fn delegate_to_sp_callback(
         &self,
         #[call_result] result: ManagedAsyncCallResult<()>,
         caller: &ManagedAddress,
@@ -106,26 +105,25 @@ pub trait AdminModule:
 
         match result {
             ManagedAsyncCallResult::Ok(()) => {
-                self.admin_delegate_success_event(caller, delegate_address, delegated_amount, self.blockchain().get_block_timestamp());
+                self.delegate_to_staking_provider_success_event(caller, delegate_address, delegated_amount, self.blockchain().get_block_timestamp());
             },
             ManagedAsyncCallResult::Err(err) => {
                 // restore prestaked_egld pool
                 self.prestaked_egld_amount().update(|v| *v += delegated_amount);
 
-                self.admin_delegate_fail_event(caller, delegate_address, delegated_amount, self.blockchain().get_block_timestamp(), &err.err_msg);
+                self.delegate_to_staking_provider_fail_event(caller, delegate_address, delegated_amount, self.blockchain().get_block_timestamp(), &err.err_msg);
             },
         }
     }
 
-    #[endpoint(adminUndelegate)]
-    fn admin_undelegate(
+    #[endpoint(undelegateFromStakingProvider)]
+    fn undelegate_from_staking_provider(
         &self,
         undelegate_address_opt: OptionalValue<ManagedAddress>,
         opt_amount: OptionalValue<BigUint>,
     ) {
         self.require_is_owner_or_admin();
         self.require_admin_action_allowed();
-        self.require_initial_configuration_is_done();
 
         // use auto_undelegate_address if undelegate_address_opt is None
         let undelegate_address = match undelegate_address_opt {
@@ -177,7 +175,7 @@ pub trait AdminModule:
             .unDelegate(undelegating_amount.clone())
             .with_gas_limit(gas_for_async_call)
             .async_call()
-            .with_callback(self.callbacks().admin_undelegate_callback(
+            .with_callback(self.callbacks().undelegate_from_sp_callback(
                 &caller,
                 &undelegate_address,
                 &undelegating_amount,
@@ -187,7 +185,7 @@ pub trait AdminModule:
     }
 
     #[callback]
-    fn admin_undelegate_callback(
+    fn undelegate_from_sp_callback(
         &self,
         #[call_result] result: ManagedAsyncCallResult<()>,
         caller: &ManagedAddress,
@@ -200,22 +198,21 @@ pub trait AdminModule:
 
         match result {
             ManagedAsyncCallResult::Ok(()) => {
-                self.admin_undelegate_success_event(caller, delegate_address, undelegated_amount, self.blockchain().get_block_timestamp());
+                self.undelegate_from_staking_provider_success_event(caller, delegate_address, undelegated_amount, self.blockchain().get_block_timestamp());
             },
             ManagedAsyncCallResult::Err(err) => {
                 // restore
                 self.preunstaked_egld_amount().update(|v| *v += undelegated_amount);
 
-                self.admin_undelegate_fail_event(caller, delegate_address, undelegated_amount, self.blockchain().get_block_timestamp(), &err.err_msg);
+                self.undelegate_from_staking_provider_fail_event(caller, delegate_address, undelegated_amount, self.blockchain().get_block_timestamp(), &err.err_msg);
             },
         } 
     }
 
     ///
-    #[endpoint(adminWithdraw)]
-    fn admin_withdraw(&self, delegate_address: ManagedAddress) {
-        self.require_admin_action_allowed();
-        self.require_initial_configuration_is_done();
+    #[endpoint(withdrawFromStakingProvider)]
+    fn withdraw_from_staking_provider(&self, delegate_address: ManagedAddress) {
+        self.require_user_action_allowed();
 
         let caller = self.blockchain().get_caller();
         let gas_for_async_call = self.get_gas_for_async_call();
@@ -232,7 +229,7 @@ pub trait AdminModule:
             .withdraw()
             .with_gas_limit(gas_for_async_call)
             .async_call()
-            .with_callback(self.callbacks().withdraw_callback(
+            .with_callback(self.callbacks().withdraw_from_sp_callback(
                 &caller,
                 &delegate_address,
                 last_async_call_id,
@@ -241,7 +238,7 @@ pub trait AdminModule:
     }
 
     #[callback]
-    fn withdraw_callback(
+    fn withdraw_from_sp_callback(
         &self,
         #[call_result] result: ManagedAsyncCallResult<()>,
         caller: &ManagedAddress,
@@ -256,20 +253,19 @@ pub trait AdminModule:
                 let received_egld_amount = self.call_value().egld_value();
                 self.unbonded_egld_amount().update(|v| *v += &received_egld_amount);
 
-                self.admin_withdraw_success_event(caller, delegate_address, &received_egld_amount, self.blockchain().get_block_timestamp());
+                self.withdraw_from_staking_provider_success_event(caller, delegate_address, &received_egld_amount, self.blockchain().get_block_timestamp());
             },
             ManagedAsyncCallResult::Err(_) => {
-                self.admin_withdraw_fail_event(caller, delegate_address, self.blockchain().get_block_timestamp());
+                self.withdraw_from_staking_provider_fail_event(caller, delegate_address, self.blockchain().get_block_timestamp());
             },
         }
     }
 
     //
-    #[endpoint(adminClaimRewards)]
-    fn admin_claim_rewards(&self, delegate_address: ManagedAddress) {
+    #[endpoint(claimRewardsFromStakingProvider)]
+    fn claim_rewards_from_staking_provider(&self, delegate_address: ManagedAddress) {
         self.require_is_owner_or_admin();
         self.require_admin_action_allowed();
-        self.require_initial_configuration_is_done();
 
         let caller = self.blockchain().get_caller();
         let gas_for_async_call = self.get_gas_for_async_call();
@@ -286,7 +282,7 @@ pub trait AdminModule:
             .claimRewards()
             .with_gas_limit(gas_for_async_call)
             .async_call()
-            .with_callback(self.callbacks().claim_rewards_callback(
+            .with_callback(self.callbacks().claim_rewards_sp_callback(
                 &caller,
                 &delegate_address,
                 last_async_call_id,
@@ -295,7 +291,7 @@ pub trait AdminModule:
     }
 
     #[callback]
-    fn claim_rewards_callback(
+    fn claim_rewards_sp_callback(
         &self,
         #[call_result] result: ManagedAsyncCallResult<()>,
         caller: &ManagedAddress,
@@ -323,7 +319,7 @@ pub trait AdminModule:
                 // update LP Share Pool
                 self.pool_egld_amount().update(|v| *v += &remain_egld);
 
-                self.emit_admin_claim_rewards_success_event(
+                self.emit_claim_rewards_from_staking_provider_success_event(
                     caller,
                     delegate_address,
                     &received_egld_amount,
@@ -332,7 +328,7 @@ pub trait AdminModule:
                 );
             },
             ManagedAsyncCallResult::Err(_) => {
-                self.emit_admin_claim_rewards_fail_event(
+                self.emit_claim_rewards_from_staking_provider_fail_event(
                     caller,
                     delegate_address,
                     self.blockchain().get_block_timestamp()
@@ -341,6 +337,33 @@ pub trait AdminModule:
         }
     }
 
+    /// Put EGLD to PreUnstake Pool without minting VEGLD
+    #[endpoint(undelegateFromPrestaked)]
+    fn undelegate_from_prestaked(&self) {
+        self.require_user_action_allowed();
+
+        let available_egld_amount = core::cmp::min(
+            self.prestaked_egld_amount().get(),
+            self.preunstaked_egld_amount().get()
+        );
+        require!(
+            available_egld_amount != 0u64,
+            "Nothing for FastWithdraw"
+        );
+
+        self.prestaked_egld_amount().update(|v| *v -= &available_egld_amount);
+        self.preunstaked_egld_amount().update(|v| *v -= &available_egld_amount);
+        self.unbonded_egld_amount().update(|v| *v += &available_egld_amount);
+
+        //
+        self.emit_undelegate_from_prestaked_event(
+            &self.blockchain().get_caller(),
+            &available_egld_amount,
+            self.blockchain().get_block_timestamp()
+        );
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////
     #[inline]
     fn get_gas_for_async_call(&self) -> u64 {
         let gas_left = self.blockchain().get_gas_left();

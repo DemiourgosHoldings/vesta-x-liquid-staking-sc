@@ -126,6 +126,7 @@ pub trait ConfigModule:
         addresses: MultiValueEncoded<ManagedAddress>,
     ) {
         for address in addresses.into_iter() {
+            self.require_is_address_smart_contract_and_on_metachain(&address);
             self.whitelisted_sp_addresses().insert(address);
         }
     }
@@ -148,7 +149,7 @@ pub trait ConfigModule:
         auto_delegate_address: ManagedAddress,
     ) {
         self.require_is_owner_or_admin();
-
+        self.require_whitelisted_staking_provider(&auto_delegate_address);
         self.auto_delegate_address().set(&auto_delegate_address);
     }
 

@@ -27,3 +27,6 @@ pub const MAX_BLOCKS_FOR_ASYNC_CALLBACK: u64 = 10;  // 10 blocks = 60 seconds
 // gas limit
 pub const MIN_GAS_FOR_ASYNC_CALL: u64 = 12_000_000;
 pub const MIN_GAS_FOR_CALLBACK: u64 = 12_000_000;
+
+//
+pub const METACHAIN_SHARD_ID: u32 = 0;

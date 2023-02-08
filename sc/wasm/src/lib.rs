@@ -10,12 +10,9 @@ elrond_wasm_node::wasm_endpoints! {
         callBack
         addAdmins
         addWhitelistedStakingProviderAddresses
-        adminClaimRewards
-        adminDelegate
-        adminUndelegate
-        adminWithdraw
+        claimRewardsFromStakingProvider
+        delegateToStakingProvider
         donate
-        fastWithdraw
         getAdminActionAllowed
         getAdmins
         getAsyncCallStartBlockMap
@@ -56,10 +53,13 @@ elrond_wasm_node::wasm_endpoints! {
         setUnbondingPeriod
         setUserActionAllowed
         stake
+        undelegateFromPrestaked
+        undelegateFromStakingProvider
         unstake
         viewFailedAsyncCallIds
         viewLiquidStakingSettings
         viewUserUnstakingPacks
         withdraw
+        withdrawFromStakingProvider
     )
 }

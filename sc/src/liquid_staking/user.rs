@@ -16,7 +16,6 @@ pub trait UserModule:
     #[endpoint]
     fn stake(&self) {
         self.require_user_action_allowed();
-        self.require_initial_configuration_is_done();
 
         let staking_egld_amount = self.call_value().egld_value();
         let caller = self.blockchain().get_caller();
@@ -57,7 +56,6 @@ pub trait UserModule:
     #[endpoint]
     fn unstake(&self) {
         self.require_user_action_allowed();
-        self.require_initial_configuration_is_done();
 
         let (payment_token, _, unstaking_vegld_amount) = self.call_value().single_esdt().into_tuple();
 
@@ -89,7 +87,6 @@ pub trait UserModule:
     #[endpoint]
     fn withdraw(&self) {
         self.require_user_action_allowed();
-        self.require_initial_configuration_is_done();
 
         let caller = self.blockchain().get_caller();
         let current_timestamp = self.blockchain().get_block_timestamp();
@@ -151,7 +148,6 @@ pub trait UserModule:
     #[endpoint]
     fn donate(&self) {
         self.require_user_action_allowed();
-        self.require_initial_configuration_is_done();
 
         let staking_egld_amount = self.call_value().egld_value();
         let caller = self.blockchain().get_caller();
@@ -161,32 +157,5 @@ pub trait UserModule:
 
         //
         self.donate_event(&caller, &staking_egld_amount, self.blockchain().get_block_timestamp());
-    }
-
-    /// Put EGLD to PreUnstake Pool without minting VEGLD
-    #[endpoint(fastWithdraw)]
-    fn fast_withdraw(&self) {
-        self.require_user_action_allowed();
-        self.require_initial_configuration_is_done();
-
-        let available_egld_amount = core::cmp::min(
-            self.prestaked_egld_amount().get(),
-            self.preunstaked_egld_amount().get()
-        );
-        require!(
-            available_egld_amount != 0u64,
-            "Nothing for FastWithdraw"
-        );
-
-        self.prestaked_egld_amount().update(|v| *v -= &available_egld_amount);
-        self.preunstaked_egld_amount().update(|v| *v -= &available_egld_amount);
-        self.unbonded_egld_amount().update(|v| *v += &available_egld_amount);
-
-        //
-        self.emit_fast_withdraw_event(
-            &self.blockchain().get_caller(),
-            &available_egld_amount,
-            self.blockchain().get_block_timestamp()
-        );
     }
 }

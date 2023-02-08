@@ -53,8 +53,8 @@ pub trait EventModule
         #[indexed] timestamp: u64,
     );
 
-    #[event("FastWithdraw")]
-    fn emit_fast_withdraw_event(
+    #[event("UndelegateFromPrestaked")]
+    fn emit_undelegate_from_prestaked_event(
         &self,
         #[indexed] caller: &ManagedAddress,
         #[indexed] egld_amount: &BigUint,
@@ -62,8 +62,8 @@ pub trait EventModule
     );
 
     // Admin
-    #[event("AdminDelegateSuccess")]
-    fn admin_delegate_success_event(
+    #[event("DelegateToStakingProviderSuccess")]
+    fn delegate_to_staking_provider_success_event(
         &self,
         #[indexed] caller: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,
@@ -71,27 +71,8 @@ pub trait EventModule
         #[indexed] timestamp: u64,
     );
 
-    #[event("AdminDelegateFail")]
-    fn admin_delegate_fail_event(
-        &self,
-        #[indexed] caller: &ManagedAddress,
-        #[indexed] delegate_address: &ManagedAddress,
-        #[indexed] egld_amount: &BigUint,
-        #[indexed] timestamp: u64,
-        err_msg: &ManagedBuffer,
-    );
-
-    #[event("AdminUndelegateSuccess")]
-    fn admin_undelegate_success_event(
-        &self,
-        #[indexed] caller: &ManagedAddress,
-        #[indexed] delegate_address: &ManagedAddress,
-        #[indexed] egld_amount: &BigUint,
-        #[indexed] timestamp: u64,
-    );
-
-    #[event("AdminUndelegateFail")]
-    fn admin_undelegate_fail_event(
+    #[event("DelegateToStakingProviderFail")]
+    fn delegate_to_staking_provider_fail_event(
         &self,
         #[indexed] caller: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,
@@ -100,8 +81,8 @@ pub trait EventModule
         err_msg: &ManagedBuffer,
     );
 
-    #[event("AdminWithdrawSuccess")]
-    fn admin_withdraw_success_event(
+    #[event("UndelegateFromStakingProviderSuccess")]
+    fn undelegate_from_staking_provider_success_event(
         &self,
         #[indexed] caller: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,
@@ -109,8 +90,27 @@ pub trait EventModule
         #[indexed] timestamp: u64,
     );
 
-    #[event("AdminWithdrawFail")]
-    fn admin_withdraw_fail_event(
+    #[event("UndelegateFromStakingProviderFail")]
+    fn undelegate_from_staking_provider_fail_event(
+        &self,
+        #[indexed] caller: &ManagedAddress,
+        #[indexed] delegate_address: &ManagedAddress,
+        #[indexed] egld_amount: &BigUint,
+        #[indexed] timestamp: u64,
+        err_msg: &ManagedBuffer,
+    );
+
+    #[event("WithdrawFromStakingProviderSuccess")]
+    fn withdraw_from_staking_provider_success_event(
+        &self,
+        #[indexed] caller: &ManagedAddress,
+        #[indexed] delegate_address: &ManagedAddress,
+        #[indexed] egld_amount: &BigUint,
+        #[indexed] timestamp: u64,
+    );
+
+    #[event("WithdrawFromStakingProviderFail")]
+    fn withdraw_from_staking_provider_fail_event(
         &self,
         #[indexed] caller: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,
@@ -118,8 +118,8 @@ pub trait EventModule
     );
 
     // Rewards
-    #[event("AdminClaimRewardsSuccess")]
-    fn emit_admin_claim_rewards_success_event(
+    #[event("ClaimRewardsFromStakingProviderSuccess")]
+    fn emit_claim_rewards_from_staking_provider_success_event(
         &self,
         #[indexed] caller: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,
@@ -128,8 +128,8 @@ pub trait EventModule
         #[indexed] timestamp: u64,
     );
 
-    #[event("AdminClaimRewardsFail")]
-    fn emit_admin_claim_rewards_fail_event(
+    #[event("ClaimRewardsFromStakingProviderFail")]
+    fn emit_claim_rewards_from_staking_provider_fail_event(
         &self,
         #[indexed] caller: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,
