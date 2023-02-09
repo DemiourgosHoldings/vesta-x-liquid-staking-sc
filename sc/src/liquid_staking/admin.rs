@@ -25,7 +25,7 @@ pub trait AdminModule:
         opt_amount: OptionalValue<BigUint>,
     ) {
         self.require_is_owner_or_admin();
-        self.require_admin_action_allowed();
+        self.require_management_action_allowed();
 
         // use auto_delegate_address if delegate_address_opt is None
         let delegate_address = match delegate_address_opt {
@@ -123,11 +123,8 @@ pub trait AdminModule:
         undelegate_address_opt: OptionalValue<ManagedAddress>,
         opt_amount: OptionalValue<BigUint>,
     ) {
-        self.require_admin_action_allowed();
-        require!(
-            self.caller_can_undelegate() || self.is_owner_or_admin(&self.blockchain().get_caller()),
-            "Cannot undelegate"
-        );
+        self.require_management_action_allowed();
+        self.require_caller_can_undelegate();
 
         // use auto_undelegate_address if undelegate_address_opt is None
         let undelegate_address = match undelegate_address_opt {
@@ -218,7 +215,7 @@ pub trait AdminModule:
     ///
     #[endpoint(withdrawFromStakingProvider)]
     fn withdraw_from_staking_provider(&self, delegate_address: ManagedAddress) {
-        self.require_user_action_allowed();
+        self.require_management_action_allowed();
 
         let caller = self.blockchain().get_caller();
         let gas_for_async_call = self.get_gas_for_async_call();
@@ -271,7 +268,7 @@ pub trait AdminModule:
     #[endpoint(claimRewardsFromStakingProvider)]
     fn claim_rewards_from_staking_provider(&self, delegate_address: ManagedAddress) {
         self.require_is_owner_or_admin();
-        self.require_admin_action_allowed();
+        self.require_management_action_allowed();
 
         let caller = self.blockchain().get_caller();
         let gas_for_async_call = self.get_gas_for_async_call();
@@ -331,7 +328,7 @@ pub trait AdminModule:
 
     #[endpoint(prestakePendingRewards)]
     fn prestake_pending_rewards(&self) {
-        self.require_user_action_allowed();
+        self.require_management_action_allowed();
 
         let pending_reward = self.pending_reward_egld_amount().get();
         self.pending_reward_egld_amount().set(BigUint::zero());
@@ -358,11 +355,8 @@ pub trait AdminModule:
     /// Put EGLD to PreUnstake Pool without minting VEGLD
     #[endpoint(withdrawFromPrestaked)]
     fn withdraw_from_prestaked(&self) {
-        self.require_user_action_allowed();
-        require!(
-            self.caller_can_undelegate(),
-            "Cannot undelegate"
-        );
+        self.require_management_action_allowed();
+        self.require_caller_can_undelegate();
 
         let available_egld_amount = core::cmp::min(
             self.prestaked_egld_amount().get(),
@@ -370,12 +364,15 @@ pub trait AdminModule:
         );
         require!(
             available_egld_amount != 0u64,
-            "Nothing for FastWithdraw"
+            "No EGLD for withdraw"
         );
 
         self.prestaked_egld_amount().update(|v| *v -= &available_egld_amount);
         self.preunstaked_egld_amount().update(|v| *v -= &available_egld_amount);
         self.unbonded_egld_amount().update(|v| *v += &available_egld_amount);
+
+        //
+        self.total_undelegated_egld_amount().update(|v| *v += &available_egld_amount);
 
         //
         self.emit_withdraw_from_prestaked_event(
@@ -420,11 +417,14 @@ pub trait AdminModule:
     }
 
     //
-    fn caller_can_undelegate(&self) -> bool {
+    fn require_caller_can_undelegate(&self) {
         self.update_old_preunstaked_egld_amount();
-
-        self.total_undelegated_egld_amount().get() < self.total_old_preunstaked_egld_amount().get()
-    }
+        require!(
+           self.is_owner_or_admin(&self.blockchain().get_caller())
+           || self.total_undelegated_egld_amount().get() < self.total_old_preunstaked_egld_amount().get(),
+           "Cannot undelegate"
+        );
+     }
 
     fn update_old_preunstaked_egld_amount(&self) {
         let current_epoch = self.blockchain().get_block_epoch();

@@ -57,14 +57,14 @@ pub trait UserModule:
     fn unstake(&self) {
         self.require_user_action_allowed();
 
+        let caller = self.blockchain().get_caller();
         let (payment_token, _, unstaking_vegld_amount) = self.call_value().single_esdt().into_tuple();
-
         require!(
             payment_token == self.vegld_identifier().get_token_id(),
             "You sent wrong token."
         );
 
-        let caller = self.blockchain().get_caller();
+        self.update_old_preunstaked_egld_amount();
         
         // burn VEGLD
         self.send().esdt_local_burn(&self.vegld_identifier().get_token_id(), 0, &unstaking_vegld_amount);

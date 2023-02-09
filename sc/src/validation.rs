@@ -31,7 +31,7 @@ pub trait ValidationModule:
     }
 
     #[inline]
-    fn require_admin_action_allowed(&self) {
+    fn require_management_action_allowed(&self) {
         require!(
             self.admin_action_allowed().get(),
             "Admin Action is not allowed."

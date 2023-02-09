@@ -198,3 +198,8 @@ only whitelisted Staking Providers can participate in delegation & undelegation
 ### `stake`, `unstake`, `withdraw`, `donate`
 
 15_000_000
+
+
+## Deployment Rules
+
+### You must need to call `setSettings` method after SC deployment.
