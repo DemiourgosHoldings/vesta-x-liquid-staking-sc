@@ -1,7 +1,7 @@
 elrond_wasm::imports!();
 elrond_wasm::derive_imports!();
 
-use crate::constant::{ ONE_VEGLD_IN_WEI, ONE_EGLD_IN_WEI };
+use crate::constant::*;
 use crate::context::{ LiquidStakingSettings, UserUnstakingPacks };
 
 #[elrond_wasm::module]
