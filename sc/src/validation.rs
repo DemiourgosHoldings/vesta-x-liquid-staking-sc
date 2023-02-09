@@ -40,6 +40,17 @@ pub trait ValidationModule:
 
     #[inline]
     fn require_initial_configuration_is_done(&self) {
+        require!(
+            !self.treasury_wallet().is_empty() && !self.treasury_wallet().get().is_zero(),
+            "treasury_wallet is not set"
+        );
+        let unbonding_period = self.unbonding_period().get();
+        require!(
+            MIN_UNBONDING_PERIOD <= unbonding_period && unbonding_period <= MAX_UNBONDING_PERIOD,
+            "unbonding_period must be in range of {} and {}",
+            MIN_UNBONDING_PERIOD, MAX_UNBONDING_PERIOD
+        );
+
         let roles = self.blockchain().get_esdt_local_roles(self.vegld_identifier().get_token_id_ref());
         require!(
             roles.has_role(&EsdtLocalRole::Mint),

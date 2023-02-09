@@ -16,6 +16,7 @@ pub trait UserModule:
     #[endpoint]
     fn stake(&self) {
         self.require_user_action_allowed();
+        self.require_initial_configuration_is_done();
 
         let staking_egld_amount = self.call_value().egld_value();
         let caller = self.blockchain().get_caller();
