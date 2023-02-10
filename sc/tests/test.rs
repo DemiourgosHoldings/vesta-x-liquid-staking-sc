@@ -43,7 +43,7 @@ fn user_stake_and_unstake_test() {
 }
 
 #[test]
-fn user_stake_and_unstake_and_fast_withdraw_and_withdraw_test() {
+fn user_stake_and_unstake_and_withdraw_from_prestaked_and_withdraw_test() {
     let _ = DebugApi::dummy();
     let mut sc_setup = VestaXLiquidStakingSetup::new(vesta_x_liquid_staking::contract_obj);
 
@@ -73,8 +73,8 @@ fn user_stake_and_unstake_and_fast_withdraw_and_withdraw_test() {
         0u64,
     );
 
-    // fast_withdraw
-    sc_setup.fast_withdraw(&first_user);
+    // withdraw_from_prestaked
+    sc_setup.withdraw_from_prestaked(&sc_setup.owner_address.clone());
     sc_setup.check_user_egld_balance(&first_user, 0u64);
     sc_setup.check_contract_storage(
         stake_amount - unstake_amount,

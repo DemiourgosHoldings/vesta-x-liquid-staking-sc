@@ -7,6 +7,7 @@ use elrond_wasm_debug::{
 };
 use vesta_x_liquid_staking::{
     liquid_staking::user::UserModule,
+    liquid_staking::management::ManagementModule,
     storages::pool_storage::PoolStorageModule,
 };
 use crate::contract_setup::*;
@@ -79,7 +80,7 @@ VestaXLiquidStakingContractObjBuilder: 'static + Copy + Fn() -> vesta_x_liquid_s
                 &self.sc_wrapper,
                 &num_bigint::BigUint::from(payment_amount),
                 |sc| {
-                    sc.stake();
+                    sc.user_stake();
                 },
             )
             .assert_ok();
@@ -99,7 +100,7 @@ VestaXLiquidStakingContractObjBuilder: 'static + Copy + Fn() -> vesta_x_liquid_s
                 0,
                 &num_bigint::BigUint::from(payment_amount),
                 |sc| {
-                    sc.unstake();
+                    sc.user_unstake();
                 },
             )
             .assert_ok();
@@ -116,7 +117,7 @@ VestaXLiquidStakingContractObjBuilder: 'static + Copy + Fn() -> vesta_x_liquid_s
                 &self.sc_wrapper,
                 &rust_zero,
                 |sc| {
-                    sc.withdraw();
+                    sc.user_withdraw();
                 },
             )
             .assert_ok();
@@ -133,14 +134,14 @@ VestaXLiquidStakingContractObjBuilder: 'static + Copy + Fn() -> vesta_x_liquid_s
                 &self.sc_wrapper,
                 &rust_zero,
                 |sc| {
-                    sc.withdraw();
+                    sc.user_withdraw();
                 },
             )
             .assert_error(4, "No EGLD to withdraw.");
     }
 
 
-    pub fn fast_withdraw(
+    pub fn withdraw_from_prestaked(
         &mut self,
         caller: &Address,
     ) {
@@ -151,7 +152,7 @@ VestaXLiquidStakingContractObjBuilder: 'static + Copy + Fn() -> vesta_x_liquid_s
                 &self.sc_wrapper,
                 &rust_zero,
                 |sc| {
-                    sc.fast_withdraw();
+                    sc.withdraw_from_prestaked();
                 },
             )
             .assert_ok();

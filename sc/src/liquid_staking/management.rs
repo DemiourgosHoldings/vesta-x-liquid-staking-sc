@@ -411,7 +411,7 @@ pub trait ManagementModule:
            || self.total_undelegated_egld_amount().get() < self.total_old_preunstaked_egld_amount().get(),
            "Cannot undelegate"
         );
-     }
+    }
 
     fn update_old_preunstaked_egld_amount(&self) {
         let current_epoch = self.blockchain().get_block_epoch();
