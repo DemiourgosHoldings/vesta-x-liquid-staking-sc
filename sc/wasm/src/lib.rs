@@ -13,7 +13,6 @@ elrond_wasm_node::wasm_endpoints! {
         claimRewardsFromStakingProvider
         delegateToStakingProvider
         donate
-        getAdminActionAllowed
         getAdmins
         getAsyncCallStartBlockMap
         getAutoDelegateAddress
@@ -21,6 +20,7 @@ elrond_wasm_node::wasm_endpoints! {
         getEgldPrice
         getFee
         getLastAsyncCallId
+        getManagementActionAllowed
         getPendingRewardEgldAmount
         getPoolEgldAmount
         getPoolVegldAmount
@@ -49,21 +49,21 @@ elrond_wasm_node::wasm_endpoints! {
         removeAutoUndelegateAddress
         removeFailedAsyncCallIds
         removeWhitelistedStakingProviderAddresses
-        setAdminActionAllowed
         setAutoDelegateAddress
         setAutoUndelegateAddress
         setFee
+        setManagementActionAllowed
         setSettings
         setTreasuryWallet
         setUnbondingPeriod
         setUserActionAllowed
-        stake
         undelegateFromStakingProvider
-        unstake
+        userStake
+        userUnstake
+        userWithdraw
         viewFailedAsyncCallIds
         viewLiquidStakingSettings
         viewUserUnstakingPacks
-        withdraw
         withdrawFromPrestaked
         withdrawFromStakingProvider
     )

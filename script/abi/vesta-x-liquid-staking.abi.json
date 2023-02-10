@@ -10,7 +10,7 @@
         "contractCrate": {
             "name": "vesta-x-liquid-staking",
             "version": "0.1.0",
-            "git_version": "9592fb3-modified"
+            "git_version": "58c842e-modified"
         },
         "framework": {
             "name": "elrond-wasm",
@@ -85,7 +85,7 @@
             ]
         },
         {
-            "name": "getAdminActionAllowed",
+            "name": "getManagementActionAllowed",
             "mutability": "readonly",
             "inputs": [],
             "outputs": [
@@ -177,7 +177,7 @@
             ]
         },
         {
-            "name": "getPreunstakedEgldAmount",
+            "name": "getPendingRewardEgldAmount",
             "mutability": "readonly",
             "inputs": [],
             "outputs": [
@@ -187,7 +187,7 @@
             ]
         },
         {
-            "name": "getUnstakingEgldAmount",
+            "name": "getPreunstakedEgldAmount",
             "mutability": "readonly",
             "inputs": [],
             "outputs": [
@@ -234,7 +234,38 @@
             ]
         },
         {
-            "name": "adminDelegate",
+            "name": "getTotalUndelegatedEgldAmount",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "BigUint"
+                }
+            ]
+        },
+        {
+            "name": "getTotalOldPreunstakedEgldAmount",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "BigUint"
+                }
+            ]
+        },
+        {
+            "name": "getRecentPreunstakedEgldAmountsMap",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "variadic<multi<u64,BigUint>>",
+                    "multi_result": true
+                }
+            ]
+        },
+        {
+            "name": "delegateToStakingProvider",
             "mutability": "mutable",
             "inputs": [
                 {
@@ -251,7 +282,7 @@
             "outputs": []
         },
         {
-            "name": "adminUndelegate",
+            "name": "undelegateFromStakingProvider",
             "mutability": "mutable",
             "inputs": [
                 {
@@ -271,7 +302,7 @@
             "docs": [
                 ""
             ],
-            "name": "adminWithdraw",
+            "name": "withdrawFromStakingProvider",
             "mutability": "mutable",
             "inputs": [
                 {
@@ -282,7 +313,7 @@
             "outputs": []
         },
         {
-            "name": "adminClaimRewards",
+            "name": "claimRewardsFromStakingProvider",
             "mutability": "mutable",
             "inputs": [
                 {
@@ -293,17 +324,22 @@
             "outputs": []
         },
         {
-            "name": "viewFailedAsyncCallIds",
-            "mutability": "readonly",
+            "name": "prestakePendingRewards",
+            "mutability": "mutable",
             "inputs": [],
-            "outputs": [
-                {
-                    "type": "List<u32>"
-                }
-            ]
+            "outputs": []
         },
         {
-            "name": "removeAsyncCallIds",
+            "docs": [
+                "Put EGLD to PreUnstake Pool without minting VEGLD"
+            ],
+            "name": "withdrawFromPrestaked",
+            "mutability": "mutable",
+            "inputs": [],
+            "outputs": []
+        },
+        {
+            "name": "removeFailedAsyncCallIds",
             "onlyOwner": true,
             "mutability": "mutable",
             "inputs": [
@@ -316,7 +352,7 @@
             "outputs": []
         },
         {
-            "name": "stake",
+            "name": "userStake",
             "mutability": "mutable",
             "payableInTokens": [
                 "EGLD"
@@ -325,7 +361,7 @@
             "outputs": []
         },
         {
-            "name": "unstake",
+            "name": "userUnstake",
             "mutability": "mutable",
             "payableInTokens": [
                 "*"
@@ -334,7 +370,7 @@
             "outputs": []
         },
         {
-            "name": "withdraw",
+            "name": "userWithdraw",
             "mutability": "mutable",
             "inputs": [],
             "outputs": []
@@ -392,6 +428,21 @@
             ]
         },
         {
+            "name": "isOwnerOrAdmin",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "address",
+                    "type": "Address"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "bool"
+                }
+            ]
+        },
+        {
             "name": "isTokenRolesSet",
             "mutability": "readonly",
             "inputs": [],
@@ -425,17 +476,12 @@
             ]
         },
         {
-            "name": "isOwnerOrAdmin",
+            "name": "viewFailedAsyncCallIds",
             "mutability": "readonly",
-            "inputs": [
-                {
-                    "name": "caller",
-                    "type": "Address"
-                }
-            ],
+            "inputs": [],
             "outputs": [
                 {
-                    "type": "bool"
+                    "type": "List<u32>"
                 }
             ]
         },
@@ -481,7 +527,7 @@
                     "type": "bool"
                 },
                 {
-                    "name": "admin_action_allowed",
+                    "name": "management_action_allowed",
                     "type": "bool"
                 }
             ],
@@ -567,12 +613,12 @@
             "outputs": []
         },
         {
-            "name": "setAdminActionAllowed",
+            "name": "setManagementActionAllowed",
             "onlyOwner": true,
             "mutability": "mutable",
             "inputs": [
                 {
-                    "name": "admin_action_allowed",
+                    "name": "management_action_allowed",
                     "type": "bool"
                 }
             ],
@@ -756,7 +802,27 @@
             ]
         },
         {
-            "identifier": "AdminDelegateSuccess",
+            "identifier": "WithdrawFromPrestaked",
+            "inputs": [
+                {
+                    "name": "caller",
+                    "type": "Address",
+                    "indexed": true
+                },
+                {
+                    "name": "egld_amount",
+                    "type": "BigUint",
+                    "indexed": true
+                },
+                {
+                    "name": "timestamp",
+                    "type": "u64",
+                    "indexed": true
+                }
+            ]
+        },
+        {
+            "identifier": "DelegateToStakingProviderSuccess",
             "inputs": [
                 {
                     "name": "caller",
@@ -781,61 +847,7 @@
             ]
         },
         {
-            "identifier": "AdminDelegateFail",
-            "inputs": [
-                {
-                    "name": "caller",
-                    "type": "Address",
-                    "indexed": true
-                },
-                {
-                    "name": "delegate_address",
-                    "type": "Address",
-                    "indexed": true
-                },
-                {
-                    "name": "egld_amount",
-                    "type": "BigUint",
-                    "indexed": true
-                },
-                {
-                    "name": "timestamp",
-                    "type": "u64",
-                    "indexed": true
-                },
-                {
-                    "name": "err_msg",
-                    "type": "bytes"
-                }
-            ]
-        },
-        {
-            "identifier": "AdminUndelegateSuccess",
-            "inputs": [
-                {
-                    "name": "caller",
-                    "type": "Address",
-                    "indexed": true
-                },
-                {
-                    "name": "delegate_address",
-                    "type": "Address",
-                    "indexed": true
-                },
-                {
-                    "name": "egld_amount",
-                    "type": "BigUint",
-                    "indexed": true
-                },
-                {
-                    "name": "timestamp",
-                    "type": "u64",
-                    "indexed": true
-                }
-            ]
-        },
-        {
-            "identifier": "AdminUndelegateFail",
+            "identifier": "DelegateToStakingProviderFail",
             "inputs": [
                 {
                     "name": "caller",
@@ -864,7 +876,7 @@
             ]
         },
         {
-            "identifier": "AdminWithdrawSuccess",
+            "identifier": "UndelegateFromStakingProviderSuccess",
             "inputs": [
                 {
                     "name": "caller",
@@ -889,7 +901,61 @@
             ]
         },
         {
-            "identifier": "AdminWithdrawFail",
+            "identifier": "UndelegateFromStakingProviderFail",
+            "inputs": [
+                {
+                    "name": "caller",
+                    "type": "Address",
+                    "indexed": true
+                },
+                {
+                    "name": "delegate_address",
+                    "type": "Address",
+                    "indexed": true
+                },
+                {
+                    "name": "egld_amount",
+                    "type": "BigUint",
+                    "indexed": true
+                },
+                {
+                    "name": "timestamp",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "err_msg",
+                    "type": "bytes"
+                }
+            ]
+        },
+        {
+            "identifier": "WithdrawFromStakingProviderSuccess",
+            "inputs": [
+                {
+                    "name": "caller",
+                    "type": "Address",
+                    "indexed": true
+                },
+                {
+                    "name": "delegate_address",
+                    "type": "Address",
+                    "indexed": true
+                },
+                {
+                    "name": "egld_amount",
+                    "type": "BigUint",
+                    "indexed": true
+                },
+                {
+                    "name": "timestamp",
+                    "type": "u64",
+                    "indexed": true
+                }
+            ]
+        },
+        {
+            "identifier": "WithdrawFromStakingProviderFail",
             "inputs": [
                 {
                     "name": "caller",
@@ -909,7 +975,7 @@
             ]
         },
         {
-            "identifier": "AdminClaimRewardsSuccess",
+            "identifier": "ClaimRewardsFromStakingProviderSuccess",
             "inputs": [
                 {
                     "name": "caller",
@@ -927,11 +993,6 @@
                     "indexed": true
                 },
                 {
-                    "name": "fee_egld_amount",
-                    "type": "BigUint",
-                    "indexed": true
-                },
-                {
                     "name": "timestamp",
                     "type": "u64",
                     "indexed": true
@@ -939,7 +1000,7 @@
             ]
         },
         {
-            "identifier": "AdminClaimRewardsFail",
+            "identifier": "ClaimRewardsFromStakingProviderFail",
             "inputs": [
                 {
                     "name": "caller",
@@ -1029,7 +1090,7 @@
                     "type": "bool"
                 },
                 {
-                    "name": "admin_action_allowed",
+                    "name": "management_action_allowed",
                     "type": "bool"
                 },
                 {
@@ -1061,16 +1122,20 @@
                     "type": "BigUint"
                 },
                 {
-                    "name": "unstaking_egld_amount",
+                    "name": "unbonded_egld_amount",
                     "type": "BigUint"
                 },
                 {
-                    "name": "unbonded_egld_amount",
+                    "name": "pending_reward_egld_amount",
                     "type": "BigUint"
                 },
                 {
                     "name": "vegld_price",
                     "type": "BigUint"
+                },
+                {
+                    "name": "failed_async_call_ids",
+                    "type": "List<u32>"
                 }
             ]
         },

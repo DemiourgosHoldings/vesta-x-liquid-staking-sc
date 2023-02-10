@@ -61,7 +61,7 @@ async function main() {
 	const args: TypedValue[] = [
 		new StringValue(VEGLD_TOKEN),
 		new BigUIntValue(USER_UNSTAKE_AMOUNT),
-		new StringValue('unstake'),
+		new StringValue('userUnstake'),
 	];
 	const { argumentsString } = new ArgSerializer().valuesToString(args);
 	const data = new TransactionPayload(`ESDTTransfer@${argumentsString}`);

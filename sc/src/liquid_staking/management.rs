@@ -8,7 +8,7 @@ use crate::constant::*;
 use crate::error::*;
 
 #[elrond_wasm::module]
-pub trait AdminModule:
+pub trait ManagementModule:
     crate::storages::common_storage::CommonStorageModule
     + crate::storages::pool_storage::PoolStorageModule
     + crate::event::EventModule
@@ -309,7 +309,7 @@ pub trait AdminModule:
                 let received_egld_amount = self.call_value().egld_value();
                 self.pending_reward_egld_amount().update(|v| *v += &received_egld_amount);
 
-                self.emit_claim_rewards_from_staking_provider_success_event(
+                self.claim_rewards_from_staking_provider_success_event(
                     caller,
                     delegate_address,
                     &received_egld_amount,
@@ -317,7 +317,7 @@ pub trait AdminModule:
                 );
             },
             ManagedAsyncCallResult::Err(_) => {
-                self.emit_claim_rewards_from_staking_provider_fail_event(
+                self.claim_rewards_from_staking_provider_fail_event(
                     caller,
                     delegate_address,
                     self.blockchain().get_block_timestamp()
@@ -375,7 +375,7 @@ pub trait AdminModule:
         self.total_undelegated_egld_amount().update(|v| *v += &available_egld_amount);
 
         //
-        self.emit_withdraw_from_prestaked_event(
+        self.withdraw_from_prestaked_event(
             &self.blockchain().get_caller(),
             &available_egld_amount,
             self.blockchain().get_block_timestamp()
@@ -391,19 +391,6 @@ pub trait AdminModule:
             ERROR_INSUFFICIENT_GAS
         );
         gas_left - MIN_GAS_FOR_CALLBACK
-    }
-
-    // if async call is not removed from async_call_start_block_map 10 blocks (MAX_BLOCKS_FOR_ASYNC_CALLBACK) after it started, it is assumed that the async call failed
-    #[view(viewFailedAsyncCallIds)]
-    fn view_failed_async_call_ids(&self) -> ManagedVec<usize> {
-        let mut ids = ManagedVec::new();
-        let current_block = self.blockchain().get_block_nonce();
-        for (async_call_id, async_call_start_block) in self.async_call_start_block_map().iter() {
-            if current_block > async_call_start_block + MAX_BLOCKS_FOR_ASYNC_CALLBACK {
-                ids.push(async_call_id);
-            }
-        }
-        ids
     }
 
     // admin will use this function for confirmed async calls

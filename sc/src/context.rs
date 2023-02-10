@@ -16,7 +16,7 @@ pub struct LiquidStakingSettings<M: ManagedTypeApi>  {
     pub unbonding_period: u64,
     pub admins: ManagedVec<M, ManagedAddress<M>>,
     pub user_action_allowed: bool,
-    pub admin_action_allowed: bool,
+    pub management_action_allowed: bool,
     pub is_token_roles_set: bool,
     pub auto_delegate_address: ManagedAddress<M>,
     pub auto_undelegate_address: ManagedAddress<M>,
@@ -26,8 +26,10 @@ pub struct LiquidStakingSettings<M: ManagedTypeApi>  {
     pub prestaked_egld_amount: BigUint<M>,
     pub preunstaked_egld_amount: BigUint<M>,
     pub unbonded_egld_amount: BigUint<M>,
+    pub pending_reward_egld_amount: BigUint<M>,
 
     pub vegld_price: BigUint<M>,
+    pub failed_async_call_ids: ManagedVec<M, usize>,
 }
 
 #[derive(TopEncode, TopDecode, NestedEncode, NestedDecode, TypeAbi, ManagedVecItem, Clone)]

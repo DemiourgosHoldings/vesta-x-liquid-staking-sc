@@ -1,17 +1,17 @@
 import {
 	Address,
+	AddressValue,
 	GasLimit,
 	ArgSerializer,
 	TransactionPayload,
 	Transaction,
 	TypedValue,
-	U64Value,
 } from "@elrondnetwork/erdjs/out";
 import {
 	EXPLORER_URL,
 	SMART_CONRACT_ADDRESS,
+	DELEGATE_ADDRESS,
 	ADMIN_CLAIM_REWARDS_GAS_LIMIT,
-	FAILED_ASYNC_CALL_IDS,
 } from "./config";
 
 import {
@@ -21,10 +21,7 @@ import {
 } from './provider';
 
 async function main() {
-	const args: TypedValue[] = [];
-	FAILED_ASYNC_CALL_IDS.map(row => args.push(new U64Value(row)));
-	const { argumentsString } = new ArgSerializer().valuesToString(args);
-	const data = new TransactionPayload(`removeFailedAsyncCallIds@${argumentsString}`);
+	const data = new TransactionPayload(`withdrawFromPrestaked`);
 
 	const tx = new Transaction({
 		nonce: account.getNonceThenIncrement(),

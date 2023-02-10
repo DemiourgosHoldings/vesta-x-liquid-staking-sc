@@ -55,7 +55,7 @@ import {
 import { loadContractCode } from '@elrondnetwork/erdjs/out/testutils';
 
 async function main() {
-	const data = new TransactionPayload(`stake`);
+	const data = new TransactionPayload(`userStake`);
 
 	const tx = new Transaction({
 		nonce: account.getNonceThenIncrement(),

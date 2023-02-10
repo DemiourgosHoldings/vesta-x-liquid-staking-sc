@@ -10,11 +10,11 @@ pub trait UserModule:
     + crate::event::EventModule
     + crate::amm::AmmModule
     + crate::validation::ValidationModule
-    + crate::admin::AdminModule
+    + crate::management::ManagementModule
 {
     #[payable("EGLD")]
-    #[endpoint]
-    fn stake(&self) {
+    #[endpoint(userStake)]
+    fn user_stake(&self) {
         self.require_user_action_allowed();
         self.require_initial_configuration_is_done();
 
@@ -54,8 +54,8 @@ pub trait UserModule:
 
     //
     #[payable("*")]
-    #[endpoint]
-    fn unstake(&self) {
+    #[endpoint(userUnstake)]
+    fn user_unstake(&self) {
         self.require_user_action_allowed();
 
         let caller = self.blockchain().get_caller();
@@ -88,8 +88,8 @@ pub trait UserModule:
     }
 
     //
-    #[endpoint]
-    fn withdraw(&self) {
+    #[endpoint(userWithdraw)]
+    fn user_withdraw(&self) {
         self.require_user_action_allowed();
 
         let caller = self.blockchain().get_caller();

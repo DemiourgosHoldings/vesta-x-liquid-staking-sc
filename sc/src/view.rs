@@ -22,6 +22,20 @@ pub trait ViewModule:
         self.quote_vegld(&BigUint::from(ONE_EGLD_IN_WEI))
     }
 
+    // if async call is not removed from async_call_start_block_map 10 blocks (MAX_BLOCKS_FOR_ASYNC_CALLBACK) after it started, it is assumed that the async call failed
+    #[view(viewFailedAsyncCallIds)]
+    fn view_failed_async_call_ids(&self) -> ManagedVec<usize> {
+        let mut ids = ManagedVec::new();
+        let current_block = self.blockchain().get_block_nonce();
+        for (async_call_id, async_call_start_block) in self.async_call_start_block_map().iter() {
+            if current_block > async_call_start_block + MAX_BLOCKS_FOR_ASYNC_CALLBACK {
+                ids.push(async_call_id);
+            }
+        }
+        ids
+    }    
+
+    //
     #[view(viewLiquidStakingSettings)]
     fn view_liquid_staking_settings(&self) -> LiquidStakingSettings<Self::Api> {
         let admins_set = self.admins();
@@ -29,6 +43,7 @@ pub trait ViewModule:
         for admin in admins_set.iter() {
             admins.push(admin);
         }
+        let failed_async_call_ids = self.view_failed_async_call_ids();
 
         LiquidStakingSettings {
             vegld_identifier: self.vegld_identifier().get_token_id(),
@@ -37,7 +52,7 @@ pub trait ViewModule:
             unbonding_period: self.unbonding_period().get(),
             admins,
             user_action_allowed: self.user_action_allowed().get(),
-            admin_action_allowed: self.admin_action_allowed().get(),
+            management_action_allowed: self.management_action_allowed().get(),
             is_token_roles_set: self.is_token_roles_set(),
             auto_delegate_address: if self.auto_delegate_address().is_empty() { ManagedAddress::zero() } else { self.auto_delegate_address().get() },
             auto_undelegate_address: if self.auto_undelegate_address().is_empty() { ManagedAddress::zero() } else { self.auto_undelegate_address().get() },
@@ -47,9 +62,11 @@ pub trait ViewModule:
             prestaked_egld_amount: self.prestaked_egld_amount().get(),
             preunstaked_egld_amount: self.preunstaked_egld_amount().get(),
             unbonded_egld_amount: self.unbonded_egld_amount().get(),
+            pending_reward_egld_amount: self.pending_reward_egld_amount().get(),
 
             // to prevent panic when pool_vegld_amount is zero
             vegld_price: if self.pool_vegld_amount().get() != BigUint::zero() { self.get_vegld_price() } else { BigUint::zero() },
+            failed_async_call_ids,
         }
     }
 

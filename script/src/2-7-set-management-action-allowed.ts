@@ -5,13 +5,13 @@ import {
 	TransactionPayload,
 	Transaction,
 	TypedValue,
-	U64Value,
+	BooleanValue,
 } from "@elrondnetwork/erdjs/out";
 import {
 	EXPLORER_URL,
 	SMART_CONRACT_ADDRESS,
-	ADMIN_CLAIM_REWARDS_GAS_LIMIT,
-	FAILED_ASYNC_CALL_IDS,
+    SET_SETTINGS_GAS_LIMIT,
+	MANAGEMENT_ACTION_ALLOWED,
 } from "./config";
 
 import {
@@ -21,16 +21,17 @@ import {
 } from './provider';
 
 async function main() {
-	const args: TypedValue[] = [];
-	FAILED_ASYNC_CALL_IDS.map(row => args.push(new U64Value(row)));
+	const args: TypedValue[] = [
+		new BooleanValue(MANAGEMENT_ACTION_ALLOWED),
+	];
 	const { argumentsString } = new ArgSerializer().valuesToString(args);
-	const data = new TransactionPayload(`removeFailedAsyncCallIds@${argumentsString}`);
+	const data = new TransactionPayload(`setManagementActionAllowed@${argumentsString}`);
 
 	const tx = new Transaction({
 		nonce: account.getNonceThenIncrement(),
 		receiver: new Address(SMART_CONRACT_ADDRESS),
 		data: data,
-		gasLimit: new GasLimit(ADMIN_CLAIM_REWARDS_GAS_LIMIT),
+		gasLimit: new GasLimit(SET_SETTINGS_GAS_LIMIT),
 	});
 
 	await signer.sign(tx);

@@ -34,7 +34,7 @@ export const USER_STAKE_GAS_LIMIT = 25_000_000;     // when auto-delegate enable
 
 export const USER_UNSTAKE_GAS_LIMIT = 25_000_000;
 export const USER_WITHDRAW_GAS_LIMIT = 15_000_000;
-export const ADMIN_DELEGATE_GAS_LIMIT = 30_000_000;
+export const DELEGATE_TO_SP_GAS_LIMIT = 30_000_000;
 export const ADMIN_UNDELEGATE_GAS_LIMIT = 30_000_000;
 export const ADMIN_WITHDRAW_GAS_LIMIT = 30_000_000;
 export const ADMIN_CLAIM_REWARDS_GAS_LIMIT = 30_000_000;
@@ -48,7 +48,7 @@ export const ADMIN_ADDRESSES = [
     'erd1klkykugf5w67nrj22fvkalzf34rge7czr4cd93rj6rdz9t8upd4sww53ju', // vestax-admin
 ];
 export const USER_ACTION_ALLOWED = true;
-export const ADMIN_ACTION_ALLOWED = true;
+export const MANAGEMENT_ACTION_ALLOWED = true;
 
 //
 export const VEGLD_TOKEN = 'VEGLD-a99e98';
@@ -63,7 +63,7 @@ export const WHITELISTED_SP_ADDRESSES = [
 ];
 
 //
-export const USER_STAKE_AMOUNT = 10_000_000_000_000_000_000;
+export const USER_STAKE_AMOUNT = 1_000_000_000_000_000_000;
 export const USER_UNSTAKE_AMOUNT = 1_000_000_000_000_000_000;
 
 //

@@ -54,7 +54,7 @@ pub trait EventModule
     );
 
     #[event("WithdrawFromPrestaked")]
-    fn emit_withdraw_from_prestaked_event(
+    fn withdraw_from_prestaked_event(
         &self,
         #[indexed] caller: &ManagedAddress,
         #[indexed] egld_amount: &BigUint,
@@ -119,7 +119,7 @@ pub trait EventModule
 
     // Rewards
     #[event("ClaimRewardsFromStakingProviderSuccess")]
-    fn emit_claim_rewards_from_staking_provider_success_event(
+    fn claim_rewards_from_staking_provider_success_event(
         &self,
         #[indexed] caller: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,
@@ -128,7 +128,7 @@ pub trait EventModule
     );
 
     #[event("ClaimRewardsFromStakingProviderFail")]
-    fn emit_claim_rewards_from_staking_provider_fail_event(
+    fn claim_rewards_from_staking_provider_fail_event(
         &self,
         #[indexed] caller: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,

@@ -18,13 +18,13 @@ pub trait ConfigModule:
         treasury_wallet: ManagedAddress,
         fee: u64,
         user_action_allowed: bool,
-        admin_action_allowed: bool,
+        management_action_allowed: bool,
     ) {
         self.set_unbonding_period(unbonding_period);
         self.set_treasury_wallet(treasury_wallet);
         self.set_fee(fee);
         self.set_user_action_allowed(user_action_allowed);
-        self.set_admin_action_allowed(admin_action_allowed);
+        self.set_management_action_allowed(management_action_allowed);
     }
 
     #[only_owner]
@@ -109,12 +109,12 @@ pub trait ConfigModule:
     }
 
     #[only_owner]
-    #[endpoint(setAdminActionAllowed)]
-    fn set_admin_action_allowed(
+    #[endpoint(setManagementActionAllowed)]
+    fn set_management_action_allowed(
         &self,
-        admin_action_allowed: bool,
+        management_action_allowed: bool,
     ) {
-        self.admin_action_allowed().set(admin_action_allowed);
+        self.management_action_allowed().set(management_action_allowed);
     }
 
     ////////////////////////////////////////////////////////////

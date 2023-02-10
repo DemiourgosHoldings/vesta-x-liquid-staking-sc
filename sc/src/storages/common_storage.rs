@@ -35,9 +35,9 @@ pub trait CommonStorageModule
     #[storage_mapper("user_action_allowed")]
     fn user_action_allowed(&self) -> SingleValueMapper<bool>;
 
-    #[view(getAdminActionAllowed)]
-    #[storage_mapper("admin_action_allowed")]
-    fn admin_action_allowed(&self) -> SingleValueMapper<bool>;
+    #[view(getManagementActionAllowed)]
+    #[storage_mapper("management_action_allowed")]
+    fn management_action_allowed(&self) -> SingleValueMapper<bool>;
 
     ///////////////////////////////////////////////////////////
     // only whitelisted Staking Providers can participate in delegation & undelegation

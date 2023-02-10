@@ -15,9 +15,8 @@ pub trait ValidationModule:
 
     #[inline]
     fn require_is_owner_or_admin(&self) {
-        let caller = self.blockchain().get_caller();
         require!(
-            caller == self.blockchain().get_owner_address() || self.admins().contains(&caller),
+            self.is_owner_or_admin(&self.blockchain().get_caller()),
             "You are not Owner or Admin."
         );
     }
@@ -33,8 +32,8 @@ pub trait ValidationModule:
     #[inline]
     fn require_management_action_allowed(&self) {
         require!(
-            self.admin_action_allowed().get(),
-            "Admin Action is not allowed."
+            self.management_action_allowed().get(),
+            "Management Action is not allowed."
         );
     }
 
