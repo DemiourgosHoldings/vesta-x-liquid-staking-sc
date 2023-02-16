@@ -153,6 +153,7 @@ pub trait ManagementModule:
         undelegate_address: ManagedAddress,
         undelegating_amount: BigUint,
     ) {
+        self.require_is_address_smart_contract_and_on_metachain(&undelegate_address);
         require!(
             undelegating_amount >= BigUint::from(DELEGATE_MIN_AMOUNT),
             "undelegating_amount cannot be less than 1 EGLD."
@@ -216,6 +217,7 @@ pub trait ManagementModule:
     #[endpoint(withdrawFromStakingProvider)]
     fn withdraw_from_staking_provider(&self, delegate_address: ManagedAddress) {
         self.require_management_action_allowed();
+        self.require_is_address_smart_contract_and_on_metachain(&delegate_address);
 
         let caller = self.blockchain().get_caller();
         let gas_for_async_call = self.get_gas_for_async_call();
@@ -269,6 +271,7 @@ pub trait ManagementModule:
     fn claim_rewards_from_staking_provider(&self, delegate_address: ManagedAddress) {
         self.require_is_owner_or_admin();
         self.require_management_action_allowed();
+        self.require_is_address_smart_contract_and_on_metachain(&delegate_address);
 
         let caller = self.blockchain().get_caller();
         let gas_for_async_call = self.get_gas_for_async_call();
