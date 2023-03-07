@@ -1,7 +1,7 @@
 #![no_std]
 
-elrond_wasm::imports!();
-elrond_wasm::derive_imports!();
+multiversx_sc::imports!();
+multiversx_sc::derive_imports!();
 
 pub mod storages;
 pub use storages::common_storage;
@@ -21,7 +21,7 @@ pub mod validation;
 pub mod view;
 pub mod config;
 
-#[elrond_wasm::contract]
+#[multiversx_sc::contract]
 pub trait VestaXLiquidStaking:
     common_storage::CommonStorageModule
     + pool_storage::PoolStorageModule

@@ -1,9 +1,9 @@
-elrond_wasm::imports!();
-elrond_wasm::derive_imports!();
+multiversx_sc::imports!();
+multiversx_sc::derive_imports!();
 
 use crate::constant::{ MAX_PERCENTAGE, MIN_UNBONDING_PERIOD, MAX_UNBONDING_PERIOD };
 
-#[elrond_wasm::module]
+#[multiversx_sc::module]
 pub trait ConfigModule:
     crate::storages::common_storage::CommonStorageModule
     + crate::storages::pool_storage::PoolStorageModule

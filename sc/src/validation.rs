@@ -1,9 +1,9 @@
-elrond_wasm::imports!();
-elrond_wasm::derive_imports!();
+multiversx_sc::imports!();
+multiversx_sc::derive_imports!();
 
 use crate::constant::*;
 
-#[elrond_wasm::module]
+#[multiversx_sc::module]
 pub trait ValidationModule:
     crate::storages::common_storage::CommonStorageModule
     + crate::storages::pool_storage::PoolStorageModule

@@ -1,8 +1,8 @@
-elrond_wasm::imports!();
-elrond_wasm::derive_imports!();
+multiversx_sc::imports!();
+multiversx_sc::derive_imports!();
 
 
-#[elrond_wasm::module]
+#[multiversx_sc::module]
 pub trait CommonStorageModule
 {
     // Liquid Staking Token

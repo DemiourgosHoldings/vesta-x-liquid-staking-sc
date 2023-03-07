@@ -1,5 +1,5 @@
-elrond_wasm::imports!();
-elrond_wasm::derive_imports!();
+multiversx_sc::imports!();
+multiversx_sc::derive_imports!();
 
 use crate::constant::{
     TOKEN_ISSUE_COST,
@@ -8,7 +8,7 @@ use crate::constant::{
     VEGLD_DECIMALS,
 };
 
-#[elrond_wasm::module]
+#[multiversx_sc::module]
 pub trait BrandModule:
     crate::common_storage::CommonStorageModule
     + crate::event::EventModule

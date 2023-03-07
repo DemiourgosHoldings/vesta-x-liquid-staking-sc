@@ -15,12 +15,12 @@
     },
     "contracts": {
         "vesta-x-liquid-staking": {
-            "version": "0.1.0",
-            "codehash": "16004254ab3cc1ca04476b59581ddbe661058d82845db4e1d1d2ea2e5bc23bf9",
+            "version": "0.2.0",
+            "codehash": "d82152f794b90407e709575ef42f0b5b4b956ebbe6c1264e19ea26d6972c0193",
             "artifacts": {
                 "bytecode": "vesta-x-liquid-staking.wasm",
                 "abi": "vesta-x-liquid-staking.abi.json",
-                "srcPackage": "vesta-x-liquid-staking-0.1.0.source.json"
+                "srcPackage": "vesta-x-liquid-staking-0.2.0.source.json"
             }
         }
     }

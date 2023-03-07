@@ -1,9 +1,8 @@
-use elrond_wasm_debug::{
+use multiversx_sc_scenario::{
     DebugApi,
 };
 
 pub mod contract_setup;
-pub mod contract_interactions;
 
 use contract_setup::*;
 

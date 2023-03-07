@@ -1,10 +1,10 @@
-elrond_wasm::imports!();
-elrond_wasm::derive_imports!();
+multiversx_sc::imports!();
+multiversx_sc::derive_imports!();
 
 use crate::constant::*;
 use crate::context::{ LiquidStakingSettings, UserUnstakingPacks };
 
-#[elrond_wasm::module]
+#[multiversx_sc::module]
 pub trait ViewModule:
     crate::storages::common_storage::CommonStorageModule
     + crate::storages::pool_storage::PoolStorageModule

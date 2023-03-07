@@ -1,9 +1,9 @@
-elrond_wasm::imports!();
-elrond_wasm::derive_imports!();
+multiversx_sc::imports!();
+multiversx_sc::derive_imports!();
 
 use crate::{context::{ UnstakingPack }, constant::MAX_LOOP_IN_USER_WITHDRAW};
 
-#[elrond_wasm::module]
+#[multiversx_sc::module]
 pub trait UserModule:
     crate::storages::common_storage::CommonStorageModule
     + crate::storages::pool_storage::PoolStorageModule

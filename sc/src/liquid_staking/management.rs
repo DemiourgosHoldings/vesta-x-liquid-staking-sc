@@ -1,5 +1,5 @@
-elrond_wasm::imports!();
-elrond_wasm::derive_imports!();
+multiversx_sc::imports!();
+multiversx_sc::derive_imports!();
 
 use core::cmp::min;
 
@@ -7,7 +7,7 @@ use crate::delegate_proxy;
 use crate::constant::*;
 use crate::error::*;
 
-#[elrond_wasm::module]
+#[multiversx_sc::module]
 pub trait ManagementModule:
     crate::storages::common_storage::CommonStorageModule
     + crate::storages::pool_storage::PoolStorageModule

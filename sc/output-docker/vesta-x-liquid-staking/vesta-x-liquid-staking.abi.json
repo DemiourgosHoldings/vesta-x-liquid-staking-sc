@@ -9,11 +9,11 @@
         },
         "contractCrate": {
             "name": "vesta-x-liquid-staking",
-            "version": "0.1.0"
+            "version": "0.2.0"
         },
         "framework": {
-            "name": "elrond-wasm",
-            "version": "0.36.1"
+            "name": "multiversx-sc",
+            "version": "0.39.5"
         }
     },
     "name": "VestaXLiquidStaking",
