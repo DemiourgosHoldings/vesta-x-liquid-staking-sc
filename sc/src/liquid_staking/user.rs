@@ -1,28 +1,26 @@
-elrond_wasm::imports!();
-elrond_wasm::derive_imports!();
+multiversx_sc::imports!();
+multiversx_sc::derive_imports!();
 
-use crate::context::{ UnstakingPack };
-use crate::constant::{ DELEGATE_MIN_AMOUNT };
+use crate::{context::{ UnstakingPack }, constant::MAX_LOOP_IN_USER_WITHDRAW};
 
-#[elrond_wasm::module]
+#[multiversx_sc::module]
 pub trait UserModule:
     crate::storages::common_storage::CommonStorageModule
     + crate::storages::pool_storage::PoolStorageModule
     + crate::event::EventModule
     + crate::amm::AmmModule
     + crate::validation::ValidationModule
-    + crate::admin::AdminModule
+    + crate::management::ManagementModule
 {
     #[payable("EGLD")]
-    #[endpoint]
-    fn stake(&self) {
+    #[endpoint(userStake)]
+    fn user_stake(&self) {
         self.require_user_action_allowed();
         self.require_initial_configuration_is_done();
 
         let staking_egld_amount = self.call_value().egld_value();
         let caller = self.blockchain().get_caller();
 
-        // VEGLD supply should be increased only after successful Delegation
         let pool_vegld_amount = self.pool_vegld_amount().get();
         let pool_egld_amount = self.pool_egld_amount().get();
 
@@ -52,28 +50,22 @@ pub trait UserModule:
 
         //
         self.user_stake_event(&caller, &staking_egld_amount, &vegld_mint_amount, self.blockchain().get_block_timestamp());
-
-        // auto-delegate
-        if !self.auto_delegate_address().is_empty() && staking_egld_amount >= BigUint::from(DELEGATE_MIN_AMOUNT) {
-            self._delegate(self.auto_delegate_address().get(), staking_egld_amount);
-        }
     }
 
     //
     #[payable("*")]
-    #[endpoint]
-    fn unstake(&self) {
+    #[endpoint(userUnstake)]
+    fn user_unstake(&self) {
         self.require_user_action_allowed();
-        self.require_initial_configuration_is_done();
 
+        let caller = self.blockchain().get_caller();
         let (payment_token, _, unstaking_vegld_amount) = self.call_value().single_esdt().into_tuple();
-
         require!(
             payment_token == self.vegld_identifier().get_token_id(),
             "You sent wrong token."
         );
 
-        let caller = self.blockchain().get_caller();
+        self.update_old_preunstaked_egld_amount();
         
         // burn VEGLD
         self.send().esdt_local_burn(&self.vegld_identifier().get_token_id(), 0, &unstaking_vegld_amount);
@@ -83,6 +75,9 @@ pub trait UserModule:
         self.pool_egld_amount().update(|v| *v -= &unstaking_egld_amount);
         self.preunstaked_egld_amount().update(|v| *v += &unstaking_egld_amount);
 
+        //
+        self.update_recent_preunstaked_egld_amounts_map(&unstaking_egld_amount);
+
         self.unstaking_users().insert(caller.clone());
         self.unstaking_packs(&caller).push_back(UnstakingPack {
             amount: unstaking_egld_amount.clone(),
@@ -90,18 +85,12 @@ pub trait UserModule:
         });
 
         self.user_unstake_event(&caller, &unstaking_vegld_amount, &unstaking_egld_amount, self.blockchain().get_block_timestamp());
-
-        // auto-undelegate
-        if !self.auto_undelegate_address().is_empty() && unstaking_egld_amount >= BigUint::from(DELEGATE_MIN_AMOUNT) {
-            self._undelegate(self.auto_undelegate_address().get(), unstaking_egld_amount);
-        }
     }
 
     //
-    #[endpoint]
-    fn withdraw(&self) {
+    #[endpoint(userWithdraw)]
+    fn user_withdraw(&self) {
         self.require_user_action_allowed();
-        self.require_initial_configuration_is_done();
 
         let caller = self.blockchain().get_caller();
         let current_timestamp = self.blockchain().get_block_timestamp();
@@ -118,6 +107,11 @@ pub trait UserModule:
             if current_timestamp >= item.timestamp + unbonding_period {
                 unbonded_amount += &item.amount;
                 unbonded_count += 1;
+
+                // a user can withdraw only MAX_LOOP_IN_USER_WITHDRAW unstaking_packs at one time to prevent tx failure due to too much gas comsumption
+                if unbonded_count > MAX_LOOP_IN_USER_WITHDRAW {
+                    break;
+                }
             } else {
                 break;
             }
@@ -158,7 +152,6 @@ pub trait UserModule:
     #[endpoint]
     fn donate(&self) {
         self.require_user_action_allowed();
-        self.require_initial_configuration_is_done();
 
         let staking_egld_amount = self.call_value().egld_value();
         let caller = self.blockchain().get_caller();

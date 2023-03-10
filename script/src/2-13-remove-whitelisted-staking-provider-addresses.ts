@@ -40,7 +40,10 @@ import {
     SET_SETTINGS_GAS_LIMIT,
 	ADMIN_ADDRESSES,
 	USER_ACTION_ALLOWED,
-	ADMIN_ACTION_ALLOWED,
+	MANAGEMENT_ACTION_ALLOWED,
+	DELEGATE_ADDRESS,
+	UNDELEGATE_ADDRESS,
+	WHITELISTED_SP_ADDRESSES,
 } from "./config";
 
 import {
@@ -57,11 +60,10 @@ import {
 import { loadContractCode } from '@elrondnetwork/erdjs/out/testutils';
 
 async function main() {
-	const args: TypedValue[] = [
-		new BooleanValue(ADMIN_ACTION_ALLOWED),
-	];
+	const args: TypedValue[] = [];
+	WHITELISTED_SP_ADDRESSES.map(row => args.push(new AddressValue(new Address(row))));
 	const { argumentsString } = new ArgSerializer().valuesToString(args);
-	const data = new TransactionPayload(`setAdminActionAllowed@${argumentsString}`);
+	const data = new TransactionPayload(`removeWhitelistedStakingProviderAddresses@${argumentsString}`);
 
 	const tx = new Transaction({
 		nonce: account.getNonceThenIncrement(),

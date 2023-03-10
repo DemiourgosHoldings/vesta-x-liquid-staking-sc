@@ -1,8 +1,8 @@
 #![allow(non_snake_case)]
 
-elrond_wasm::imports!();
+multiversx_sc::imports!();
 
-#[elrond_wasm::proxy]
+#[multiversx_sc::proxy]
 pub trait DelegateProxy {
     #[payable("EGLD")]
     #[endpoint(delegate)]

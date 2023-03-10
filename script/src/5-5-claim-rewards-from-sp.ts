@@ -6,18 +6,12 @@ import {
 	TransactionPayload,
 	Transaction,
 	TypedValue,
-	U64Value,
-	BooleanValue,
 } from "@elrondnetwork/erdjs/out";
 import {
 	EXPLORER_URL,
 	SMART_CONRACT_ADDRESS,
-    UNBONDING_PERIOD,
-    TREASURY_WALLET,
-    FEE,
-    SET_SETTINGS_GAS_LIMIT,
-	USER_ACTION_ALLOWED,
-	MANAGEMENT_ACTION_ALLOWED,
+	DELEGATE_ADDRESS,
+	ADMIN_CLAIM_REWARDS_GAS_LIMIT,
 } from "./config";
 
 import {
@@ -28,20 +22,16 @@ import {
 
 async function main() {
 	const args: TypedValue[] = [
-		new U64Value(UNBONDING_PERIOD),
-		new AddressValue(new Address(TREASURY_WALLET)),
-        new U64Value(FEE),
-		new BooleanValue(USER_ACTION_ALLOWED),
-		new BooleanValue(MANAGEMENT_ACTION_ALLOWED),
+		new AddressValue(new Address(DELEGATE_ADDRESS)),
 	];
 	const { argumentsString } = new ArgSerializer().valuesToString(args);
-	const data = new TransactionPayload(`setSettings@${argumentsString}`);
+	const data = new TransactionPayload(`claimRewardsFromStakingProvider@${argumentsString}`);
 
 	const tx = new Transaction({
 		nonce: account.getNonceThenIncrement(),
 		receiver: new Address(SMART_CONRACT_ADDRESS),
 		data: data,
-		gasLimit: new GasLimit(SET_SETTINGS_GAS_LIMIT),
+		gasLimit: new GasLimit(ADMIN_CLAIM_REWARDS_GAS_LIMIT),
 	});
 
 	await signer.sign(tx);

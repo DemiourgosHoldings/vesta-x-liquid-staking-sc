@@ -1,31 +1,5 @@
-import * as fs from 'fs';
-import { sendTransactions, timedOutBatchTransactionsStates } from "@elrondnetwork/dapp-core";
 import {
-	Account,
-	Address,
-	AddressValue,
-	ChainID,
-	ContractFunction,
-	GasLimit,
-	I8Value,
-	ProxyProvider,
-	SmartContract,
-	StringValue,
-	AbiRegistry,
-	SmartContractAbi,
-	Egld,
-	Balance,
-	BigUIntValue,
-	BytesValue,
-	ArgSerializer,
-	TransactionPayload,
-	Transaction,
-	TypedValue,
-	U64Value,
-	U32Value,
-} from "@elrondnetwork/erdjs/out";
-import {
-	EXPLORER_URL, ZERO_ADDRESS,
+	ZERO_ADDRESS,
 } from "./config";
 
 import {
@@ -59,23 +33,24 @@ async function main() {
         unbonding_period: value.unbonding_period.toNumber(),
         admins: value.admins.map(v => v.toString()),
         user_action_allowed: value.user_action_allowed,
-        admin_action_allowed: value.admin_action_allowed,
+        management_action_allowed: value.management_action_allowed,
         is_token_roles_set: value.is_token_roles_set,
-				auto_delegate_address: value.auto_delegate_address.toString() == ZERO_ADDRESS ? '' : value.auto_delegate_address.toString(),
-				auto_undelegate_address: value.auto_undelegate_address.toString() == ZERO_ADDRESS ? '' : value.auto_undelegate_address.toString(),
+		auto_delegate_address: value.auto_delegate_address.toString() == ZERO_ADDRESS ? '' : value.auto_delegate_address.toString(),
+		auto_undelegate_address: value.auto_undelegate_address.toString() == ZERO_ADDRESS ? '' : value.auto_undelegate_address.toString(),
 
         pool_vegld_amount: value.pool_vegld_amount.toFixed(),
         pool_egld_amount: value.pool_egld_amount.toFixed(),
         prestaked_egld_amount: value.prestaked_egld_amount.toFixed(),
         preunstaked_egld_amount: value.preunstaked_egld_amount.toFixed(),
-        unstaking_egld_amount: value.unstaking_egld_amount.toFixed(),
         unbonded_egld_amount: value.unbonded_egld_amount.toFixed(),
+        pending_reward_egld_amount: value.pending_reward_egld_amount.toFixed(),
+
         vegld_price: value.vegld_price.toFixed(),
+        failed_async_call_ids: value.failed_async_call_ids.map(v => v.toNumber()),
     }
 
 	console.log('Settings: ', decoded);
 }
-
 
 (async function() {
 	await account.sync(provider);

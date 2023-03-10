@@ -1,7 +1,7 @@
-elrond_wasm::imports!();
-elrond_wasm::derive_imports!();
+multiversx_sc::imports!();
+multiversx_sc::derive_imports!();
 
-#[elrond_wasm::module]
+#[multiversx_sc::module]
 pub trait EventModule
 {
     // Vegld Token
@@ -53,9 +53,17 @@ pub trait EventModule
         #[indexed] timestamp: u64,
     );
 
+    #[event("WithdrawFromPrestaked")]
+    fn withdraw_from_prestaked_event(
+        &self,
+        #[indexed] caller: &ManagedAddress,
+        #[indexed] egld_amount: &BigUint,
+        #[indexed] timestamp: u64,
+    );
+
     // Admin
-    #[event("AdminDelegateSuccess")]
-    fn admin_delegate_success_event(
+    #[event("DelegateToStakingProviderSuccess")]
+    fn delegate_to_staking_provider_success_event(
         &self,
         #[indexed] caller: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,
@@ -63,27 +71,8 @@ pub trait EventModule
         #[indexed] timestamp: u64,
     );
 
-    #[event("AdminDelegateFail")]
-    fn admin_delegate_fail_event(
-        &self,
-        #[indexed] caller: &ManagedAddress,
-        #[indexed] delegate_address: &ManagedAddress,
-        #[indexed] egld_amount: &BigUint,
-        #[indexed] timestamp: u64,
-        err_msg: &ManagedBuffer,
-    );
-
-    #[event("AdminUndelegateSuccess")]
-    fn admin_undelegate_success_event(
-        &self,
-        #[indexed] caller: &ManagedAddress,
-        #[indexed] delegate_address: &ManagedAddress,
-        #[indexed] egld_amount: &BigUint,
-        #[indexed] timestamp: u64,
-    );
-
-    #[event("AdminUndelegateFail")]
-    fn admin_undelegate_fail_event(
+    #[event("DelegateToStakingProviderFail")]
+    fn delegate_to_staking_provider_fail_event(
         &self,
         #[indexed] caller: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,
@@ -92,8 +81,8 @@ pub trait EventModule
         err_msg: &ManagedBuffer,
     );
 
-    #[event("AdminWithdrawSuccess")]
-    fn admin_withdraw_success_event(
+    #[event("UndelegateFromStakingProviderSuccess")]
+    fn undelegate_from_staking_provider_success_event(
         &self,
         #[indexed] caller: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,
@@ -101,54 +90,52 @@ pub trait EventModule
         #[indexed] timestamp: u64,
     );
 
-    #[event("AdminWithdrawFail")]
-    fn admin_withdraw_fail_event(
+    #[event("UndelegateFromStakingProviderFail")]
+    fn undelegate_from_staking_provider_fail_event(
         &self,
         #[indexed] caller: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,
         #[indexed] egld_amount: &BigUint,
+        #[indexed] timestamp: u64,
+        err_msg: &ManagedBuffer,
+    );
+
+    #[event("WithdrawFromStakingProviderSuccess")]
+    fn withdraw_from_staking_provider_success_event(
+        &self,
+        #[indexed] caller: &ManagedAddress,
+        #[indexed] delegate_address: &ManagedAddress,
+        #[indexed] egld_amount: &BigUint,
+        #[indexed] timestamp: u64,
+    );
+
+    #[event("WithdrawFromStakingProviderFail")]
+    fn withdraw_from_staking_provider_fail_event(
+        &self,
+        #[indexed] caller: &ManagedAddress,
+        #[indexed] delegate_address: &ManagedAddress,
         #[indexed] timestamp: u64,
     );
 
     // Rewards
-    #[event("AdminRedelegateRewardsSuccess")]
-    fn admin_redelegate_rewards_success_event(
+    #[event("ClaimRewardsFromStakingProviderSuccess")]
+    fn claim_rewards_from_staking_provider_success_event(
         &self,
         #[indexed] caller: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,
-        #[indexed] rewards_amount: &BigUint,
-        #[indexed] fee_stegld_amount: &BigUint,
+        #[indexed] rewards_egld_amount: &BigUint,
         #[indexed] timestamp: u64,
     );
 
-    #[event("AdminRedelegateRewardsFail")]
-    fn admin_redelegate_rewards_fail_event(
+    #[event("ClaimRewardsFromStakingProviderFail")]
+    fn claim_rewards_from_staking_provider_fail_event(
         &self,
         #[indexed] caller: &ManagedAddress,
         #[indexed] delegate_address: &ManagedAddress,
-        #[indexed] rewards_amount: &BigUint,
-        #[indexed] timestamp: u64,
-    );
-
-    // Pool
-    #[event("UpdateMainPool")]
-    fn update_main_pool_event(
-        &self,
-        #[indexed] caller: &ManagedAddress,
-        #[indexed] pool_vegld_amount: &BigUint,
-        #[indexed] pool_egld_amount: &BigUint,
         #[indexed] timestamp: u64,
     );
 
     // Admin Settings
-    #[event("ChangeDelegateAddress")]
-    fn change_delegate_address_event(
-        &self,
-        #[indexed] caller: &ManagedAddress,
-        #[indexed] to: &ManagedAddress,
-        #[indexed] timestamp: u64,
-    );
-
     #[event("ChangeTreasuryWallet")]
     fn change_treasury_wallet_event(
         &self,

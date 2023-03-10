@@ -1,20 +1,19 @@
 {
     "buildInfo": {
         "rustc": {
-            "version": "1.68.0-nightly",
-            "commitHash": "afaf3e07aaa7ca9873bdb439caec53faffa4230c",
-            "commitDate": "2023-01-14",
+            "version": "1.66.0-nightly",
+            "commitHash": "b8c35ca26b191bb9a9ac669a4b3f4d3d52d97fb1",
+            "commitDate": "2022-10-15",
             "channel": "Nightly",
-            "short": "rustc 1.68.0-nightly (afaf3e07a 2023-01-14)"
+            "short": "rustc 1.66.0-nightly (b8c35ca26 2022-10-15)"
         },
         "contractCrate": {
             "name": "vesta-x-liquid-staking",
-            "version": "0.1.0",
-            "git_version": "58c842e-modified"
+            "version": "0.2.0"
         },
         "framework": {
-            "name": "elrond-wasm",
-            "version": "0.36.1"
+            "name": "multiversx-sc",
+            "version": "0.39.5"
         }
     },
     "name": "VestaXLiquidStaking",

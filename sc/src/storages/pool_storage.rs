@@ -1,9 +1,9 @@
-elrond_wasm::imports!();
-elrond_wasm::derive_imports!();
+multiversx_sc::imports!();
+multiversx_sc::derive_imports!();
 
 use crate::context::{ UnstakingPack };
 
-#[elrond_wasm::module]
+#[multiversx_sc::module]
 pub trait PoolStorageModule
 {
     /* LP Share Pool - Main Pool */
@@ -17,13 +17,15 @@ pub trait PoolStorageModule
     #[storage_mapper("pool_egld_amount")]
     fn pool_egld_amount(&self) -> SingleValueMapper<BigUint>;
 
-
     /* PreStake Pool */
     // total prestaked amount
     #[view(getPrestakedEgldAmount)]
     #[storage_mapper("prestaked_egld_amount")]
     fn prestaked_egld_amount(&self) -> SingleValueMapper<BigUint>;
 
+    #[view(getPendingRewardEgldAmount)]
+    #[storage_mapper("pending_reward_egld_amount")]
+    fn pending_reward_egld_amount(&self) -> SingleValueMapper<BigUint>;
 
     /* PreUnstake Pool */
     // total preunstaked EGLD amount
@@ -31,13 +33,7 @@ pub trait PoolStorageModule
     #[storage_mapper("preunstaked_egld_amount")]
     fn preunstaked_egld_amount(&self) -> SingleValueMapper<BigUint>;
 
-
     /* Unstaking Packs */
-    // total unstaking EGLD amount
-    #[view(getUnstakingEgldAmount)]
-    #[storage_mapper("unstaking_egld_amount")]
-    fn unstaking_egld_amount(&self) -> SingleValueMapper<BigUint>;
-
     #[view(getUnstakingUsers)]
     #[storage_mapper("unstaking_users")]
     fn unstaking_users(&self) -> UnorderedSetMapper<ManagedAddress>;
@@ -51,4 +47,18 @@ pub trait PoolStorageModule
     #[view(getUnbondedEgldAmount)]
     #[storage_mapper("unbonded_egld_amount")]
     fn unbonded_egld_amount(&self) -> SingleValueMapper<BigUint>;
+
+
+    //////////////////////////////////////////////////////////////
+    #[view(getTotalUndelegatedEgldAmount)]
+    #[storage_mapper("total_undelegated_egld_amount")]
+    fn total_undelegated_egld_amount(&self) -> SingleValueMapper<BigUint>;
+
+    #[view(getTotalOldPreunstakedEgldAmount)]
+    #[storage_mapper("total_old_preunstaked_egld_amount")]
+    fn total_old_preunstaked_egld_amount(&self) -> SingleValueMapper<BigUint>;
+
+    #[view(getRecentPreunstakedEgldAmountsMap)]
+    #[storage_mapper("recent_preunstaked_egld_amounts_map")]
+    fn recent_preunstaked_egld_amounts_map(&self) -> MapMapper<u64, BigUint>;
 }

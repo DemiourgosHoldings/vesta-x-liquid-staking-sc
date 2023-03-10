@@ -58,7 +58,7 @@ import {
 import { loadContractCode } from '@elrondnetwork/erdjs/out/testutils';
 
 async function main() {
-	const data = new TransactionPayload(`withdraw`);
+	const data = new TransactionPayload(`userWithdraw`);
 
 	const tx = new Transaction({
 		nonce: account.getNonceThenIncrement(),

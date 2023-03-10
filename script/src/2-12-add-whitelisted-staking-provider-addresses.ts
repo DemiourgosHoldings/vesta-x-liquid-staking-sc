@@ -25,6 +25,7 @@ import {
 	U32Value,
 	DefaultSmartContractController,
 	CodeMetadata,
+	BooleanValue,
 } from "@elrondnetwork/erdjs/out";
 import {
 	EXPLORER_URL,
@@ -37,13 +38,12 @@ import {
     TREASURY_WALLET,
     FEE,
     SET_SETTINGS_GAS_LIMIT,
-    USER_STAKE_AMOUNT,
-    USER_STAKE_GAS_LIMIT,
-	ADMIN_DELEGATE_GAS_LIMIT,
+	ADMIN_ADDRESSES,
+	USER_ACTION_ALLOWED,
+	MANAGEMENT_ACTION_ALLOWED,
 	DELEGATE_ADDRESS,
-	ADMIN_UNDELEGATE_GAS_LIMIT,
-	ADMIN_WITDRAW_AMOUNT,
-	ADMIN_WITHDRAW_GAS_LIMIT,
+	UNDELEGATE_ADDRESS,
+	WHITELISTED_SP_ADDRESSES,
 } from "./config";
 
 import {
@@ -57,20 +57,19 @@ import {
 	sleep,
 	convertWeiToEsdt,
 } from './util';
+import { loadContractCode } from '@elrondnetwork/erdjs/out/testutils';
 
 async function main() {
-	const args: TypedValue[] = [
-		new AddressValue(new Address(DELEGATE_ADDRESS)),
-        new BigUIntValue(ADMIN_WITDRAW_AMOUNT),	// withdraw amount
-	];
+	const args: TypedValue[] = [];
+	WHITELISTED_SP_ADDRESSES.map(row => args.push(new AddressValue(new Address(row))));
 	const { argumentsString } = new ArgSerializer().valuesToString(args);
-	const data = new TransactionPayload(`adminWithdraw@${argumentsString}`);
+	const data = new TransactionPayload(`addWhitelistedStakingProviderAddresses@${argumentsString}`);
 
 	const tx = new Transaction({
 		nonce: account.getNonceThenIncrement(),
 		receiver: new Address(SMART_CONRACT_ADDRESS),
 		data: data,
-		gasLimit: new GasLimit(ADMIN_WITHDRAW_GAS_LIMIT),
+		gasLimit: new GasLimit(SET_SETTINGS_GAS_LIMIT),
 	});
 
 	await signer.sign(tx);
