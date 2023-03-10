@@ -1,24 +1,24 @@
-export const GATEWAY_URL = "https://devnet-gateway.elrond.com";
-export const API_URL = "https://devnet-api.elrond.com";
-export const EXPLORER_URL = 'https://devnet-explorer.elrond.com/transactions/';
-export const CHAIN_ID = "D"
+// export const GATEWAY_URL = "https://devnet-gateway.elrond.com";
+// export const API_URL = "https://devnet-api.elrond.com";
+// export const EXPLORER_URL = 'https://devnet-explorer.elrond.com/transactions/';
+// export const CHAIN_ID = "D"
 
 // export const GATEWAY_URL = "https://testnet-gateway.elrond.com";
 // export const API_URL = "https://testnet-api.elrond.com";
 // export const EXPLORER_URL = 'https://testnet-explorer.elrond.com/transactions/';
 // export const CHAIN_ID = "T"
 
-// export const GATEWAY_URL = "https://gateway.elrond.com";
-// export const API_URL = "https://api.elrond.com";
-// export const EXPLORER_URL = 'https://explorer.elrond.com/transactions/';
-// export const CHAIN_ID = "1"
+export const GATEWAY_URL = "https://gateway.elrond.com";
+export const API_URL = "https://api.elrond.com";
+export const EXPLORER_URL = 'https://explorer.elrond.com/transactions/';
+export const CHAIN_ID = "1"
 
 export const PEM_PATH = "./wallets/vestax-vegld.pem";
 
 // SC metadata
 export const SMART_CONRACT_ABI_URL = 'abi/vesta-x-liquid-staking.abi.json';
 export const SMART_CONRACT_NAME = 'VestaXLiquidStaking';
-export const SMART_CONRACT_ADDRESS = 'erd1qqqqqqqqqqqqqpgqsvunnqer0q8uecrf4wqfk6vm2x78d49803as452f4r';
+export const SMART_CONRACT_ADDRESS = 'erd1qqqqqqqqqqqqqpgqawus4zu5w2frmhh9rscjqnu9x6msfjya2d2sfw7tsn';
 
 //
 export const ESDT_MODULE_ADDRESS = 'erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u';
@@ -41,7 +41,7 @@ export const ADMIN_CLAIM_REWARDS_GAS_LIMIT = 30_000_000;
 
 //
 export const UNBONDING_PERIOD = 3600 * 2; // 2 hours
-export const TREASURY_WALLET = 'erd15936k9pw34xyzmcaupyn7lpr7f6p20q50h4wlgemxg7h9zasdfysmhg50z';    // shard1-odin
+export const TREASURY_WALLET = 'erd1qqqqqqqqqqqqqpgqc0e2y2fsv8mcxja6vqz7k7wh33mtclj027rsxry8a2';    // DAO Vault
 export const FEE = 500; // 5%
 export const ADMIN_ADDRESSES = [
     'erd1ygdttzrulwfspme2s4qrx5y2qyfqalju0k2vcyy8z3979whlj9qssl5uay', // my shard1
@@ -51,15 +51,15 @@ export const USER_ACTION_ALLOWED = true;
 export const MANAGEMENT_ACTION_ALLOWED = true;
 
 //
-export const VEGLD_TOKEN = 'VEGLD-a99e98';
+export const VEGLD_TOKEN = 'VEGLD-2b9319';
 export const VEGLD_DECIMALS = 18;
 export const VEGLD_TICKER = 'vEGLD';
 
 //
-export const DELEGATE_ADDRESS = 'erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr0llllsj732py';
-export const UNDELEGATE_ADDRESS = 'erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr0llllsj732py';
+export const DELEGATE_ADDRESS = 'erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqq50lllls8dl5vl'; // should be Parasco in default
+export const UNDELEGATE_ADDRESS = 'erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqq50lllls8dl5vl'; // should be Parasco in default
 export const WHITELISTED_SP_ADDRESSES = [
-    'erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr0llllsj732py',
+    'erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqq50lllls8dl5vl', // Parasco SP
 ];
 
 //

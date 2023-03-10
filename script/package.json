@@ -19,6 +19,7 @@
       "2-11": "ts-node src/2-11-remove-auto-undelegate-address",
       "2-12": "ts-node src/2-12-add-whitelisted-staking-provider-addresses",
       "2-13": "ts-node src/2-13-remove-whitelisted-staking-provider-addresses",
+      "2-14": "ts-node src/2-14-get-whitelisted-sp-addresses",
       "3-1": "ts-node src/3-1-user-stake",
       "3-2": "ts-node src/3-2-user-unstake",
       "3-3": "ts-node src/3-3-user-withdraw",
