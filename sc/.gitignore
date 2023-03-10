@@ -5,6 +5,7 @@
 
 # The mxpy output
 /output
+/output-docker
 
 # Mandos test trace
 trace*.scen.json
