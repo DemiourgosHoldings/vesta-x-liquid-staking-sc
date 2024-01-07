@@ -1,70 +1,39 @@
-import * as fs from 'fs';
-import { sendTransactions, timedOutBatchTransactionsStates } from "@elrondnetwork/dapp-core";
 import {
-	Account,
-	Address,
-	AddressValue,
-	ChainID,
-	ContractFunction,
-	GasLimit,
-	I8Value,
-	ProxyProvider,
-	SmartContract,
-	StringValue,
-	AbiRegistry,
-	SmartContractAbi,
-	Egld,
-	Balance,
-	BigUIntValue,
-	BytesValue,
-	ArgSerializer,
-	TransactionPayload,
-	Transaction,
-	TypedValue,
-	U64Value,
-	U32Value,
-} from "@elrondnetwork/erdjs/out";
-import {
-	EXPLORER_URL,
-} from "./config";
-
-import {
-	account,
 	provider,
-	signer,
-	getSmartContractInteractor,
+	getSmartContract,
 } from './provider';
-import BigNumber from 'bignumber.js';
-import {
-	sleep,
-	convertWeiToEsdt,
-	convertEsdtToWei,
-} from './util';
+import { ResultsParser } from "@multiversx/sdk-core/out";
 
 async function main() {
-	const contractInteractor = await getSmartContractInteractor();
-	const interaction = contractInteractor.contract.methods.viewUserUnstakingPacks();
-	const res = await contractInteractor.controller.query(interaction);
+	try {
+		const contract = await getSmartContract();
+		const interaction = contract.methodsExplicit.viewUserUnstakingPacks();
+		const query = interaction.check().buildQuery();
+		const queryResponse = await provider.queryContract(query);
+		const endpointDefinition = interaction.getEndpoint();
+		const { firstValue, returnCode, returnMessage } =
+			new ResultsParser().parseQueryResponse(queryResponse, endpointDefinition);
 
-	if (!res || !res.returnCode.isSuccess()) {
-        console.log('res', res);
-        return;
-    }
-	const values = res.firstValue.valueOf();
-	
-    const decodeds = values.map(value => ({
-        address: value.address.toString(),
-        packs: value.packs.map(v => ({
-			amount: v.amount.toFixed(),
-			timestamp: v.timestamp.toNumber(),
-		})),
-    }));
+		if (!firstValue || !returnCode.isSuccess()) {
+			throw Error(returnMessage);
+		}
 
-	console.log('viewUserUnstakingPacks: ', JSON.stringify(decodeds, null, 4));
+		const value = firstValue.valueOf();
+		const decodeds = value.map(value => ({
+			address: value.address.toString(),
+			packs: value.packs.map(v => ({
+				amount: v.amount.toFixed(),
+				timestamp: v.timestamp.toNumber(),
+			})),
+		}));
+
+		console.log('viewUserUnstakingPacks: ', JSON.stringify(decodeds, null, 4));
+	} catch (err) {
+		console.log(err);
+	}
 }
 
 
-(async function() {
-	await account.sync(provider);
+(async function () {
 	await main();
 })();

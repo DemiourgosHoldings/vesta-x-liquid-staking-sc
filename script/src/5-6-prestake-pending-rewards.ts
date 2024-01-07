@@ -1,41 +1,17 @@
 import {
-	Address,
-	AddressValue,
-	GasLimit,
-	ArgSerializer,
 	TransactionPayload,
-	Transaction,
-	TypedValue,
-} from "@elrondnetwork/erdjs/out";
-import {
-	EXPLORER_URL,
-	SMART_CONRACT_ADDRESS,
-	DELEGATE_ADDRESS,
-	ADMIN_CLAIM_REWARDS_GAS_LIMIT,
-} from "./config";
+  } from "@multiversx/sdk-core";
+  import {
+	createAndSendTransaction,
+  } from './provider';
 
-import {
-	account,
-	provider,
-	signer,
-} from './provider';
 
 async function main() {
 	const data = new TransactionPayload(`prestakePendingRewards`);
 
-	const tx = new Transaction({
-		nonce: account.getNonceThenIncrement(),
-		receiver: new Address(SMART_CONRACT_ADDRESS),
-		data: data,
-		gasLimit: new GasLimit(ADMIN_CLAIM_REWARDS_GAS_LIMIT),
-	});
-
-	await signer.sign(tx);
-	const txHash = await tx.send(provider);
-	console.log(`${EXPLORER_URL}${txHash.toString()}`);
+	await createAndSendTransaction(data);
 }
 
 (async function() {
-	await account.sync(provider);
-	await main();
+  await main();
 })();

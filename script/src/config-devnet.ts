@@ -1,6 +1,6 @@
-export const GATEWAY_URL = "https://devnet-gateway.elrond.com";
-export const API_URL = "https://devnet-api.elrond.com";
-export const EXPLORER_URL = 'https://devnet-explorer.elrond.com/transactions/';
+export const GATEWAY_URL = "https://devnet-gateway.multiversx.com";
+export const API_URL = "https://devnet-api.multiversx.com";
+export const EXPLORER_URL = 'https://devnet-explorer.multiversx.com/transactions/';
 export const CHAIN_ID = "D"
 
 // export const GATEWAY_URL = "https://testnet-gateway.elrond.com";
@@ -13,12 +13,12 @@ export const CHAIN_ID = "D"
 // export const EXPLORER_URL = 'https://explorer.elrond.com/transactions/';
 // export const CHAIN_ID = "1"
 
-export const PEM_PATH = "./wallets/vestax-vegld.pem";
+export const PEM_PATH = "../../wallet-DH/owner/erd14kgcxv7kev8evnnly4ctnweaf7f45jmff7n52ajmgpmxu7u9c5wsp6f0jk.pem";
 
 // SC metadata
 export const SMART_CONRACT_ABI_URL = 'abi/vesta-x-liquid-staking.abi.json';
 export const SMART_CONRACT_NAME = 'VestaXLiquidStaking';
-export const SMART_CONRACT_ADDRESS = 'erd1qqqqqqqqqqqqqpgqsvunnqer0q8uecrf4wqfk6vm2x78d49803as452f4r';
+export const SMART_CONRACT_ADDRESS = 'erd1qqqqqqqqqqqqqpgq7mvz9c6uwwv4y7eee8gcz4588c2c595zc5wspz0tek';
 
 //
 export const ESDT_MODULE_ADDRESS = 'erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u';
@@ -38,20 +38,20 @@ export const DELEGATE_TO_SP_GAS_LIMIT = 30_000_000;
 export const ADMIN_UNDELEGATE_GAS_LIMIT = 30_000_000;
 export const ADMIN_WITHDRAW_GAS_LIMIT = 30_000_000;
 export const ADMIN_CLAIM_REWARDS_GAS_LIMIT = 30_000_000;
+export const COMMON_CONFIG_GAS_LIMIT = 20_000_000;
 
 //
-export const UNBONDING_PERIOD = 3600 * 2; // 2 hours
-export const TREASURY_WALLET = 'erd15936k9pw34xyzmcaupyn7lpr7f6p20q50h4wlgemxg7h9zasdfysmhg50z';    // shard1-odin
+export const UNBONDING_PERIOD = 864000 * 2; // 2 hours
+export const TREASURY_WALLET = 'erd1lp8qlwx5s480yefu32wvw9ehkpdvznslq8unj7usfugalp50suhst0ytdn';    // shard1-odin
 export const FEE = 500; // 5%
 export const ADMIN_ADDRESSES = [
-    'erd1ygdttzrulwfspme2s4qrx5y2qyfqalju0k2vcyy8z3979whlj9qssl5uay', // my shard1
-    'erd1klkykugf5w67nrj22fvkalzf34rge7czr4cd93rj6rdz9t8upd4sww53ju', // vestax-admin
+    'erd14kgcxv7kev8evnnly4ctnweaf7f45jmff7n52ajmgpmxu7u9c5wsp6f0jk'
 ];
 export const USER_ACTION_ALLOWED = true;
 export const MANAGEMENT_ACTION_ALLOWED = true;
 
 //
-export const VEGLD_TOKEN = 'VEGLD-a99e98';
+export const VEGLD_TOKEN = 'VEGLD-103b9f';
 export const VEGLD_DECIMALS = 18;
 export const VEGLD_TICKER = 'vEGLD';
 

@@ -1,26 +1,32 @@
 import {
-	account,
 	provider,
-	getSmartContractInteractor,
+	getSmartContract,
 } from './provider';
+import { ResultsParser } from "@multiversx/sdk-core/out";
 
 async function main() {
-	const contractInteractor = await getSmartContractInteractor();
-	const interaction = contractInteractor.contract.methods.viewFailedAsyncCallIds();
-	const res = await contractInteractor.controller.query(interaction);
+	try {
+		const contract = await getSmartContract();
+		const interaction = contract.methodsExplicit.viewFailedAsyncCallIds();
+		const query = interaction.check().buildQuery();
+		const queryResponse = await provider.queryContract(query);
+		const endpointDefinition = interaction.getEndpoint();
+		const { firstValue, returnCode, returnMessage } =
+			new ResultsParser().parseQueryResponse(queryResponse, endpointDefinition);
 
-	if (!res || !res.returnCode.isSuccess()) {
-		console.log('res', res);
-		return;
+		if (!firstValue || !returnCode.isSuccess()) {
+			throw Error(returnMessage);
+		}
+
+		const value = firstValue.valueOf();
+		const decodeds = value.map(value => value.toNumber());
+
+		console.log('viewFailedAsyncCallIds: ', decodeds);
+	} catch (err) {
+		console.log(err);
 	}
-
-	const values = res.firstValue.valueOf();
-	const decodeds = values.map(value => value.toNumber());
-
-	console.log('viewFailedAsyncCallIds: ', decodeds);
 }
 
-(async function() {
-	await account.sync(provider);
+(async function () {
 	await main();
 })();
