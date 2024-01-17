@@ -1,1 +1,1 @@
-export * from './config-devnet';
+export * from './config-mainnet';
