@@ -1,31 +1,11 @@
 import * as fs from 'fs';
-import { sendTransactions, timedOutBatchTransactionsStates } from "@elrondnetwork/dapp-core";
 import {
-	Account,
-	Address,
-	AddressValue,
-	ChainID,
-	ContractFunction,
-	GasLimit,
-	I8Value,
-	ProxyProvider,
-	SmartContract,
-	StringValue,
 	AbiRegistry,
-	SmartContractAbi,
-	BytesValue,
-	BigUIntValue,
-	Egld,
-	U32Value,
-	NetworkConfig,
-	TypedValue,
-	ArgSerializer,
-	TransactionPayload,
-	Transaction,
-	Interaction,
-	DefaultSmartContractController,
-} from "@elrondnetwork/erdjs/out";
-import { UserSecretKey, UserSigner } from "@elrondnetwork/erdjs-walletcore"
+	Account, Address, SmartContract, Transaction, TransactionPayload,
+  } from "@multiversx/sdk-core";
+import {
+	UserSigner, parseUserKey,
+  } from "@multiversx/sdk-wallet";
 import {
 	GATEWAY_URL,
 	PEM_PATH,
@@ -34,25 +14,61 @@ import {
 	SMART_CONRACT_ABI_URL,
 	SMART_CONRACT_NAME,
 	SMART_CONRACT_ADDRESS,
+	API_URL,
 } from "./config";
+import { ProxyNetworkProvider, ApiNetworkProvider } from '@multiversx/sdk-network-providers/out';
+import { COMMON_CONFIG_GAS_LIMIT } from './config-devnet';
 
-export const provider = new ProxyProvider(GATEWAY_URL, { timeout: 20000 });
-let config = NetworkConfig.getDefault();
-config.ChainID = new ChainID(CHAIN_ID);
-config.sync(provider);
+export const provider = new ProxyNetworkProvider(GATEWAY_URL, { timeout: 20000 });
+export const apiProvider = new ApiNetworkProvider(API_URL, { timeout: 20_000 });
+// let config = NetworkConfig.getDefault();
+// config.ChainID = new ChainID(CHAIN_ID);
+// config.sync(provider);
 
 const pem = fs.readFileSync(PEM_PATH, { encoding: 'utf-8' }).trim();
 export const signer = UserSigner.fromPem(pem);
-export const account = new Account(new Address((signer.getAddress()).bech32()));
 
-export const getSmartContractInteractor = async () => {
-	const registry = await AbiRegistry.load({ files: [SMART_CONRACT_ABI_URL] });
-	const abi = new SmartContractAbi(registry, [SMART_CONRACT_NAME]);
-	const contract = new SmartContract({ address: new Address(SMART_CONRACT_ADDRESS), abi: abi });
-	const controller = new DefaultSmartContractController(abi, provider);
-
-	return {
-		contract,
-		controller,
-	};
+export const getSmartContract = async () => {
+  const abiJson = await fs.readFileSync(SMART_CONRACT_ABI_URL, {
+    encoding: "utf8",
+  });
+  const abiObj = JSON.parse(abiJson);
+  const abiRegistry = AbiRegistry.create(abiObj);
+  return new SmartContract({
+    address: new Address(SMART_CONRACT_ADDRESS),
+    abi: abiRegistry,
+  });
 };
+
+export const getAccount = async () => {
+  const userKey = parseUserKey(pem);
+  const address = userKey.generatePublicKey().toAddress();
+
+  const account = new Account(address);
+  const apiAccount = await apiProvider.getAccount(address);
+  account.update(apiAccount);
+  return account;
+};
+
+export const signAndSendTx = async (tx: Transaction) => {
+  const serializedTransaction = tx.serializeForSigning();
+  const signature = await signer.sign(serializedTransaction);
+  tx.applySignature(signature);
+  await provider.sendTransaction(tx);
+  console.log(`${EXPLORER_URL}${tx.getHash().toString()}`);
+} 
+
+export const createAndSendTransaction = async (data: TransactionPayload) => {
+  const account = await getAccount();
+  
+  const tx = new Transaction({
+    sender: account.address,
+    nonce: account.getNonceThenIncrement(),
+    receiver: new Address(SMART_CONRACT_ADDRESS),
+    data: data,
+    chainID: CHAIN_ID,
+    gasLimit: COMMON_CONFIG_GAS_LIMIT,
+  });
+
+  await signAndSendTx(tx);
+}

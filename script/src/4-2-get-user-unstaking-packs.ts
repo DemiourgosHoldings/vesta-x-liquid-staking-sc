@@ -1,72 +1,42 @@
-import * as fs from 'fs';
-import { sendTransactions, timedOutBatchTransactionsStates } from "@elrondnetwork/dapp-core";
-import {
-	Account,
-	Address,
-	AddressValue,
-	ChainID,
-	ContractFunction,
-	GasLimit,
-	I8Value,
-	ProxyProvider,
-	SmartContract,
-	StringValue,
-	AbiRegistry,
-	SmartContractAbi,
-	Egld,
-	Balance,
-	BigUIntValue,
-	BytesValue,
-	ArgSerializer,
-	TransactionPayload,
-	Transaction,
-	TypedValue,
-	U64Value,
-	U32Value,
-} from "@elrondnetwork/erdjs/out";
-import {
-	EVE_ADDRESS,
-	EXPLORER_URL,
-} from "./config";
 
+import { ADMIN_ADDRESSES } from './config';
 import {
-	account,
 	provider,
-	signer,
-	getSmartContractInteractor,
+	getSmartContract,
 } from './provider';
-import BigNumber from 'bignumber.js';
-import {
-	sleep,
-	convertWeiToEsdt,
-	convertEsdtToWei,
-} from './util';
+import { Address, AddressValue, ResultsParser, TypedValue } from "@multiversx/sdk-core/out";
 
 async function main() {
-	const args: TypedValue[] = [
-		new AddressValue(new Address(EVE_ADDRESS)),
-	];
+	try {
+		const args: TypedValue[] = [
+			new AddressValue(new Address(ADMIN_ADDRESSES[0])),
+		];
 
-	const contractInteractor = await getSmartContractInteractor();
-	const interaction = contractInteractor.contract.methods.getUnstakingPacks(args);
-	const res = await contractInteractor.controller.query(interaction);
+		const contract = await getSmartContract();
+		const interaction = contract.methodsExplicit.getUnstakingPacks(args);
+		const query = interaction.check().buildQuery();
+		const queryResponse = await provider.queryContract(query);
+		const endpointDefinition = interaction.getEndpoint();
+		const { firstValue, returnCode, returnMessage } =
+			new ResultsParser().parseQueryResponse(queryResponse, endpointDefinition);
 
-	if (!res || !res.returnCode.isSuccess()) {
-        console.log('res', res);
-        return;
-    }
-	const values = res.firstValue.valueOf();
-	
-    const decodeds = values.map(value => ({
-		amount: value.amount.toFixed(),
-		timestamp: value.timestamp.toNumber(),
-    }));
+		if (!firstValue || !returnCode.isSuccess()) {
+			throw Error(returnMessage);
+		}
 
-	console.log('getUnstakingPacks: ', JSON.stringify(decodeds, null, 4));
+		const value = firstValue.valueOf();
+		const decodeds = value.map(value => ({
+			amount: value.amount.toFixed(),
+			timestamp: value.timestamp.toNumber(),
+		}));
+
+		console.log('getUnstakingPacks: ', JSON.stringify(decodeds, null, 4));
+	} catch (err) {
+		console.log(err);
+	}
 }
 
 
-(async function() {
-	await account.sync(provider);
+(async function () {
 	await main();
 })();
